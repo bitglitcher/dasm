@@ -11,6 +11,7 @@ Autor: Benjamin Herrera Navarro
 #include "libs/terminal_colors.h"
 #include "libs/file_table.h"
 #include "libs/symbol_table.h"
+#include "internals.h"
 
 const char *argp_program_version = "dasm rebuilt";
 const char *argp_program_bug_address = "<draketaco@github.com>";
@@ -77,6 +78,7 @@ int main(int argc, char *argv[])
         //File table
         init_file_table(&file_table);
         init_symbol_table(&symbol_table);
+        init_internals();
         append_file(&file_table, arguments.input_file);
         //Parse first file
         printf("Scanning File\n");

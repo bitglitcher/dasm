@@ -1,13 +1,12 @@
-add
+add ax, bx, cx;
 
-sub
+sub ax, bx, cx;
 
-def
-
-
-
-
-hol_:
-
-
-
+add ax, bx, cx;
+sub ax, bx, cx;
+and ax, bx, cx;
+xor ax, bx, cx;
+or ax, bx, cx;
+not ax, bx, cx;
+shftl ax, bx, cx;
+shftr ax, bx, cx;
