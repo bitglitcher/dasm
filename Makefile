@@ -1,6 +1,8 @@
 
-all: internals arch grammar lexer preprocessor libs main clean
+all: grammar internals arch compile_grammar lexer preprocessor libs main clean
 
+grammar: grammar.y libs/terminal_colors.h
+	bison -y -d grammar.y
 
 internals: internals.c internals.h internals_backend.c internals_backend.h
 	gcc internals.c internals.h -c
@@ -9,8 +11,7 @@ internals: internals.c internals.h internals_backend.c internals_backend.h
 arch: arch/d16i.h arch/d16i.c
 	gcc arch/d16i.c -c
 
-grammar: grammar.y libs/terminal_colors.h
-	bison -y -d grammar.y
+compile_grammar: grammar.y libs/terminal_colors.h
 	gcc y.tab.c -c
 
 lexer:
