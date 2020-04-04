@@ -1,5 +1,3 @@
-#pragma once
-
 #ifndef INTERNALS
 #define INTERNALS
 
@@ -14,20 +12,24 @@
 extern char* keywords [];
 extern int keyword_id [];
 
+
+/*Structs for the instruction maching*/
 typedef struct
 {
     int op; //Instruction op
     char* name; //Name to match
     int nargs; //Number of arguments
     int* relative_args; //array of 0 or 1 to set relative arguments
+    int*** types;
     void (*asm_func)(BIN_BUFFER* bin_buffer, ARG_TABLE* arg_table, int op); //Function pointer to assembler function 
 } INS_NODE_TEMPLATE;
-
+ 
 typedef struct
 {
     int op;
     ARG_TABLE args;
 } INS_NODE;
+
 
 //number handdling
 void set_values(int);
@@ -49,5 +51,10 @@ extern int identifier_index;
 
 void set_identifier(char* identifier_name);
 void reset_identifiers();
+
+/*TYPES of symbols*/
+#define TYPE_LABEL  0x00
+#define TYPE_DEF    0x01
+
 
 #endif

@@ -5,16 +5,31 @@
 #include "internals.h"
 #include "arch/d16i.h"
 
+typedef struct
+{
+    int val;
+    int type;
+} MATCHED_ARG;
 
 /*regiter defenitions*/
 extern char* regs [];
 extern int reg_addr [];
 
+/*Target Specific Keyword array*/
+
+extern char* target_keywords [];
+extern int target_keywords_vals [];
 
 //Instruction template array
 extern INS_NODE_TEMPLATE* instructions [];
 
 
 void assemble_ins(char* name, ARG_TABLE* arg_table);
+
+MATCHED_ARG match_args(char* name);
+
+void increment_addr();
+
+int addr;
 
 #endif
