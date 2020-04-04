@@ -13,7 +13,7 @@ int keyword_id [] = {DEF, ALLOC}; //defined in the y.tab.h header file
 //SYMBOL_TABLE local_table; //for identifiers
 
 char* identifiers [4];
-int identifier_index;
+int identifier_index = 0;
 
 void set_identifier(char* identifier_name)
 {
@@ -30,8 +30,6 @@ void init_internals()
 {
     //init_symbol_table(&local_table);
 }
-
-
 
 int return_token(char* identifier)
 {

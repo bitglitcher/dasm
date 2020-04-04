@@ -20,7 +20,7 @@ static char args_doc[] = "[FILENAME]...";
 
 static struct argp_option options[] = { 
     { "output", 'o', "FILE", 0, "Place output file as <file>."},
-    { "table", 't', 0, 0, "Display simbol table."},
+    { "table", 't', 0, 0, "Display symbol table."},
     { 0 } 
 };
 
@@ -53,6 +53,26 @@ extern int yylex();
 //FILE TABLE
 FILE_TABLE file_table;
 SYMBOL_TABLE symbol_table;
+
+//Parsing variables
+bool dry_run = true;
+
+void print_symbol_table(SYMBOL_TABLE* symbol_table)
+{
+    printf("\n\n------------SYMBOL_TABLE------------\n");
+    printf("size: %d\n", symbol_table->size);
+    printf("capacity: %d\n", symbol_table->capacity);
+    printf("wait_slow: %d\n", symbol_table->wait_slot);
+    for(int i = 0;i <= symbol_table->size;i++)
+    {
+        printf("NODE: 0x%x\n", i);
+        printf("\taddr %d\n", symbol_table->data[i].addr);
+        printf("\tdomain %s\n", symbol_table->data[i].domain);
+        printf("\tname %s\n", symbol_table->data[i].name);
+        printf("\ttype %d\n", symbol_table->data[i].type);
+    }
+}
+
 int main(int argc, char *argv[])
 {
     struct arguments arguments;
@@ -85,8 +105,15 @@ int main(int argc, char *argv[])
         FILE_NODE* file_node = search_file(&file_table, arguments.input_file);
         if(file_node)
         {
+            dry_run = true;
             yy_scan_bytes(file_node->data, file_node->size);
             yyparse();
+            //yypop_buffer_state();
+            //yyfree();
+            dry_run = false;
+            yy_scan_bytes(file_node->data, file_node->size);
+            yyparse();
+            if(arguments.table_display) print_symbol_table(&symbol_table);
         }
         else
         {
