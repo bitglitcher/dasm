@@ -24,6 +24,9 @@ ARG_TABLE arg;
 extern char* yytext;
 extern int yylineno;
 extern int yylex();
+extern int val;
+
+
 void yyerror(const char *str)
 {
         fprintf(stderr,"error: on line %d, %s before token: %s\n",yylineno ,str, yytext);
@@ -31,6 +34,11 @@ void yyerror(const char *str)
 
 extern char* identifier_name;
 
+extern SYMBOL_TABLE symbol_table;
+
+char* current_scope;
+
+extern bool dry_run;
 %}
 
 
@@ -52,25 +60,47 @@ command:
 arguments:
     IDENTIFIER
     {
-        append_arg(&arg, match_args(yytext));
-        printf("arguments detected: name: %s \t value %d\n", yytext, match_args(yytext));
+        if(!dry_run)
+        {
+            //append_arg(&arg, match_args(yytext));
+            printf("arguments detected: name: %s \t value %d\n", yytext, match_args(yytext));
+        }
     }
     |
     arguments ',' IDENTIFIER 
     {
-        printf("arguments detected: name: %s \t value %d\n", yytext, match_args(yytext));
-        append_arg(&arg, match_args(yytext));
+        if(!dry_run)
+        {
+            printf("arguments detected: name: %s \t value %d\n", yytext, match_args(yytext));
+            //append_arg(&arg, match_args(yytext));
+        }
+    }
+    |
+    arguments ',' NUMBER
+    {
+        if(!dry_run)
+        {
+            printf("arguments number detected: %d\n", val);
+            //append_arg(&arg, val);
+        }
     }
     ;
 
 instruction:
     IDENTIFIER
-    {
-        printf("Instructions %s\n", IDENTIFIER_0);
-        init_arg_table(&arg);
+    {   
+        if(!dry_run)
+        {
+            printf("Instructions %s\n", IDENTIFIER_0);
+            init_arg_table(&arg);
+        }
     } arguments ';'
     {
-        assemble_ins(IDENTIFIER_0, &arg);
+        if(!dry_run)
+        {
+            assemble_ins(IDENTIFIER_0, &arg);
+        }
+        increment_addr();
         reset_identifiers();
     }
     ;
@@ -94,7 +124,12 @@ defenition:
 label:
     IDENTIFIER ':'
     {
-        printf("label\n");
+        if(dry_run)
+        {
+            printf("label: %s\n", IDENTIFIER_0);
+            append_symbol(&symbol_table, IDENTIFIER_0, TYPE_LABEL, addr, "none");
+        }
+        reset_identifiers();
     }
     ;
 

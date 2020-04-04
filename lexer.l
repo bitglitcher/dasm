@@ -11,7 +11,7 @@
 
 char* identifier_name;
 int op_addr;
-
+int val;
 //IDENTIFIER ^[a-zA-Z_][a-zA-Z0-9_]*
 //"add"               {op_addr = op_type_add	; return OPERATION;};
 //"sub"               {op_addr = op_type_sub	; return OPERATION;};
@@ -40,8 +40,8 @@ IDENTIFIER [A-Za-z0-9]*
 
 [a-zA-Z_][a-zA-Z0-9_]*      {set_identifier(strdup(yytext));printf("IDENTIFIER\n"); return return_token(yytext);};
 
-(0-9)*                      {printf("NUMBER: %d\n", atoi(yytext));return NUMBER;}
-(0x)+[A-Fa-f0-9]*           {printf("NUMBER: %d\n", strtol(yytext,NULL,0));return NUMBER;}
+(0-9)*                      {val=atoi(yytext); return NUMBER;}
+(0x)+[A-Fa-f0-9]*           {val=strtol(yytext,NULL,0); return NUMBER;}
 
 ":"                         return ':';
 "("                         return '(';
