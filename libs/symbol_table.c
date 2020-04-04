@@ -21,7 +21,7 @@ void delete_symbol_table()
 
 }
 
-void append_symbol(SYMBOL_TABLE* symbol_table, char* name, int type, char* domain)
+void append_symbol(SYMBOL_TABLE* symbol_table, char* name, int type, int addr, char* domain)
 {
     if(symbol_table->wait_slot == true)
     {
@@ -32,15 +32,17 @@ void append_symbol(SYMBOL_TABLE* symbol_table, char* name, int type, char* domai
         symbol_table->size++;
     }
     //Check size
-    if(symbol_table->size > symbol_table->capacity)
+    if(symbol_table->size >= symbol_table->capacity)
     {
         symbol_table->capacity *= 2;
+        printf("Reallocating: %d\n", symbol_table->capacity);
         symbol_table->data = realloc(symbol_table->data, sizeof(SYMBOL_NODE) * symbol_table->capacity);
     }
 
     symbol_table->data[symbol_table->size].name = strdup(name);
     symbol_table->data[symbol_table->size].domain = strdup(domain);
     symbol_table->data[symbol_table->size].type = type;    
+    symbol_table->data[symbol_table->size].addr = addr;
 }
 
 SYMBOL_NODE* search_symbol(SYMBOL_TABLE* symbol_table, char* name, char* domain)
