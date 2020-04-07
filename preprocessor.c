@@ -10,10 +10,9 @@ void remove_defines(char* buffer);
 void remove_includes(char* buffer);
 void process_macros(char* buffer);
 
-
 int main()
 {
-
+    char* buffer = "#define HOLA\n HOLA";
 
 
     return 0;

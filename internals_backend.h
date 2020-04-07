@@ -5,11 +5,6 @@
 #include "internals.h"
 #include "arch/d16i.h"
 
-typedef struct
-{
-    int val;
-    int type;
-} MATCHED_ARG;
 
 /*regiter defenitions*/
 extern char* regs [];

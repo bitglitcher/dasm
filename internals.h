@@ -12,16 +12,16 @@
 extern char* keywords [];
 extern int keyword_id [];
 
-
 /*Structs for the instruction maching*/
 typedef struct
 {
     int op; //Instruction op
     char* name; //Name to match
-    int nargs; //Number of arguments
-    int* relative_args; //array of 0 or 1 to set relative arguments
-    int*** types;
+    int nargs;
+    int* ntypes; //Number of permissive types per argument
+    int** types;
     void (*asm_func)(BIN_BUFFER* bin_buffer, ARG_TABLE* arg_table, int op); //Function pointer to assembler function 
+    int relative_args []; //array of 0 or 1 to set relative arguments
 } INS_NODE_TEMPLATE;
  
 typedef struct
@@ -29,6 +29,7 @@ typedef struct
     int op;
     ARG_TABLE args;
 } INS_NODE;
+
 
 
 //number handdling
