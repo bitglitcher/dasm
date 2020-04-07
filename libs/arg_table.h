@@ -1,6 +1,5 @@
 #pragma once
 #include <stdbool.h>
-#include "../internals_backend.h"
 
 #define INIT_ARG_TABLE_CP 0xff 
 
@@ -16,8 +15,13 @@ typedef struct
     int size;
     int capacity;
     ARG_NODE* data;
-
 } ARG_TABLE;
+
+typedef struct
+{
+    int val;
+    int type;
+} MATCHED_ARG;
 
 
 void init_arg_table(ARG_TABLE* arg_table);
