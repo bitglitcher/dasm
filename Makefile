@@ -8,7 +8,7 @@ internals: internals.c internals.h internals_backend.c internals_backend.h
 	gcc internals.c internals.h -c
 	gcc internals_backend.c -c
 
-arch: arch/d16i.h arch/d16i.c d16i.o
+arch: arch/d16i.h arch/d16i.c
 	gcc arch/d16i.c -c
 
 compile_grammar: grammar.y libs/terminal_colors.h

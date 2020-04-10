@@ -49,7 +49,7 @@ extern int yyparse();
 extern int yy_scan_bytes ( const char *, int);
 extern int yylex();
 
-
+extern void init_internals();
 //FILE TABLE
 FILE_TABLE file_table;
 SYMBOL_TABLE symbol_table;
