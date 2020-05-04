@@ -1,3 +1,6 @@
+L			[a-zA-Z_]
+
+
 %{
 #include <stdio.h>
 #include <stdlib.h>
@@ -51,22 +54,24 @@ int val;
 %option nounput yylineno
 %option noyywrap
 
-
+STRING_P L?\"(\\.|[^\\"])*\"	
 
 %%
 
-[a-zA-Z_][a-zA-Z0-9_]*      {set_identifier(strdup(yytext));printf("IDENTIFIER\n"); return return_token(yytext);};
+[[:alnum:]]                 {set_identifier(strdup(yytext));printf("IDENTIFIER\n"); return return_token(yytext);};
 
 (0x)+[A-Fa-f0-9]*	        {val=strtol(yytext,NULL,0); return NUMBER;}
 [0-9]*			            {val=atoi(yytext); return NUMBER;}
 (0b)+[0-1]*		            {val=strtol(yytext,NULL,2); return NUMBER;}
 
+STRING_P                    return STRING;
 
 "}"			                return '}';
 "{"			                return '{';
 "("			                return '(';
 ")"			                return ')';
 ","                         return ',';
+"%"                         return '%';
 
 [ \r\n]                     ;
 .                           ;

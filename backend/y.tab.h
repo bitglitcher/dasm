@@ -56,7 +56,8 @@ extern int yydebug;
     MAX = 262,
     ARG_TEMPLATE = 263,
     ASSEMBLE = 264,
-    NUMBER = 265
+    NUMBER = 265,
+    STRING = 266
   };
 #endif
 /* Tokens.  */
@@ -68,6 +69,7 @@ extern int yydebug;
 #define ARG_TEMPLATE 263
 #define ASSEMBLE 264
 #define NUMBER 265
+#define STRING 266
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED

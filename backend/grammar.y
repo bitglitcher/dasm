@@ -33,7 +33,7 @@ extern char* identifier_name;
 %}
 
 
-%token DEF IDENTIFIER ARG ENCODE MAX ARG_TEMPLATE ASSEMBLE NUMBER
+%token DEF IDENTIFIER ARG ENCODE MAX ARG_TEMPLATE ASSEMBLE NUMBER STRING
 
 %%
 commands: /* empty */
@@ -52,29 +52,46 @@ identifiers:
 	identifiers ',' IDENTIFIER
 	;
 
-arg_def_template_permissive:
+template_def_permissive:
 	identifiers
 	|
 	NUMBER
 	;
 
-arg_def_template_permissives:
-	arg_def_template_permissive
+template_def_permissives:
+	template_def_permissive
 	|
-	arg_def_template_permissives ',' arg_def_template_permissive
-
-arg_template:
-	'(' identifiers ')' '{' arg_def_template_permissives '}'
+	template_def_permissives ',' template_def_permissive
+	;
+	
+template_def:
+	'(' identifiers ')' '{' template_def_permissives '}'
 	;
 
-arg_templates:
-	arg_template
+template_defs:
+	template_defs
 	|
-	arg_templates ',' arg_template
+	template_defs ',' template_def
 	;
 
 arg:
-	ARG IDENTIFIER '{' arg_templates '}'
+	ARG IDENTIFIER '{' template_defs '}'
+	;
+
+arg_template:
+	ARG_TEMPLATE '{' template_defs '}'
+	;
+
+max:
+	MAX '{' template_defs '}'
+	;
+
+encode:
+	ENCODE '{' template_defs '}'
+	;
+
+assemble:
+	ASSEMBLE '{' STRING '}'
 	;
 
 def_branch:
@@ -82,7 +99,7 @@ def_branch:
 	;
 
 def:
-   DEF IDENTIFIER '{'  '}'
+   DEF IDENTIFIER '{' def_branch '}'
 	;
 
 

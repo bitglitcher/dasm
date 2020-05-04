@@ -23,6 +23,6 @@ def load_assisted{
 
 
 	assemble {
-	load %hilo %val\n
+	"load %hilo %val\n"
 	}
 }
