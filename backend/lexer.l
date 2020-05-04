@@ -66,6 +66,7 @@ int val;
 "{"			                return '{';
 "("			                return '(';
 ")"			                return ')';
+","                         return ',';
 
 [ \r\n]                     ;
 .                           ;

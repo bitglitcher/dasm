@@ -45,21 +45,36 @@ command:
     |
 	arg
     ;
+
 identifiers:
 	IDENTIFIER
 	|
 	identifiers ',' IDENTIFIER
-	,
+	;
 
-arg_template_
+arg_def_template_permissive:
+	identifiers
+	|
+	NUMBER
+	;
+
+arg_def_template_permissives:
+	arg_def_template_permissive
+	|
+	arg_def_template_permissives ',' arg_def_template_permissive
 
 arg_template:
-	'(' identifiers ')' '{'
+	'(' identifiers ')' '{' arg_def_template_permissives '}'
+	;
 
-arg_branch:
+arg_templates:
+	arg_template
+	|
+	arg_templates ',' arg_template
+	;
 
 arg:
-	ARG IDENTIFIER '{' '}'
+	ARG IDENTIFIER '{' arg_templates '}'
 	;
 
 def_branch:
