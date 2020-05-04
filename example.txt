@@ -10,3 +10,7 @@ or ax, bx, cx;
 not ax, bx, cx;
 shftl ax, bx, cx;
 shftr ax, bx, cx;
+
+
+
+load hi, 0xff;

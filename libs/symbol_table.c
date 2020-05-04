@@ -7,7 +7,7 @@
 void init_symbol_table(SYMBOL_TABLE* symbol_table)
 {
     printf("Initializing Symbol Table\n");
-    printf("Symbol Table INIT CP: %d", SYMBOL_TABLE_INIT_CP);
+    printf("Symbol Table INIT CP: %d\n", SYMBOL_TABLE_INIT_CP);
     symbol_table->capacity = SYMBOL_TABLE_INIT_CP;
     symbol_table->size = 0;
     symbol_table->wait_slot = true;

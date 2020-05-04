@@ -1,0 +1,62 @@
+//Types of predifined arguments
+
+//numeric hexadecimal, decimal, floating porint, signed decimals
+//The backend internals definition leguage
+
+/*
+Backend types
+
+def 
+arg
+
+
+functions to be used
+
+
+encode( /*argument*/ )
+
+encode has to be a member of each def
+to encode you can pass a encode type or define one in the
+instruction template scope
+
+the encode section has to 
+
+*/
+
+
+
+arg registers {ax, bx, cx, dx};
+argtemp add_arguments {(op1){registers, numeric}, (op2){labels}};
+encode add_encode (op1 << 3 | op2 << 4);
+define alu_encode ((op1 << 3) | (op3 << 4));
+
+define add {
+	argtemp(add_arguments);
+	//provide encoding macro
+	encode(add_encode);
+};
+
+
+define sub {
+
+	encode()
+
+
+
+
+
+
+yeah yeah yeah
+
+
+so for the tokens
+
+
+arg
+max
+encode
+assemble
+identifiers
+brakets
+parenthesis
+

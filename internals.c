@@ -15,6 +15,8 @@ int keyword_id [] = {DEF, ALLOC}; //defined in the y.tab.h header file
 char* identifiers [4];
 int identifier_index = 0;
 
+
+
 void set_identifier(char* identifier_name)
 {
     identifiers [identifier_index] = strdup(identifier_name);

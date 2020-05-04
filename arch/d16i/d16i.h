@@ -18,10 +18,10 @@
 #define ENCODE_MOVF(hl_t, hl_s, ft, op, rt, s1) (unsigned short)((0x06) | (hl_t << 3) | (hl_s << 4) | (ft << 5) | (op << 6) | (rt << 10) | (s1 << 13))
 #define ENCODE_JMPFR(ivr, op, ap, t1, t2) (unsigned short)((0x07) | (ivr << 3) | (op << 4) | (ap << 7) | (t1 << 10) | (t2 << 13))
 
-//D16i Classess
-#define D16i_CLASS_GPR  0
-#define D16i_CLASS_SPR  1
-#define D16i_CLASS_SEC  2
+/*Argument templates to be used in D16i.c intead of using explisit values*/
+#define TYPE_HI 0x00
+#define TYPE_LO 0x01
+
 
 #define REGS_NAMES \
     /*GPRS*/ \
@@ -35,7 +35,7 @@
      0, 1, 2}
 
 /*To diferentiate different types of registers*/
-#define REG_CLASS \
+#define REG_CLASSES \
     {0, 0, 0, 0,\
      0, 0, 0, 0,\
      1, 1, 1}
@@ -55,7 +55,7 @@
 #define N_TARGET_KEYWORDS 2
 
 #define TARGET_KEYWORDS_TYPES \
-    {0, 0}
+    {TYPE_HI, TYPE_LO}
 
 /*Function prototypes must, have sometype of contex on runtime*/
 /*op and name to give context, ARG_TABLE to assemble and bin buffer*/
@@ -73,7 +73,6 @@ extern INS_NODE_TEMPLATE shftl;
 extern INS_NODE_TEMPLATE shftr;
 extern INS_NODE_TEMPLATE loadi;
 extern INS_NODE_TEMPLATE loadi_assisted;
-
 
 #define INS_TEMPLATE_ARRAY \
     {          \

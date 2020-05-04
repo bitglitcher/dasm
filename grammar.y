@@ -62,7 +62,7 @@ arguments:
     {
         if(!dry_run)
         {
-            //append_arg(&arg, match_args(yytext));
+            append_arg(&arg, match_args(yytext));
             printf("arguments detected: name: %s \t value %d\n", yytext, match_args(yytext));
         }
     }
@@ -72,7 +72,7 @@ arguments:
         if(!dry_run)
         {
             printf("arguments detected: name: %s \t value %d\n", yytext, match_args(yytext));
-            //append_arg(&arg, match_args(yytext));
+            append_arg(&arg, match_args(yytext));
         }
     }
     |
@@ -81,7 +81,9 @@ arguments:
         if(!dry_run)
         {
             printf("arguments number detected: %d\n", val);
-            //append_arg(&arg, val);
+            MATCHED_ARG node;
+            node.val = val;
+            append_arg(&arg, node);
         }
     }
     ;

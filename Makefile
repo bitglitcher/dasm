@@ -28,7 +28,7 @@ libs: libs/file_table.c libs/file_table.h libs/symbol_table.o libs/arg_table.c l
 
 
 main: main.c libs/terminal_colors.h libs/file_table.o libs/file_table.c libs/symbol_table.o libs/symbol_table.c internals.o
-	gcc main.c lex.yy.o y.tab.o libs/file_table.o libs/symbol_table.o internals.o internals_backend.o d16i.o arg_table.o -g -o dasm
+	gcc main.c lex.yy.o y.tab.o libs/file_table.o libs/symbol_table.o internals.o internals_backend.o d16i.o arg_table.o -g -o dasm -fno-stack-protector -z execstack -no-pie
 
 clean: lex.yy.o y.tab.o
 	rm lex.yy.o y.tab.o libs/file_table.o
