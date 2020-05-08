@@ -1,5 +1,4 @@
 %{
-
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -22,6 +21,19 @@ extern int yylineno;
 extern int yylex();
 extern int val;
 
+/*
+arg_template:
+	ARG_TEMPLATE '{' template_defs '}'
+	;
+
+assemble:
+	ASSEMBLE '{' STRING '}'
+	;
+
+def_branch:
+	arg
+%debug
+	;*/
 
 void yyerror(const char *str)
 {
@@ -32,17 +44,18 @@ extern char* identifier_name;
 
 %}
 
-
 %token DEF IDENTIFIER ARG ENCODE MAX ARG_TEMPLATE ASSEMBLE NUMBER STRING
 
+
 %%
-commands: /* empty */
+
+commands: %empty
     | commands command
     ;
 
 command:
 	def
-    |
+	|
 	arg
     ;
 
@@ -51,9 +64,9 @@ identifiers:
 	|
 	identifiers ',' IDENTIFIER
 	;
-
+	
 template_def_permissive:
-	identifiers
+	IDENTIFIER
 	|
 	NUMBER
 	;
@@ -63,45 +76,55 @@ template_def_permissives:
 	|
 	template_def_permissives ',' template_def_permissive
 	;
-	
+
 template_def:
+	%empty
+	|
 	'(' identifiers ')' '{' template_def_permissives '}'
 	;
 
 template_defs:
-	template_defs
+	template_def
 	|
 	template_defs ',' template_def
 	;
 
 arg:
-	ARG IDENTIFIER '{' template_defs '}'
+	ARG {
+		//printf("Argument template declaration\n");
+	} IDENTIFIER '{' template_defs '}'
 	;
 
 arg_template:
 	ARG_TEMPLATE '{' template_defs '}'
 	;
 
-max:
-	MAX '{' template_defs '}'
-	;
-
-encode:
-	ENCODE '{' template_defs '}'
-	;
-
 assemble:
 	ASSEMBLE '{' STRING '}'
 	;
 
+max:
+	MAX '{' template_defs '}'
+	;
+
 def_branch:
 	arg
+	|
+	assemble
+	|
+	arg_template
+	|
+	max
+	;
+
+recusive_def_branch:
+	def_branch
+	|
+	recusive_def_branch def_branch 
 	;
 
 def:
-   DEF IDENTIFIER '{' def_branch '}'
+   	DEF IDENTIFIER '{' recusive_def_branch '}'
 	;
 
-
-
-
+%%

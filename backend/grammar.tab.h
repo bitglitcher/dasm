@@ -34,8 +34,8 @@
 /* Undocumented macros, especially those whose name start with YY_,
    are private implementation details.  Do not rely on them.  */
 
-#ifndef YY_YY_Y_TAB_H_INCLUDED
-# define YY_YY_Y_TAB_H_INCLUDED
+#ifndef YY_YY_GRAMMAR_TAB_H_INCLUDED
+# define YY_YY_GRAMMAR_TAB_H_INCLUDED
 /* Debug traces.  */
 #ifndef YYDEBUG
 # define YYDEBUG 0
@@ -60,16 +60,6 @@ extern int yydebug;
     STRING = 266
   };
 #endif
-/* Tokens.  */
-#define DEF 258
-#define IDENTIFIER 259
-#define ARG 260
-#define ENCODE 261
-#define MAX 262
-#define ARG_TEMPLATE 263
-#define ASSEMBLE 264
-#define NUMBER 265
-#define STRING 266
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
@@ -83,4 +73,4 @@ extern YYSTYPE yylval;
 
 int yyparse (void);
 
-#endif /* !YY_YY_Y_TAB_H_INCLUDED  */
+#endif /* !YY_YY_GRAMMAR_TAB_H_INCLUDED  */

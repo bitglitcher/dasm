@@ -11,18 +11,8 @@ def load_assisted{
 	(val){numeric}
 	}
 
-	/*Constraints on sizes of values*/
 	max {
 	(val){0xff}
 	}
 
-	encode {
-	/*C MACRO*/
-	(hilo, val) ((hilo << 3) | (val << 4))
-	}
-
-
-	assemble {
-	"load %hilo %val\n"
-	}
 }
