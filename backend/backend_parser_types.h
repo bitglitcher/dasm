@@ -1,0 +1,11 @@
+#ifndef BACKEND_PARSER_TYPES
+#define BACKEND_PARSER_TYPES
+
+#define TYPE_TEMPLATE_NAME
+#define TYPE_TEMPLATE_OBJECT
+
+#define TYPE_DEF 0
+
+
+
+#endif

@@ -1,7 +1,7 @@
 %{
 #include <stdio.h>
 #include <stdlib.h>
-
+#include "../libs/symbol_table.h"
 #include "grammar.tab.h"
 
 
@@ -47,6 +47,8 @@ int return_token(char* identifier)
 
 int val;
 
+SYMBOL_TABLE symbol_table;
+
 %}
 
 %option nounput yylineno
@@ -78,7 +80,8 @@ int val;
 
 int main(void)
 {
-   yyparse();
-   return 0;
+    init_symbol_table(&symbol_table);
+    yyparse();
+    return 0;
 }
 

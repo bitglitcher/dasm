@@ -27,5 +27,5 @@ void delete_symbol_table();
 void append_symbol(SYMBOL_TABLE* symbol_table, char* name, int type, int addr, char* domain);
 SYMBOL_NODE* search_symbol(SYMBOL_TABLE* symbol_table, char* name, char* domain);
 void reset_symbol_table(SYMBOL_TABLE* symbol_table);
-
+void append_tables(SYMBOL_TABLE* symbol_table_0, SYMBOL_TABLE* symbol_table_1);
 #endif

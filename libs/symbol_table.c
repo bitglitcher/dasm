@@ -75,3 +75,18 @@ void reset_symbol_table(SYMBOL_TABLE* symbol_table)
     symbol_table->size = 0;
     //Data will not be reseted, so it will have garbage
 }
+
+/*This function will append table 1 to table 0*/
+void append_tables(SYMBOL_TABLE* symbol_table_0, SYMBOL_TABLE* symbol_table_1)
+{
+    if(symbol_table_0 && symbol_table_1)
+    {
+        for(int i = 0;i <= symbol_table_1->size;i++)
+        {
+            if(symbol_table_1->data)
+            {
+                append_symbol(symbol_table_0, symbol_table_1->data[i].name, symbol_table_1->data[i].type, symbol_table_1->data[i].addr, symbol_table_1->data[i].domain);
+            }
+        }
+    }
+}

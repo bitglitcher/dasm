@@ -62,7 +62,7 @@ void print_symbol_table(SYMBOL_TABLE* symbol_table)
     printf("\n\n------------SYMBOL_TABLE------------\n");
     printf("size: %d\n", symbol_table->size);
     printf("capacity: %d\n", symbol_table->capacity);
-    printf("wait_slow: %d\n", symbol_table->wait_slot);
+    printf("wait_slot: %d\n", symbol_table->wait_slot);
     for(int i = 0;i <= symbol_table->size;i++)
     {
         printf("NODE: 0x%x\n", i);

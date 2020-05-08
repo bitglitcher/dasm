@@ -3,6 +3,8 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include "../libs/symbol_table.h"
+#include "backend_parser_types.h"
 
 #define BYTE_TO_BINARY_PATTERN "%c%c%c%c%c%c%c%c"
 #define BYTE_TO_BINARY(byte)  \
@@ -26,7 +28,8 @@ void yyerror(const char *str)
         fprintf(stderr,"error: on line %d, %s before token: %s\n",yylineno ,str, yytext);
 }
 
-extern char* identifier_name;
+extern char* identifiers [4];
+extern SYMBOL_TABLE symbol_table;
 
 %}
 
@@ -53,6 +56,9 @@ identifiers:
 	
 template_def_permissive:
 	IDENTIFIER
+	{
+		//Append identifier name
+	}
 	|
 	NUMBER
 	;
@@ -76,9 +82,7 @@ template_defs:
 	;
 
 arg:
-	ARG {
-		//printf("Argument template declaration\n");
-	} IDENTIFIER '{' template_defs '}'
+	ARG IDENTIFIER '{' template_defs '}'
 	;
 
 arg_template:
@@ -96,7 +100,7 @@ max:
 encode:
 	ENCODE '{' STRING '}'
 	;
-	
+
 def_branch:
 	arg
 	|
@@ -116,7 +120,12 @@ recusive_def_branch:
 	;
 
 def:
-   	DEF IDENTIFIER '{' recusive_def_branch '}'
+   	DEF IDENTIFIER 
+	   	{
+			   //Create an enrty on the symbol table
+			   append_symbol(&symbol_table, identifiers [0], TYPE_DEF, 0, "none");
+		}
+		'{' recusive_def_branch '}'
 	;
 
 %%
