@@ -21,20 +21,6 @@ extern int yylineno;
 extern int yylex();
 extern int val;
 
-/*
-arg_template:
-	ARG_TEMPLATE '{' template_defs '}'
-	;
-
-assemble:
-	ASSEMBLE '{' STRING '}'
-	;
-
-def_branch:
-	arg
-%debug
-	;*/
-
 void yyerror(const char *str)
 {
         fprintf(stderr,"error: on line %d, %s before token: %s\n",yylineno ,str, yytext);
@@ -107,6 +93,10 @@ max:
 	MAX '{' template_defs '}'
 	;
 
+encode:
+	ENCODE '{' STRING '}'
+	;
+	
 def_branch:
 	arg
 	|
@@ -115,6 +105,8 @@ def_branch:
 	arg_template
 	|
 	max
+	|
+	encode
 	;
 
 recusive_def_branch:

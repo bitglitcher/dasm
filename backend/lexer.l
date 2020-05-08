@@ -61,7 +61,7 @@ int val;
 [0-9]*			            {val=atoi(yytext); return NUMBER;}
 (0b)+[0-1]*		            {val=strtol(yytext,NULL,2); return NUMBER;}
 
-(\")+[A-Za-z0-9\%]*+(\")    return STRING;
+(\")+[A-Za-z0-9\%]*+(\")    {printf("string detected &s\n", yytext); return STRING;}
 
 "}"			                return '}';
 "{"			                return '{';

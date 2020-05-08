@@ -15,4 +15,11 @@ def load_assisted{
 	(val){0xff}
 	}
 
+	encode {
+	"(hilo, val) ((hilo << 3) | (val << 4))"
+	}
+
+
+
+
 }
