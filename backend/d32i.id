@@ -16,10 +16,12 @@ def load_assisted{
 	}
 
 	encode {
-	"(hilo, val) ((hilo << 3) | (val << 4))"
+	"(hilo, val) ((hilo << 3) | (val << 4))"'
 	}
 
 
-
+	assemble {
+	"load %hilo %val\n"
+	}
 
 }

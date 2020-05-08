@@ -61,7 +61,7 @@ int val;
 [0-9]*			            {val=atoi(yytext); return NUMBER;}
 (0b)+[0-1]*		            {val=strtol(yytext,NULL,2); return NUMBER;}
 
-\"(\\.|[^"\\])*\"           {printf("string detected %s\n", yytext); return STRING;}
+\"(\\.|[^"\\])*\"           return STRING;
 
 "}"			                return '}';
 "{"			                return '{';
