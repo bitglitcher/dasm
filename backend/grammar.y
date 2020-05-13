@@ -3,7 +3,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdbool.h>
-#include "../libs/symbol_table.h"
+#include "symbol_table.h"
 #include "backend_parser_types.h"
 
 #define BYTE_TO_BINARY_PATTERN "%c%c%c%c%c%c%c%c"
@@ -31,6 +31,10 @@ void yyerror(const char *str)
 extern char* identifiers [4];
 extern SYMBOL_TABLE symbol_table;
 
+char* domain;
+extern void reset_identifiers();
+
+
 %}
 
 %token DEF IDENTIFIER ARG ENCODE MAX ARG_TEMPLATE ASSEMBLE NUMBER STRING
@@ -50,17 +54,30 @@ command:
 
 identifiers:
 	IDENTIFIER
+	{
+		//Store entry on symbol table
+		append_symbol(&symbol_table, identifiers [0], TYPE_IDENTIFIER, 0, domain);
+	}
 	|
 	identifiers ',' IDENTIFIER
+	{
+		//Store entry on symbol table
+		append_symbol(&symbol_table, identifiers [0], TYPE_IDENTIFIER, 0, domain);
+	}
 	;
 	
 template_def_permissive:
 	IDENTIFIER
 	{
 		//Append identifier name
+		append_symbol(&symbol_table, identifiers [0], TYPE_IDENTIFIER, 0, domain);
+		reset_identifiers();
 	}
 	|
 	NUMBER
+	{
+		append_symbol(&symbol_table, "", TYPE_NUMBER, val, domain);
+	}
 	;
 
 template_def_permissives:
@@ -82,7 +99,13 @@ template_defs:
 	;
 
 arg:
-	ARG IDENTIFIER '{' template_defs '}'
+	ARG IDENTIFIER
+	{
+		append_symbol(&symbol_table, identifiers [0], TYPE_ARG, 0, "none");
+		//Set domain so template_defs stores its data in the required domain
+		domain = strdup(identifiers [0]);
+		reset_identifiers();
+	} '{' template_defs '}'
 	;
 
 arg_template:
@@ -122,8 +145,9 @@ recusive_def_branch:
 def:
    	DEF IDENTIFIER 
 	   	{
-			   //Create an enrty on the symbol table
-			   append_symbol(&symbol_table, identifiers [0], TYPE_DEF, 0, "none");
+			//Create an enrty on the symbol table
+			append_symbol(&symbol_table, identifiers [0], TYPE_DEF, 0, "none");
+			reset_identifiers();
 		}
 		'{' recusive_def_branch '}'
 	;

@@ -1,7 +1,7 @@
 all:
 	bison -d grammar.y --report=all
 	flex lexer.l
-	gcc lex.yy.c grammar.tab.c ../libs/symbol_table.c
+	gcc lex.yy.c grammar.tab.c symbol_table.c
 
 clean:
 	rm grammar.tab.c

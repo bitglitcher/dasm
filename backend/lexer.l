@@ -1,7 +1,7 @@
 %{
 #include <stdio.h>
 #include <stdlib.h>
-#include "../libs/symbol_table.h"
+#include "symbol_table.h"
 #include "grammar.tab.h"
 
 
@@ -14,6 +14,7 @@ void set_identifier(char* identifier_name)
 {
     identifiers [identifier_index] = strdup(identifier_name);
     identifier_index++;
+    printf("identifier set %s \t\t index %d\n", identifier_name, identifier_index);
 }
 
 void reset_identifiers()
@@ -41,13 +42,32 @@ int return_token(char* identifier)
     }
     //if nothing
     //printf("identifier detected %s\n", identifier);
+    set_identifier(identifier);
     return IDENTIFIER;
 }
 
+/*set_identifier(strdup(yytext)); printf("IDENTIFIER %s\n", yytext);*/
 
 int val;
 
 SYMBOL_TABLE symbol_table;
+
+void print_symbol_table(SYMBOL_TABLE* symbol_table)
+{
+    printf("\n\n------------SYMBOL_TABLE------------\n");
+    printf("size: %d\n", symbol_table->size);
+    printf("capacity: %d\n", symbol_table->capacity);
+    printf("wait_slot: %d\n", symbol_table->wait_slot);
+    for(int i = 0;i <= symbol_table->size;i++)
+    {
+        printf("NODE: 0x%x\n", i);
+        printf("\taddr %d\n", symbol_table->data[i].addr);
+        printf("\tdomain %s\n", symbol_table->data[i].domain);
+        printf("\tname %s\n", symbol_table->data[i].name);
+        printf("\ttype %d\n", symbol_table->data[i].type);
+    }
+}
+
 
 %}
 
@@ -57,7 +77,7 @@ SYMBOL_TABLE symbol_table;
 
 %%
 
-[a-zA-Z_][a-zA-Z0-9_]*      {set_identifier(strdup(yytext));/*printf("IDENTIFIER %s\n", yytext);*/ return return_token(yytext);};
+[a-zA-Z_][a-zA-Z0-9_]*      return return_token(yytext);
 
 (0x)+[A-Fa-f0-9]*	        {val=strtol(yytext,NULL,0); return NUMBER;}
 [0-9]*			            {val=atoi(yytext); return NUMBER;}
@@ -81,7 +101,10 @@ SYMBOL_TABLE symbol_table;
 int main(void)
 {
     init_symbol_table(&symbol_table);
+    reset_identifiers();
     yyparse();
+    print_symbol_table(&symbol_table);
+
     return 0;
 }
 

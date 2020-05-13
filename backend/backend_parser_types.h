@@ -5,7 +5,9 @@
 #define TYPE_TEMPLATE_OBJECT
 
 #define TYPE_DEF 0
+#define TYPE_ARG 1
 
-
+#define TYPE_IDENTIFIER     3
+#define TYPE_NUMBER         2
 
 #endif
