@@ -14,7 +14,43 @@ void init_symbol_table(SYMBOL_TABLE* symbol_table)
     symbol_table->data = malloc(sizeof(SYMBOL_NODE) * SYMBOL_TABLE_INIT_CP);
 }
 
+void init_list(LIST* list)
+{
+    list->size = 0;
+    list->capacity = LIST_INIT_CP;
+    list->wait_slot = true;
+    list->data = malloc(sizeof(LIST_NODE) * LIST_INIT_CP);
+}
 
+LIST* create_list()
+{
+    LIST* new_list = malloc(sizeof(LIST));
+    init_list(new_list);
+    return new_list;
+}
+
+void append_to_list(LIST* list, int val, char* identifier, int type)
+{
+    if(list->wait_slot)
+    {
+        list->wait_slot = false;
+    }
+    else
+    {
+        list->size++;
+    }
+    //Check list size
+    if(list->size >= list->capacity)
+    {
+        list->capacity *= 2;
+        list->data = realloc(list->data, sizeof(LIST_NODE) * list->capacity);
+    }
+
+    list->data[list->size].identifier = identifier;
+    list->data[list->size].val = val;
+    list->data[list->size].type = type;
+    
+}
 
 void delete_symbol_table()
 {
@@ -45,6 +81,31 @@ void append_symbol(SYMBOL_TABLE* symbol_table, char* name, int type, int addr, c
     symbol_table->data[symbol_table->size].addr = addr;
 }
 
+void append_symbol_with_list(SYMBOL_TABLE* symbol_table, char* name, int type, int addr, char* domain, LIST* list)
+{
+    if(symbol_table->wait_slot == true)
+    {
+        symbol_table->wait_slot = false;
+    }
+    else
+    {
+        symbol_table->size++;
+    }
+    //Check size
+    if(symbol_table->size >= symbol_table->capacity)
+    {
+        symbol_table->capacity *= 2;
+        printf("Reallocating: %d\n", symbol_table->capacity);
+        symbol_table->data = realloc(symbol_table->data, sizeof(SYMBOL_NODE) * symbol_table->capacity);
+    }
+
+    symbol_table->data[symbol_table->size].name = strdup(name);
+    symbol_table->data[symbol_table->size].domain = strdup(domain);
+    symbol_table->data[symbol_table->size].type = type;    
+    symbol_table->data[symbol_table->size].addr = addr;
+    symbol_table->data[symbol_table->size].list = list;
+}
+
 SYMBOL_NODE* search_symbol(SYMBOL_TABLE* symbol_table, char* name, char* domain)
 {
     //Check is table exist xdxdxd
@@ -71,9 +132,9 @@ SYMBOL_NODE* search_symbol(SYMBOL_TABLE* symbol_table, char* name, char* domain)
 /*This function will only reset the index pointer, not delete the table*/
 void reset_symbol_table(SYMBOL_TABLE* symbol_table)
 {
+    //Data will not be deleted, so it will have garbage
     symbol_table->wait_slot = true;
     symbol_table->size = 0;
-    //Data will not be reseted, so it will have garbage
 }
 
 /*This function will append table 1 to table 0*/

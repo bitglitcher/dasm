@@ -32,8 +32,11 @@ extern char* identifiers [4];
 extern SYMBOL_TABLE symbol_table;
 
 char* domain;
+char* linkof;
 extern void reset_identifiers();
 
+//table to which link attributes
+LIST* link_list;
 
 %}
 
@@ -56,13 +59,17 @@ identifiers:
 	IDENTIFIER
 	{
 		//Store entry on symbol table
-		append_symbol(&symbol_table, identifiers [0], TYPE_IDENTIFIER, 0, domain);
+		append_symbol_with_list(&symbol_table, identifiers[0], TYPE_IDENTIFIER, 0, domain, link_list);
+		linkof = strdup(identifiers[0]);
+		reset_identifiers();
 	}
 	|
 	identifiers ',' IDENTIFIER
 	{
 		//Store entry on symbol table
-		append_symbol(&symbol_table, identifiers [0], TYPE_IDENTIFIER, 0, domain);
+		append_symbol_with_list(&symbol_table, identifiers[0], TYPE_IDENTIFIER, 0, domain, link_list);
+		linkof = strdup(identifiers[0]);
+		reset_identifiers();
 	}
 	;
 	
@@ -70,13 +77,14 @@ template_def_permissive:
 	IDENTIFIER
 	{
 		//Append identifier name
-		append_symbol(&symbol_table, identifiers [0], TYPE_IDENTIFIER, 0, domain);
+		symbol_table.wait_slot = false;
+		append_to_list(link_list, 0, identifiers[0], TYPE_IDENTIFIER);
 		reset_identifiers();
 	}
 	|
 	NUMBER
 	{
-		append_symbol(&symbol_table, "", TYPE_NUMBER, val, domain);
+		append_to_list(link_list, val, NULL, TYPE_NUMBER);
 	}
 	;
 
@@ -89,7 +97,7 @@ template_def_permissives:
 template_def:
 	%empty
 	|
-	'(' identifiers ')' '{' template_def_permissives '}'
+	'(' {link_list = create_list();} identifiers ')' '{' template_def_permissives '}' {link_list = NULL;}
 	;
 
 template_defs:

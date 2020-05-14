@@ -1,4 +1,10 @@
 
+
+arg registers
+{
+	(ax, cx){0x20}
+}
+
 arg hi_lo{
 	(lo){1},
 	(hi){2}

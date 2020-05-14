@@ -65,6 +65,20 @@ void print_symbol_table(SYMBOL_TABLE* symbol_table)
         printf("\tdomain %s\n", symbol_table->data[i].domain);
         printf("\tname %s\n", symbol_table->data[i].name);
         printf("\ttype %d\n", symbol_table->data[i].type);
+        printf("\tlist 0x%x\n", symbol_table->data[i].list);
+        if(symbol_table->data[i].list)
+        {
+            for(int x = 0;x <= symbol_table->data[i].list->size;x++)
+            {
+                printf("\t\tcapacity %d\n", symbol_table->data[i].list->capacity);
+                printf("\t\tsize %d\n", symbol_table->data[i].list->size);
+                printf("\t\twait_slot %d\n", symbol_table->data[i].list->wait_slot);
+                printf("\t\t\tval %d\n", symbol_table->data[i].list->data[x].val);
+                printf("\t\t\tidentifier %s\n", symbol_table->data[i].list->data[x].identifier);
+                printf("\t\t\ttype %d\n", symbol_table->data[i].list->data[x].type);
+
+            }
+        }
     }
 }
 

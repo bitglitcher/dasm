@@ -1,0 +1,676 @@
+Grammar
+
+    0 $accept: commands $end
+
+    1 commands: %empty
+    2         | commands command
+
+    3 command: def
+    4        | arg
+
+    5 identifiers: IDENTIFIER
+    6            | identifiers ',' IDENTIFIER
+
+    7 template_def_permissive: IDENTIFIER
+    8                        | NUMBER
+
+    9 template_def_permissives: template_def_permissive
+   10                         | template_def_permissives ',' template_def_permissive
+
+   11 template_def: %empty
+
+   12 $@1: %empty
+
+   13 template_def: '(' $@1 identifiers ')' '{' template_def_permissives '}'
+
+   14 template_defs: template_def
+   15              | template_defs ',' template_def
+
+   16 $@2: %empty
+
+   17 arg: ARG IDENTIFIER $@2 '{' template_defs '}'
+
+   18 arg_template: ARG_TEMPLATE '{' template_defs '}'
+
+   19 assemble: ASSEMBLE '{' STRING '}'
+
+   20 max: MAX '{' template_defs '}'
+
+   21 encode: ENCODE '{' STRING '}'
+
+   22 def_branch: arg
+   23           | assemble
+   24           | arg_template
+   25           | max
+   26           | encode
+
+   27 recusive_def_branch: def_branch
+   28                    | recusive_def_branch def_branch
+
+   29 $@3: %empty
+
+   30 def: DEF IDENTIFIER $@3 '{' recusive_def_branch '}'
+
+
+Terminals, with rules where they appear
+
+    $end (0) 0
+    '(' (40) 13
+    ')' (41) 13
+    ',' (44) 6 10 15
+    '{' (123) 13 17 18 19 20 21 30
+    '}' (125) 13 17 18 19 20 21 30
+    error (256)
+    DEF (258) 30
+    IDENTIFIER (259) 5 6 7 17 30
+    ARG (260) 17
+    ENCODE (261) 21
+    MAX (262) 20
+    ARG_TEMPLATE (263) 18
+    ASSEMBLE (264) 19
+    NUMBER (265) 8
+    STRING (266) 19 21
+
+
+Nonterminals, with rules where they appear
+
+    $accept (17)
+        on left: 0
+    commands (18)
+        on left: 1 2
+        on right: 0 2
+    command (19)
+        on left: 3 4
+        on right: 2
+    identifiers (20)
+        on left: 5 6
+        on right: 6 13
+    template_def_permissive (21)
+        on left: 7 8
+        on right: 9 10
+    template_def_permissives (22)
+        on left: 9 10
+        on right: 10 13
+    template_def (23)
+        on left: 11 13
+        on right: 14 15
+    $@1 (24)
+        on left: 12
+        on right: 13
+    template_defs (25)
+        on left: 14 15
+        on right: 15 17 18 20
+    arg (26)
+        on left: 17
+        on right: 4 22
+    $@2 (27)
+        on left: 16
+        on right: 17
+    arg_template (28)
+        on left: 18
+        on right: 24
+    assemble (29)
+        on left: 19
+        on right: 23
+    max (30)
+        on left: 20
+        on right: 25
+    encode (31)
+        on left: 21
+        on right: 26
+    def_branch (32)
+        on left: 22 23 24 25 26
+        on right: 27 28
+    recusive_def_branch (33)
+        on left: 27 28
+        on right: 28 30
+    def (34)
+        on left: 30
+        on right: 3
+    $@3 (35)
+        on left: 29
+        on right: 30
+
+
+State 0
+
+    0 $accept: . commands $end
+    1 commands: . %empty
+    2         | . commands command
+
+    $default  reduce using rule 1 (commands)
+
+    commands  go to state 1
+
+
+State 1
+
+    0 $accept: commands . $end
+    2 commands: commands . command
+    3 command: . def
+    4        | . arg
+   17 arg: . ARG IDENTIFIER $@2 '{' template_defs '}'
+   30 def: . DEF IDENTIFIER $@3 '{' recusive_def_branch '}'
+
+    $end  shift, and go to state 2
+    DEF   shift, and go to state 3
+    ARG   shift, and go to state 4
+
+    command  go to state 5
+    arg      go to state 6
+    def      go to state 7
+
+
+State 2
+
+    0 $accept: commands $end .
+
+    $default  accept
+
+
+State 3
+
+   30 def: DEF . IDENTIFIER $@3 '{' recusive_def_branch '}'
+
+    IDENTIFIER  shift, and go to state 8
+
+
+State 4
+
+   17 arg: ARG . IDENTIFIER $@2 '{' template_defs '}'
+
+    IDENTIFIER  shift, and go to state 9
+
+
+State 5
+
+    2 commands: commands command .
+
+    $default  reduce using rule 2 (commands)
+
+
+State 6
+
+    4 command: arg .
+
+    $default  reduce using rule 4 (command)
+
+
+State 7
+
+    3 command: def .
+
+    $default  reduce using rule 3 (command)
+
+
+State 8
+
+   29 $@3: . %empty
+   30 def: DEF IDENTIFIER . $@3 '{' recusive_def_branch '}'
+
+    $default  reduce using rule 29 ($@3)
+
+    $@3  go to state 10
+
+
+State 9
+
+   16 $@2: . %empty
+   17 arg: ARG IDENTIFIER . $@2 '{' template_defs '}'
+
+    $default  reduce using rule 16 ($@2)
+
+    $@2  go to state 11
+
+
+State 10
+
+   30 def: DEF IDENTIFIER $@3 . '{' recusive_def_branch '}'
+
+    '{'  shift, and go to state 12
+
+
+State 11
+
+   17 arg: ARG IDENTIFIER $@2 . '{' template_defs '}'
+
+    '{'  shift, and go to state 13
+
+
+State 12
+
+   17 arg: . ARG IDENTIFIER $@2 '{' template_defs '}'
+   18 arg_template: . ARG_TEMPLATE '{' template_defs '}'
+   19 assemble: . ASSEMBLE '{' STRING '}'
+   20 max: . MAX '{' template_defs '}'
+   21 encode: . ENCODE '{' STRING '}'
+   22 def_branch: . arg
+   23           | . assemble
+   24           | . arg_template
+   25           | . max
+   26           | . encode
+   27 recusive_def_branch: . def_branch
+   28                    | . recusive_def_branch def_branch
+   30 def: DEF IDENTIFIER $@3 '{' . recusive_def_branch '}'
+
+    ARG           shift, and go to state 4
+    ENCODE        shift, and go to state 14
+    MAX           shift, and go to state 15
+    ARG_TEMPLATE  shift, and go to state 16
+    ASSEMBLE      shift, and go to state 17
+
+    arg                  go to state 18
+    arg_template         go to state 19
+    assemble             go to state 20
+    max                  go to state 21
+    encode               go to state 22
+    def_branch           go to state 23
+    recusive_def_branch  go to state 24
+
+
+State 13
+
+   11 template_def: . %empty  [',', '}']
+   13             | . '(' $@1 identifiers ')' '{' template_def_permissives '}'
+   14 template_defs: . template_def
+   15              | . template_defs ',' template_def
+   17 arg: ARG IDENTIFIER $@2 '{' . template_defs '}'
+
+    '('  shift, and go to state 25
+
+    $default  reduce using rule 11 (template_def)
+
+    template_def   go to state 26
+    template_defs  go to state 27
+
+
+State 14
+
+   21 encode: ENCODE . '{' STRING '}'
+
+    '{'  shift, and go to state 28
+
+
+State 15
+
+   20 max: MAX . '{' template_defs '}'
+
+    '{'  shift, and go to state 29
+
+
+State 16
+
+   18 arg_template: ARG_TEMPLATE . '{' template_defs '}'
+
+    '{'  shift, and go to state 30
+
+
+State 17
+
+   19 assemble: ASSEMBLE . '{' STRING '}'
+
+    '{'  shift, and go to state 31
+
+
+State 18
+
+   22 def_branch: arg .
+
+    $default  reduce using rule 22 (def_branch)
+
+
+State 19
+
+   24 def_branch: arg_template .
+
+    $default  reduce using rule 24 (def_branch)
+
+
+State 20
+
+   23 def_branch: assemble .
+
+    $default  reduce using rule 23 (def_branch)
+
+
+State 21
+
+   25 def_branch: max .
+
+    $default  reduce using rule 25 (def_branch)
+
+
+State 22
+
+   26 def_branch: encode .
+
+    $default  reduce using rule 26 (def_branch)
+
+
+State 23
+
+   27 recusive_def_branch: def_branch .
+
+    $default  reduce using rule 27 (recusive_def_branch)
+
+
+State 24
+
+   17 arg: . ARG IDENTIFIER $@2 '{' template_defs '}'
+   18 arg_template: . ARG_TEMPLATE '{' template_defs '}'
+   19 assemble: . ASSEMBLE '{' STRING '}'
+   20 max: . MAX '{' template_defs '}'
+   21 encode: . ENCODE '{' STRING '}'
+   22 def_branch: . arg
+   23           | . assemble
+   24           | . arg_template
+   25           | . max
+   26           | . encode
+   28 recusive_def_branch: recusive_def_branch . def_branch
+   30 def: DEF IDENTIFIER $@3 '{' recusive_def_branch . '}'
+
+    ARG           shift, and go to state 4
+    ENCODE        shift, and go to state 14
+    MAX           shift, and go to state 15
+    ARG_TEMPLATE  shift, and go to state 16
+    ASSEMBLE      shift, and go to state 17
+    '}'           shift, and go to state 32
+
+    arg           go to state 18
+    arg_template  go to state 19
+    assemble      go to state 20
+    max           go to state 21
+    encode        go to state 22
+    def_branch    go to state 33
+
+
+State 25
+
+   12 $@1: . %empty
+   13 template_def: '(' . $@1 identifiers ')' '{' template_def_permissives '}'
+
+    $default  reduce using rule 12 ($@1)
+
+    $@1  go to state 34
+
+
+State 26
+
+   14 template_defs: template_def .
+
+    $default  reduce using rule 14 (template_defs)
+
+
+State 27
+
+   15 template_defs: template_defs . ',' template_def
+   17 arg: ARG IDENTIFIER $@2 '{' template_defs . '}'
+
+    ','  shift, and go to state 35
+    '}'  shift, and go to state 36
+
+
+State 28
+
+   21 encode: ENCODE '{' . STRING '}'
+
+    STRING  shift, and go to state 37
+
+
+State 29
+
+   11 template_def: . %empty  [',', '}']
+   13             | . '(' $@1 identifiers ')' '{' template_def_permissives '}'
+   14 template_defs: . template_def
+   15              | . template_defs ',' template_def
+   20 max: MAX '{' . template_defs '}'
+
+    '('  shift, and go to state 25
+
+    $default  reduce using rule 11 (template_def)
+
+    template_def   go to state 26
+    template_defs  go to state 38
+
+
+State 30
+
+   11 template_def: . %empty  [',', '}']
+   13             | . '(' $@1 identifiers ')' '{' template_def_permissives '}'
+   14 template_defs: . template_def
+   15              | . template_defs ',' template_def
+   18 arg_template: ARG_TEMPLATE '{' . template_defs '}'
+
+    '('  shift, and go to state 25
+
+    $default  reduce using rule 11 (template_def)
+
+    template_def   go to state 26
+    template_defs  go to state 39
+
+
+State 31
+
+   19 assemble: ASSEMBLE '{' . STRING '}'
+
+    STRING  shift, and go to state 40
+
+
+State 32
+
+   30 def: DEF IDENTIFIER $@3 '{' recusive_def_branch '}' .
+
+    $default  reduce using rule 30 (def)
+
+
+State 33
+
+   28 recusive_def_branch: recusive_def_branch def_branch .
+
+    $default  reduce using rule 28 (recusive_def_branch)
+
+
+State 34
+
+    5 identifiers: . IDENTIFIER
+    6            | . identifiers ',' IDENTIFIER
+   13 template_def: '(' $@1 . identifiers ')' '{' template_def_permissives '}'
+
+    IDENTIFIER  shift, and go to state 41
+
+    identifiers  go to state 42
+
+
+State 35
+
+   11 template_def: . %empty  [',', '}']
+   13             | . '(' $@1 identifiers ')' '{' template_def_permissives '}'
+   15 template_defs: template_defs ',' . template_def
+
+    '('  shift, and go to state 25
+
+    $default  reduce using rule 11 (template_def)
+
+    template_def  go to state 43
+
+
+State 36
+
+   17 arg: ARG IDENTIFIER $@2 '{' template_defs '}' .
+
+    $default  reduce using rule 17 (arg)
+
+
+State 37
+
+   21 encode: ENCODE '{' STRING . '}'
+
+    '}'  shift, and go to state 44
+
+
+State 38
+
+   15 template_defs: template_defs . ',' template_def
+   20 max: MAX '{' template_defs . '}'
+
+    ','  shift, and go to state 35
+    '}'  shift, and go to state 45
+
+
+State 39
+
+   15 template_defs: template_defs . ',' template_def
+   18 arg_template: ARG_TEMPLATE '{' template_defs . '}'
+
+    ','  shift, and go to state 35
+    '}'  shift, and go to state 46
+
+
+State 40
+
+   19 assemble: ASSEMBLE '{' STRING . '}'
+
+    '}'  shift, and go to state 47
+
+
+State 41
+
+    5 identifiers: IDENTIFIER .
+
+    $default  reduce using rule 5 (identifiers)
+
+
+State 42
+
+    6 identifiers: identifiers . ',' IDENTIFIER
+   13 template_def: '(' $@1 identifiers . ')' '{' template_def_permissives '}'
+
+    ','  shift, and go to state 48
+    ')'  shift, and go to state 49
+
+
+State 43
+
+   15 template_defs: template_defs ',' template_def .
+
+    $default  reduce using rule 15 (template_defs)
+
+
+State 44
+
+   21 encode: ENCODE '{' STRING '}' .
+
+    $default  reduce using rule 21 (encode)
+
+
+State 45
+
+   20 max: MAX '{' template_defs '}' .
+
+    $default  reduce using rule 20 (max)
+
+
+State 46
+
+   18 arg_template: ARG_TEMPLATE '{' template_defs '}' .
+
+    $default  reduce using rule 18 (arg_template)
+
+
+State 47
+
+   19 assemble: ASSEMBLE '{' STRING '}' .
+
+    $default  reduce using rule 19 (assemble)
+
+
+State 48
+
+    6 identifiers: identifiers ',' . IDENTIFIER
+
+    IDENTIFIER  shift, and go to state 50
+
+
+State 49
+
+   13 template_def: '(' $@1 identifiers ')' . '{' template_def_permissives '}'
+
+    '{'  shift, and go to state 51
+
+
+State 50
+
+    6 identifiers: identifiers ',' IDENTIFIER .
+
+    $default  reduce using rule 6 (identifiers)
+
+
+State 51
+
+    7 template_def_permissive: . IDENTIFIER
+    8                        | . NUMBER
+    9 template_def_permissives: . template_def_permissive
+   10                         | . template_def_permissives ',' template_def_permissive
+   13 template_def: '(' $@1 identifiers ')' '{' . template_def_permissives '}'
+
+    IDENTIFIER  shift, and go to state 52
+    NUMBER      shift, and go to state 53
+
+    template_def_permissive   go to state 54
+    template_def_permissives  go to state 55
+
+
+State 52
+
+    7 template_def_permissive: IDENTIFIER .
+
+    $default  reduce using rule 7 (template_def_permissive)
+
+
+State 53
+
+    8 template_def_permissive: NUMBER .
+
+    $default  reduce using rule 8 (template_def_permissive)
+
+
+State 54
+
+    9 template_def_permissives: template_def_permissive .
+
+    $default  reduce using rule 9 (template_def_permissives)
+
+
+State 55
+
+   10 template_def_permissives: template_def_permissives . ',' template_def_permissive
+   13 template_def: '(' $@1 identifiers ')' '{' template_def_permissives . '}'
+
+    ','  shift, and go to state 56
+    '}'  shift, and go to state 57
+
+
+State 56
+
+    7 template_def_permissive: . IDENTIFIER
+    8                        | . NUMBER
+   10 template_def_permissives: template_def_permissives ',' . template_def_permissive
+
+    IDENTIFIER  shift, and go to state 52
+    NUMBER      shift, and go to state 53
+
+    template_def_permissive  go to state 58
+
+
+State 57
+
+   13 template_def: '(' $@1 identifiers ')' '{' template_def_permissives '}' .
+
+    $default  reduce using rule 13 (template_def)
+
+
+State 58
+
+   10 template_def_permissives: template_def_permissives ',' template_def_permissive .
+
+    $default  reduce using rule 10 (template_def_permissives)
