@@ -5,7 +5,7 @@
 #include "libs/arg_table.h"
 #include "internals_backend.h"
 #include "libs/symbol_table.h"
-#include "arch/d16i.h"
+#include "arch/d16i/d16i.h"
 
 
 /*Have to be defined*/

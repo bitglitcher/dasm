@@ -22,6 +22,7 @@ extern char* yytext;
 extern int yylineno;
 extern int yylex();
 extern int val;
+extern char* string_literal;
 
 void yyerror(const char *str)
 {
@@ -33,6 +34,7 @@ extern SYMBOL_TABLE symbol_table;
 
 char* domain;
 char* linkof;
+int scope_type;
 extern void reset_identifiers();
 
 //table to which link attributes
@@ -59,7 +61,7 @@ identifiers:
 	IDENTIFIER
 	{
 		//Store entry on symbol table
-		append_symbol_with_list(&symbol_table, identifiers[0], TYPE_IDENTIFIER, 0, domain, link_list);
+		append_symbol_with_list(&symbol_table, identifiers[0], TYPE_IDENTIFIER, 0, domain, scope_type, link_list);
 		linkof = strdup(identifiers[0]);
 		reset_identifiers();
 	}
@@ -67,7 +69,7 @@ identifiers:
 	identifiers ',' IDENTIFIER
 	{
 		//Store entry on symbol table
-		append_symbol_with_list(&symbol_table, identifiers[0], TYPE_IDENTIFIER, 0, domain, link_list);
+		append_symbol_with_list(&symbol_table, identifiers[0], TYPE_IDENTIFIER, 0, domain, scope_type, link_list);
 		linkof = strdup(identifiers[0]);
 		reset_identifiers();
 	}
@@ -97,7 +99,7 @@ template_def_permissives:
 template_def:
 	%empty
 	|
-	'(' {link_list = create_list();} identifiers ')' '{' template_def_permissives '}' {link_list = NULL;}
+	'(' identifiers ')' '{' template_def_permissives '}'
 	;
 
 template_defs:
@@ -109,27 +111,29 @@ template_defs:
 arg:
 	ARG IDENTIFIER
 	{
-		append_symbol(&symbol_table, identifiers [0], TYPE_ARG, 0, "none");
+		append_symbol(&symbol_table, domain, TYPE_ARG, 0, "none", TYPE_ARG);
 		//Set domain so template_defs stores its data in the required domain
-		domain = strdup(identifiers [0]);
-		reset_identifiers();
-	} '{' template_defs '}'
+		scope_type = TYPE_ARG;
+	} '{' {link_list = create_list(); scope_type = TYPE_ARG;} template_defs '}' {link_list = NULL;}
 	;
 
 arg_template:
-	ARG_TEMPLATE '{' template_defs '}'
+	ARG_TEMPLATE '{'  {link_list = create_list(); scope_type = TYPE_ARG_TEMPLATE;} template_defs '}' {link_list = NULL;}
 	;
 
 assemble:
-	ASSEMBLE '{' STRING '}'
+	ASSEMBLE '{' {scope_type = TYPE_ASSEMBLE;} STRING '}'
+	{
+		append_symbol(&symbol_table, string_literal, TYPE_ASSEMBLE, 0, domain, TYPE_ASSEMBLE);
+	}
 	;
 
 max:
-	MAX '{' template_defs '}'
+	MAX '{' {link_list = create_list(); scope_type = TYPE_MAX;} template_defs '}' {link_list = NULL;}
 	;
 
 encode:
-	ENCODE '{' STRING '}'
+	ENCODE '{' {scope_type = TYPE_ENCODE;} STRING '}'
 	;
 
 def_branch:
@@ -154,7 +158,8 @@ def:
    	DEF IDENTIFIER 
 	   	{
 			//Create an enrty on the symbol table
-			append_symbol(&symbol_table, identifiers [0], TYPE_DEF, 0, "none");
+			append_symbol(&symbol_table, identifiers [0], TYPE_DEF, 0, "none", TYPE_DEF);
+			domain = identifiers[0];
 			reset_identifiers();
 		}
 		'{' recusive_def_branch '}'

@@ -3,9 +3,9 @@
 #ifndef ARCH
 #define ARCH
 
-#include "../internals.h"
+#include "../../internals.h"
 #include "inset.h"
-#include "../libs/bin_buffer.h"
+#include "../../libs/bin_buffer.h"
 
 /*Instruction encoding*/
 

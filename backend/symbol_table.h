@@ -28,6 +28,7 @@ typedef struct
     char* name;
     int addr;
     char* domain; //for tags inside of defs
+    int scope_type;
     int size;
     int capacity;
     bool wait_slot;
@@ -50,8 +51,8 @@ LIST* create_list();
 void append_to_list(LIST* list, int val, char* identifier, int type);
 void delete_list(LIST* list);
 void delete_symbol_table();
-void append_symbol(SYMBOL_TABLE* symbol_table, char* name, int type, int addr, char* domain);
-void append_symbol_with_list(SYMBOL_TABLE* symbol_table, char* name, int type, int addr, char* domain, LIST* list);
+void append_symbol(SYMBOL_TABLE* symbol_table, char* name, int type, int addr, char* domain, int scope_type);
+void append_symbol_with_list(SYMBOL_TABLE* symbol_table, char* name, int type, int addr, char* domain, int scope_type, LIST* list);
 SYMBOL_NODE* search_symbol(SYMBOL_TABLE* symbol_table, char* name, char* domain);
 void reset_symbol_table(SYMBOL_TABLE* symbol_table);
 void append_tables(SYMBOL_TABLE* symbol_table_0, SYMBOL_TABLE* symbol_table_1);

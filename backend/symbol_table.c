@@ -57,7 +57,7 @@ void delete_symbol_table()
 
 }
 
-void append_symbol(SYMBOL_TABLE* symbol_table, char* name, int type, int addr, char* domain)
+void append_symbol(SYMBOL_TABLE* symbol_table, char* name, int type, int addr, char* domain, int scope_type)
 {
     if(symbol_table->wait_slot == true)
     {
@@ -77,11 +77,12 @@ void append_symbol(SYMBOL_TABLE* symbol_table, char* name, int type, int addr, c
 
     symbol_table->data[symbol_table->size].name = strdup(name);
     symbol_table->data[symbol_table->size].domain = strdup(domain);
+    symbol_table->data[symbol_table->size].scope_type = scope_type;
     symbol_table->data[symbol_table->size].type = type;    
     symbol_table->data[symbol_table->size].addr = addr;
 }
 
-void append_symbol_with_list(SYMBOL_TABLE* symbol_table, char* name, int type, int addr, char* domain, LIST* list)
+void append_symbol_with_list(SYMBOL_TABLE* symbol_table, char* name, int type, int addr, char* domain, int scope_type, LIST* list)
 {
     if(symbol_table->wait_slot == true)
     {
@@ -104,11 +105,12 @@ void append_symbol_with_list(SYMBOL_TABLE* symbol_table, char* name, int type, i
     symbol_table->data[symbol_table->size].type = type;    
     symbol_table->data[symbol_table->size].addr = addr;
     symbol_table->data[symbol_table->size].list = list;
+    symbol_table->data[symbol_table->size].scope_type = scope_type;
 }
 
 SYMBOL_NODE* search_symbol(SYMBOL_TABLE* symbol_table, char* name, char* domain)
 {
-    //Check is table exist xdxdxd
+    //Check if table exist xdxdxd
     if(symbol_table)
     {
         //Now loop throught the whole thing
@@ -146,7 +148,7 @@ void append_tables(SYMBOL_TABLE* symbol_table_0, SYMBOL_TABLE* symbol_table_1)
         {
             if(symbol_table_1->data)
             {
-                append_symbol(symbol_table_0, symbol_table_1->data[i].name, symbol_table_1->data[i].type, symbol_table_1->data[i].addr, symbol_table_1->data[i].domain);
+                append_symbol(symbol_table_0, symbol_table_1->data[i].name, symbol_table_1->data[i].type, symbol_table_1->data[i].addr, symbol_table_1->data[i].domain, symbol_table_1->data[i].scope_type);
             }
         }
     }

@@ -1,14 +1,8 @@
-
-
 arg registers
 {
 	(ax, cx){0x20}
 }
 
-arg hi_lo{
-	(lo){1},
-	(hi){2}
-}
 
 def load_assisted{
 
@@ -22,7 +16,7 @@ def load_assisted{
 	}
 
 	encode {
-	"(hilo, val) ((hilo << 3) | (val << 4))"'
+	"(hilo, val) ((hilo << 3) | (val << 4))"
 	}
 
 

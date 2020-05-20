@@ -13,7 +13,7 @@ int identifier_index = 0;
 void set_identifier(char* identifier_name)
 {
     identifiers [identifier_index] = strdup(identifier_name);
-    identifier_index++;
+    //identifier_index++;
     printf("identifier set %s \t\t index %d\n", identifier_name, identifier_index);
 }
 
@@ -24,6 +24,9 @@ void reset_identifiers()
 
 char * keywords [] = {"arg", "encode", "assemble", "max", "def", "arg_template"};
 int keyword_id [10] = {ARG, ENCODE, ASSEMBLE, MAX, DEF, ARG_TEMPLATE};
+
+const char* scope_names [] = {"def", "arg", "assemble", "encode", "max", "arg_template"};
+
 int return_token(char* identifier)
 {
     //printf("sizeof %d\n", sizeof((char*)keywords));
@@ -49,8 +52,7 @@ int return_token(char* identifier)
 /*set_identifier(strdup(yytext)); printf("IDENTIFIER %s\n", yytext);*/
 
 int val;
-
-SYMBOL_TABLE symbol_table;
+char* string_literal;
 
 void print_symbol_table(SYMBOL_TABLE* symbol_table)
 {
@@ -63,6 +65,7 @@ void print_symbol_table(SYMBOL_TABLE* symbol_table)
         printf("NODE: 0x%x\n", i);
         printf("\taddr %d\n", symbol_table->data[i].addr);
         printf("\tdomain %s\n", symbol_table->data[i].domain);
+        printf("\tscope_type %d -> %s\n", symbol_table->data[i].scope_type, scope_names [symbol_table->data[i].scope_type]);
         printf("\tname %s\n", symbol_table->data[i].name);
         printf("\ttype %d\n", symbol_table->data[i].type);
         printf("\tlist 0x%x\n", symbol_table->data[i].list);
@@ -97,7 +100,7 @@ void print_symbol_table(SYMBOL_TABLE* symbol_table)
 [0-9]*			            {val=atoi(yytext); return NUMBER;}
 (0b)+[0-1]*		            {val=strtol(yytext,NULL,2); return NUMBER;}
 
-\"(\\.|[^"\\])*\"           return STRING;
+\"(\\.|[^"\\])*\"           {string_literal = strdup(yytext); return STRING;}
 
 "}"			                return '}';
 "{"			                return '{';
@@ -111,14 +114,4 @@ void print_symbol_table(SYMBOL_TABLE* symbol_table)
 [ \t]+                      ;
 
 %%
-
-int main(void)
-{
-    init_symbol_table(&symbol_table);
-    reset_identifiers();
-    yyparse();
-    print_symbol_table(&symbol_table);
-
-    return 0;
-}
 
