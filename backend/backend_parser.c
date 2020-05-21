@@ -17,10 +17,10 @@ extern void print_symbol_table();
 
 #define default_output "target.h"
 
-#define EPILOUGE \
+#define PROLOGUE \
     "#ifndef _TARGET_\n#define _TARGET_\n\n#include \"../internals.h\"\n\n\n\n"
 
-#define PROLOUGE "\n\n\n\n#endif"
+#define EPILOUGE "\n\n\n\n#endif"
 
 /* all tree gen functions will append data to the buffer argument*/
 void gen_keywords(SYMBOL_TABLE* symbol_table, FILE* file)
