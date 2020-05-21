@@ -111,8 +111,9 @@ template_defs:
 arg:
 	ARG IDENTIFIER
 	{
+		domain = strdup(identifiers[0]);
 		append_symbol(&symbol_table, domain, TYPE_ARG, 0, "none", TYPE_ARG);
-		//Set domain so template_defs stores its data in the required domain
+		//Set domain so template_defsdomain its data in the required domain
 		scope_type = TYPE_ARG;
 	} '{' {link_list = create_list(); scope_type = TYPE_ARG;} template_defs '}' {link_list = NULL;}
 	;
@@ -137,8 +138,6 @@ encode:
 	;
 
 def_branch:
-	arg
-	|
 	assemble
 	|
 	arg_template
@@ -146,6 +145,8 @@ def_branch:
 	max
 	|
 	encode
+	|
+	%empty
 	;
 
 recusive_def_branch:

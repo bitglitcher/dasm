@@ -3,6 +3,10 @@ arg registers
 	(ax, cx){0x20}
 }
 
+arg hi_lo{
+	(lo){1},
+	(hi){2}
+}
 
 def load_assisted{
 
@@ -25,3 +29,8 @@ def load_assisted{
 	}
 
 }
+
+def load{}
+def store{}
+def add{}
+def sub{}

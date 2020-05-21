@@ -99,7 +99,7 @@ void append_symbol_with_list(SYMBOL_TABLE* symbol_table, char* name, int type, i
         printf("Reallocating: %d\n", symbol_table->capacity);
         symbol_table->data = realloc(symbol_table->data, sizeof(SYMBOL_NODE) * symbol_table->capacity);
     }
-
+    
     symbol_table->data[symbol_table->size].name = strdup(name);
     symbol_table->data[symbol_table->size].domain = strdup(domain);
     symbol_table->data[symbol_table->size].type = type;    
