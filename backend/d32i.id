@@ -1,6 +1,10 @@
 arg registers
 {
-	(ax, cx){0x20}
+	(ax, cx){0x20},
+	(dx){0x12},
+	(ex){0x12},
+	(fx){0x12},
+	(gx){0x12}
 }
 
 arg hi_lo{

@@ -30,6 +30,11 @@ typedef struct
     ARG_TABLE args;
 } INS_NODE;
 
+typedef struct
+{
+    int val;
+    char* name;
+} KEYWORD;
 
 //number handdling
 void set_values(int);

@@ -8,8 +8,8 @@ internals: internals.c internals.h internals_backend.c internals_backend.h
 	gcc internals.c internals.h -c
 	gcc internals_backend.c -c
 
-arch: arch/d16i.h arch/d16i.c
-	gcc arch/d16i.c -c
+arch: arch/d16i/d16i.h arch/d16i/d16i.c
+	gcc arch/d16i/d16i.c -c
 
 compile_grammar: grammar.y libs/terminal_colors.h
 	gcc y.tab.c -c
@@ -30,5 +30,7 @@ libs: libs/file_table.c libs/file_table.h libs/symbol_table.o libs/arg_table.c l
 main: main.c libs/terminal_colors.h libs/file_table.o libs/file_table.c libs/symbol_table.o libs/symbol_table.c internals.o
 	gcc main.c lex.yy.o y.tab.o libs/file_table.o libs/symbol_table.o internals.o internals_backend.o d16i.o arg_table.o -g -o dasm -fno-stack-protector -z execstack -no-pie
 
-clean: lex.yy.o y.tab.o
-	rm lex.yy.o y.tab.o libs/file_table.o
+clean:
+	rm *.o
+	rm *.tab.c
+	rm *.yy.c

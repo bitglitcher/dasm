@@ -99,7 +99,7 @@ template_def_permissives:
 template_def:
 	%empty
 	|
-	'(' identifiers ')' '{' template_def_permissives '}'
+	'(' {link_list = create_list();} identifiers ')' '{' template_def_permissives '}' {link_list = NULL;}
 	;
 
 template_defs:
@@ -115,7 +115,7 @@ arg:
 		append_symbol(&symbol_table, domain, TYPE_ARG, 0, "none", TYPE_ARG);
 		//Set domain so template_defsdomain its data in the required domain
 		scope_type = TYPE_ARG;
-	} '{' {link_list = create_list(); scope_type = TYPE_ARG;} template_defs '}' {link_list = NULL;}
+	} '{' template_defs '}' {link_list = NULL;}
 	;
 
 arg_template:

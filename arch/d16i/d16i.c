@@ -1,10 +1,10 @@
 #include <stdio.h>
 #include "inset.h"
 #include "alu_ops.h"
-#include "../libs/arg_table.h"
-#include "../libs/bin_buffer.h"
-#include "../internals.h"
-#include "../internals_backend.h"
+#include "../../libs/arg_table.h"
+#include "../../libs/bin_buffer.h"
+#include "../../internals.h"
+#include "../../internals_backend.h"
 #include "d16i.h"
 
 

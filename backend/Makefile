@@ -9,3 +9,7 @@ clean:
 	rm lex.yy.c
 	rm grammar.output
 	rm a.out
+	rm target.*
+
+run:
+	./a.out < d32i.id

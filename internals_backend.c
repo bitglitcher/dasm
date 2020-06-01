@@ -82,6 +82,7 @@ bool* check_types(ARG_TABLE* arg_table, INS_NODE_TEMPLATE* ins_node)
             {
                 printf("\t\t\t\t\tcheck ntypes iteration!\n");
                 //*((arr+i*n) + j)
+                /*
                 if(arg_table->data[i].type != ins_node->types[i])
                 {
                     //int** types = ins_node->types;
@@ -92,7 +93,7 @@ bool* check_types(ARG_TABLE* arg_table, INS_NODE_TEMPLATE* ins_node)
                     printf("dasm: error: incompatible arguments %d\n", *types + i);
                     printf("dasm: error: expected arguments %d, recieved %d\n", types[i], arg_table->data[i].type);
                     return NULL;
-                }
+                }*/
             }
         }
     }

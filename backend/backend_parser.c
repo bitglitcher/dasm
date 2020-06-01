@@ -9,30 +9,96 @@ Backend interface lenguage
 #include "symbol_table.h"
 #include "backend_parser_types.h"
 
+//Define if the front end uses hardcoded architecture description
+//#define BULTIN_PARSER
+
+
 SYMBOL_TABLE symbol_table;
 
 extern void reset_identifiers();
 extern void yyparse();
 extern void print_symbol_table();
 
-#define default_output "target.h"
+#define DEFAULT_C_FILE "target.c"
+#define DEFAULT_HEADER_FILE "target.h"
 
-#define PROLOGUE \
-    "#ifndef _TARGET_\n#define _TARGET_\n\n#include \"../internals.h\"\n\n\n\n"
+#define PROLOGUE_H "#ifndef _TARGET_\n#define _TARGET_\n\n#include \"../internals.h\"\n\n\n\n"
 
-#define EPILOUGE "\n\n\n\n#endif"
+#define EPILOUGE_H "\n\n\n\n#endif"
+
+//Define libraries to include in the target.c file
+#define PROLOGUE_C "#include <stdio.h>\n#include <string.h>\n#include \"target.h\"\n\n"
+#define EPILOGUE_C ""
+
+//ARGUMENT NODE TEMPLATE STRUCTURE
+
+#define ARG_TEMPLATE_PROLOUGE(name) ARG_NODE_TEMPLATE##name
+#define ARG_TEMPLATE_EPILOGUE "}"
+
+#define ARG_NODES_INFO "//Join all the ARG_NODE_TEMPLATE defenition into a pointer array,\n//so the assembler backend can reference the argument nodes\n"
+
+#define INS_TEMPLATE_ARRAY_INFO "\n//Pointers to the instruction nodes, so the assembler can use them\n"
+/*ARGUMENT NODE TEMPLATE STRUCTURE*/
+
+/*
+typedef struct 
+{
+    char* name;
+    int type;
+    int value;
+} ARG_NODE_TEMPLATE;
+
+The gen_keywords function will initialize the ARG_NODE_TEMPLATE
+structure 
+
+ARG_NODE_TEMPLATE "name" = {.name="name", .type="some_type", .value="somevalue", .domain="domain_name"};
+
+*/
 
 /* all tree gen functions will append data to the buffer argument*/
-void gen_keywords(SYMBOL_TABLE* symbol_table, FILE* file)
+void gen_keywords(SYMBOL_TABLE* symbol_table, FILE* _c_file, FILE* _h_file)
 {
     bool first = true;
     //all nodes within the scope_type of arg are keywords
+    /*Better adding it to an struct with name and value*/
     printf("----------------ARG DOMAINS----------------\n");
-    //extract and print all arg domains
+    //extract and print all arg domains and create instaces of them
     if(symbol_table)
     {
-        fputs("/*----------------KEYWORDS----------------*/\n", file);
-        fputs("char* taget_keywords = {", file);
+        fputs("/*----------------KEYWORDS----------------*/\n", _c_file);
+        fputs("/*----------------KEYWORDS----------------*/\n", _h_file);
+        //fputs("char* taget_keywords = {", file);
+        for(int i = 0;i <= symbol_table->size;i++)
+        {
+            if(symbol_table->data + i)
+            {
+                if(symbol_table->data[i].scope_type == TYPE_ARG & symbol_table->data[i].type == TYPE_IDENTIFIER)
+                {                    
+                    printf("keyword found -> %s\n", symbol_table->data[i].name);
+                    //check is there is another element after this one
+                    fputs("ARG_NODE_TEMPLATE", _c_file);
+                    fprintf(_c_file, " %s = { .name = \"%s\" ", symbol_table->data[i].name, symbol_table->data[i].name);
+                    if(symbol_table->data[i].list)
+                    {
+                        printf("pass\n");
+                        //Store all values on an array for list
+                        fprintf(_c_file, ".value = %d", symbol_table->data[i].list->data[0].val);
+                    }
+                    else
+                    {
+                        fputs(".value = NULL", _c_file);
+                    }
+                    
+                    fprintf(_c_file, " .domain = \"%s\"", symbol_table->data[i].domain);
+                    //fputs("}\n", file);
+                    fputs("};\n", _c_file);
+                }
+            }
+        }
+        fputc('\n', _c_file);
+        //Now include every element into a pointer array
+        fputs(ARG_NODES_INFO, _h_file);
+        fputs("#define ARG_NODES {", _h_file);
         for(int i = 0;i <= symbol_table->size;i++)
         {
             if(symbol_table->data + i)
@@ -45,21 +111,44 @@ void gen_keywords(SYMBOL_TABLE* symbol_table, FILE* file)
                     }
                     else
                     {
-                        fputs(", ", file);
+                        fputs(", ", _h_file);
                     }
-                    
                     printf("keyword found -> %s\n", symbol_table->data[i].name);
-                    //check is there is another element after this one
-                    fprintf(file, "\"%s\"", symbol_table->data[i].name);
+                    fprintf(_h_file, "&%s", symbol_table->data[i].name);
                 }
             }
         }
-        fputs("};\n", file);
-        fputs("\n\n\n\n", file);
+        fputs("};\n\n", _h_file);
+        //also generate the header file extern references
+        for(int i = 0;i <= symbol_table->size;i++)
+        {
+            if(symbol_table->data + i)
+            {
+                if(symbol_table->data[i].scope_type == TYPE_ARG & symbol_table->data[i].type == TYPE_IDENTIFIER)
+                {
+                    fprintf(_h_file, "extern ARG_NODE_TEMPLATE %s;\n", symbol_table->data[i].name);
+                }
+            }
+        }
+        //Separate lines on the header file
+        fputs("\n", _h_file);
     }
 }
+/*
+The strcuture that this function should generate
 
-void gen_arg_template(SYMBOL_TABLE* symbol_table, char* buffer)
+typedef struct
+{
+    char* name;
+} DOMAIN;
+
+typedef struct
+{
+    char* name;
+} ARG_TEMPLATE;
+
+*/
+void gen_arg_template(SYMBOL_TABLE* symbol_table, FILE* file)
 {
     //all nodes within the scope_type of arg_template are templates
     printf("----------------ARG TEMPLATES----------------\n");
@@ -70,7 +159,7 @@ void gen_arg_template(SYMBOL_TABLE* symbol_table, char* buffer)
         {
             if(symbol_table->data + i)
             {
-                if(symbol_table->data[i].scope_type == TYPE_ARG & symbol_table->data[i].type == TYPE_IDENTIFIER)
+                if(symbol_table->data[i].scope_type == TYPE_ARG_TEMPLATE & symbol_table->data[i].type == TYPE_IDENTIFIER)
                 {
                     printf("keyword found -> %s\n", symbol_table->data[i].name);
                 }
@@ -80,10 +169,14 @@ void gen_arg_template(SYMBOL_TABLE* symbol_table, char* buffer)
 }
 
 
-void gen_ins(SYMBOL_TABLE* symbol_table, FILE* file)
+void gen_ins(SYMBOL_TABLE* symbol_table, FILE* _c_file, FILE* _h_file)
 {
+    //To know the state if there is need to include another comma
+    bool first = true;
    //all nodes within the scope_type of arg_template are templates
     printf("----------------INSTRUCTIONS----------------\n");
+    fputs("/*----------------INSTRUCTIONS----------------*/\n", _c_file);
+    fputs("/*----------------INSTRUCTIONS----------------*/\n", _h_file);
     //extract and print all the arg template domains 
     if(symbol_table)
     {
@@ -95,42 +188,68 @@ void gen_ins(SYMBOL_TABLE* symbol_table, FILE* file)
                 {
                     printf("instruction found -> %s\n", symbol_table->data[i].name);
                     //INS_NODE_TEMPLATE shftr = {.op = iSHFTR, .name="shftr", .nargs = 3, .relative_args = {0, 0, 0}, .asm_func = &assemble_alu};
-                    fprintf(file, "INS_NODE_TEMPLATE %s = {.op = iSHFTR, .name=\"%s\", .nargs = 3, .relative_args = {0, 0, 0}, .asm_func = &assemble_alu};\n", \
+                    fprintf(_c_file, "INS_NODE_TEMPLATE %s = {.op = iSHFTR, .name=\"%s\", .nargs = 3, .relative_args = {0, 0, 0}, .asm_func = &assemble_alu};\n", \
                         symbol_table->data[i].name, symbol_table->data[i].name);
+                    fprintf(_h_file, "extern INS_NODE_TEMPLATE %s;\n", symbol_table->data[i].name);
                 }
             }
         }
-
+        //Now define the structure that holds all the instruction node pointers
+        fputs(INS_TEMPLATE_ARRAY_INFO, _h_file);
+        fputs("#define INS_TEMPLATE_ARRAY {", _h_file);
+        for(int i = 0;i <= symbol_table->size;i++)
+        {
+            if(symbol_table->data + i)
+            {
+                if(symbol_table->data[i].scope_type == TYPE_DEF)
+                {
+                    if(first)
+                    {
+                        first = false;
+                    }
+                    else
+                    {
+                        fputs(", ", _h_file);
+                    }
+                    fprintf(_h_file, "&%s", symbol_table->data[i].name);
+                }
+            }
+        }
+        fputs("}", _h_file);
     }
 }
 
-
-void gen_memonics(SYMBOL_TABLE* symbol_table, char* buffer)
+void gen_ins_templates()
 {
 
 }
-
-FILE*  output_file;
-
+FILE* c_file;
+FILE* c_header;
 int main(void)
 {
-    output_file = fopen (default_output,"w");
+    //Open or create output files
+    c_header = fopen (DEFAULT_HEADER_FILE,"w");
+    c_file = fopen (DEFAULT_C_FILE,"w");
 
-    init_symbol_table(&symbol_table);
-    reset_identifiers();
-    yyparse();
-    print_symbol_table(&symbol_table);
-
-    fputs(EPILOUGE, output_file);
-
-    gen_keywords(&symbol_table, output_file);
-    gen_ins(&symbol_table, output_file);
-
-    fputs(PROLOUGE, output_file);
-    
-    if (output_file!=NULL)
+    if(c_header != NULL & c_file != NULL)
     {
-      fclose (output_file);
+        //Initilize
+        init_symbol_table(&symbol_table);
+        reset_identifiers();
+        yyparse();
+        print_symbol_table(&symbol_table);
+
+        fputs(PROLOGUE_H, c_header);
+        fputs(PROLOGUE_C, c_file);
+
+        gen_keywords(&symbol_table, c_file, c_header);
+        gen_arg_template(&symbol_table, c_header);
+        gen_ins(&symbol_table, c_file, c_header);
+
+        fputs(EPILOUGE_H, c_header);
+        
+        fclose(c_file);
+        fclose(c_header);
     }
     return 0;
 }
