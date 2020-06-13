@@ -1,2 +1,3 @@
 # assembler
-D16i new rebuilt assembler
+
+DASM is a retargatable assembler, with a backend description file you can port any architecture to it.
