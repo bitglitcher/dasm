@@ -1,10 +1,11 @@
 arg registers
 {
-	(ax, cx){0x20},
-	(dx){0x12},
-	(ex){0x12},
-	(fx){0x12},
-	(gx){0x12}
+	(ax){0x00},
+	(bx){0x01},
+	(cx){0x02},
+	(dx){0x03},
+	(ex){0x04},
+	(fx){0x05}
 }
 
 arg hi_lo{
@@ -16,7 +17,9 @@ def load_assisted{
 
 	arg_template{
 	(hilo){hi_lo},
-	(val){numeric}
+	(val){numeric},
+	(something){numeric},
+	(apple){numeric}}
 	}
 
 	max {

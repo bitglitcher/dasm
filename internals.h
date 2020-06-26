@@ -36,6 +36,21 @@ typedef struct
     char* name;
 } KEYWORD;
 
+//ARG NODE TEMPLATE
+
+typedef struct
+{
+		char* name;
+		int value;
+		char* domain;
+} ARG_NODE_TEMPLATE;
+
+typedef struct
+{
+		int size;
+		char* templates [];
+} ARG_TEMPLATE;
+
 //number handdling
 void set_values(int);
 

@@ -24,7 +24,7 @@ extern void print_symbol_table();
 
 #define PROLOGUE_H "#ifndef _TARGET_\n#define _TARGET_\n\n#include \"../internals.h\"\n\n\n\n"
 
-#define EPILOUGE_H "\n\n\n\n#endif"
+#define EPILOUGE_H "\n\n\n\n#endif\n"
 
 //Define libraries to include in the target.c file
 #define PROLOGUE_C "#include <stdio.h>\n#include <string.h>\n#include \"target.h\"\n\n"
@@ -38,6 +38,7 @@ extern void print_symbol_table();
 #define ARG_NODES_INFO "//Join all the ARG_NODE_TEMPLATE defenition into a pointer array,\n//so the assembler backend can reference the argument nodes\n"
 
 #define INS_TEMPLATE_ARRAY_INFO "\n//Pointers to the instruction nodes, so the assembler can use them\n"
+
 /*ARGUMENT NODE TEMPLATE STRUCTURE*/
 
 /*
@@ -77,12 +78,11 @@ void gen_keywords(SYMBOL_TABLE* symbol_table, FILE* _c_file, FILE* _h_file)
                     printf("keyword found -> %s\n", symbol_table->data[i].name);
                     //check is there is another element after this one
                     fputs("ARG_NODE_TEMPLATE", _c_file);
-                    fprintf(_c_file, " %s = { .name = \"%s\" ", symbol_table->data[i].name, symbol_table->data[i].name);
+                    fprintf(_c_file, " %s = { .name = \"%s\", ", symbol_table->data[i].name, symbol_table->data[i].name);
                     if(symbol_table->data[i].list)
                     {
-                        printf("pass\n");
                         //Store all values on an array for list
-                        fprintf(_c_file, ".value = %d", symbol_table->data[i].list->data[0].val);
+                        fprintf(_c_file, ".value = %d,", symbol_table->data[i].list->data[0].val);
                     }
                     else
                     {
@@ -118,7 +118,7 @@ void gen_keywords(SYMBOL_TABLE* symbol_table, FILE* _c_file, FILE* _h_file)
                 }
             }
         }
-        fputs("};\n\n", _h_file);
+        fputs("}\n\n", _h_file);
         //also generate the header file extern references
         for(int i = 0;i <= symbol_table->size;i++)
         {
@@ -139,22 +139,32 @@ The strcuture that this function should generate
 
 typedef struct
 {
-    char* name;
-} DOMAIN;
-
-typedef struct
-{
-    char* name;
+    ARG_NODE_TEMPLATE* templates;
+    int size
 } ARG_TEMPLATE;
 
+
+ARG_TEMPLATE domain 
+
+ARG_TEMPLATE name = { .templates = {
+	&A,
+	&B,
+	&C
+	},
+
+	.size = 2; //n -1
+	}
 */
-void gen_arg_template(SYMBOL_TABLE* symbol_table, FILE* file)
+void gen_arg_template(SYMBOL_TABLE* symbol_table, FILE* c_file, FILE* h_file)
 {
     //all nodes within the scope_type of arg_template are templates
     printf("----------------ARG TEMPLATES----------------\n");
-    //extract and print all the arg template domains 
-    if(symbol_table)
-    {
+    fputs("/*----------------ARG TEMPLATES----------------*/\n", c_file);
+    fputs("/*----------------ARG TEMPLATES----------------*/\n", h_file);
+	bool first = true;
+	//extract and print all the arg template domains 
+	if(symbol_table)
+   	{
         for(int i = 0;i <= symbol_table->size;i++)
         {
             if(symbol_table->data + i)
@@ -162,10 +172,48 @@ void gen_arg_template(SYMBOL_TABLE* symbol_table, FILE* file)
                 if(symbol_table->data[i].scope_type == TYPE_ARG_TEMPLATE & symbol_table->data[i].type == TYPE_IDENTIFIER)
                 {
                     printf("keyword found -> %s\n", symbol_table->data[i].name);
-                }
-            }
-        }
-    }
+                    fprintf(c_file, "ARG_TEMPLATE %s = { .templates = {", symbol_table->data[i].name);
+					first = true;
+					//Rpintf all args 
+					for(int x = 0; x <= symbol_table->data[i].list->size;x++)
+					{
+						if(first)
+						{
+							first = false;
+						}
+						else
+						{
+							fputc(',', c_file);
+						}
+						fprintf(c_file, "\"%s\"", symbol_table->data[i].list->data[x].identifier);
+					}
+					printf("sizeof %d\n", sizeof(symbol_table->data[i]));
+					fprintf(c_file, "}, .size = %d};\n", symbol_table->data[i].list->size);
+			   	}
+            }	
+		}
+
+        fputs("#define ARG_TEMPLATES {", h_file);
+		first = true;
+		for(int i = 0;i <= symbol_table->size;i++)
+        {
+            if(symbol_table->data + i)
+            {
+                if(symbol_table->data[i].scope_type == TYPE_ARG_TEMPLATE & symbol_table->data[i].type == TYPE_IDENTIFIER)
+                {
+					if(first) first = false;
+					else 
+					{
+						fputs(", ", h_file);
+					}
+                    printf("keyword found -> %s\n", symbol_table->data[i].name);
+            		fprintf(h_file, "%s", symbol_table->data[i].name);
+				}
+			}	
+		}
+	}
+	fputs("}\n\n", h_file);
+	fputs("\n", c_file);
 }
 
 
@@ -243,7 +291,7 @@ int main(void)
         fputs(PROLOGUE_C, c_file);
 
         gen_keywords(&symbol_table, c_file, c_header);
-        gen_arg_template(&symbol_table, c_header);
+        gen_arg_template(&symbol_table, c_file, c_header);
         gen_ins(&symbol_table, c_file, c_header);
 
         fputs(EPILOUGE_H, c_header);
