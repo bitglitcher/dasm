@@ -19,7 +19,7 @@ def load_assisted{
 	(hilo){hi_lo},
 	(val){numeric},
 	(something){numeric},
-	(apple){numeric}}
+	(apple){numeric}
 	}
 
 	max {

@@ -12,44 +12,46 @@
 extern char* keywords [];
 extern int keyword_id [];
 
-/*Structs for the instruction maching*/
-typedef struct
-{
-    int op; //Instruction op
-    char* name; //Name to match
-    int nargs;
-    int *ntypes; //Number of permissive types per argument
-    int *type;
-    void (*asm_func)(BIN_BUFFER* bin_buffer, ARG_TABLE* arg_table, int op); //Function pointer to assembler function 
-    int relative_args []; //array of 0 or 1 to set relative arguments
-} INS_NODE_TEMPLATE;
- 
-typedef struct
-{
-    int op;
-    ARG_TABLE args;
-} INS_NODE;
-
-typedef struct
-{
-    int val;
-    char* name;
-} KEYWORD;
-
 //ARG NODE TEMPLATE
 
 typedef struct
 {
-		char* name;
-		int value;
-		char* domain;
+	char* name;
+	int value;
+	char* domain;
 } ARG_NODE_TEMPLATE;
 
 typedef struct
 {
-		int size;
-		char* templates [];
+	int size;
+	char* templates [];
 } ARG_TEMPLATE;
+
+/*Structs for the instruction maching*/
+typedef struct
+{
+	int op; //Instruction op
+	char* name; //Name to match
+	int nargs;
+	int *ntypes; //Number of permissive types per argument
+	int *type;
+	int n_templates;
+	void (*asm_func)(BIN_BUFFER* bin_buffer, ARG_TABLE* arg_table, int op); //Function pointer to assembler function 
+	//int relative_args []; //array of 0 or 1 to set relative arguments
+	ARG_TEMPLATE *arg_templates [];
+} INS_NODE_TEMPLATE;
+
+typedef struct
+{
+	int op;
+	ARG_TABLE args;
+} INS_NODE;
+
+typedef struct
+{
+	int val;
+	char* name;
+} KEYWORD;
 
 //number handdling
 void set_values(int);
