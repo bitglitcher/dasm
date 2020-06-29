@@ -9,40 +9,40 @@
 
 typedef struct
 {
-	int val;
-	char* identifier;
-	int type; //Just to diferentiate between val and identifier
+    int val;
+    char* identifier;
+    int type; //Just to diferentiate between val and identifier
 } LIST_NODE;
 
 typedef struct
 {
-	LIST_NODE* data;
-	int capacity;
-	int size;
-	bool wait_slot;
+    LIST_NODE* data;
+    int capacity;
+    int size;
+    bool wait_slot;
 } LIST;
 
 typedef struct
 {
-	int type; 
-	char* name;
-	int addr;
-	char* domain; //for tags inside of defs
-	int scope_type;
-	int size;
-	int capacity;
-	bool wait_slot;
-	//Points to the list of the source attributes
-	LIST* list;
+    int type; 
+    char* name;
+    int addr;
+    char* domain; //for tags inside of defs
+    int scope_type;
+    int size;
+    int capacity;
+    bool wait_slot;
+    //Points to the list of the source attributes
+    LIST* list;
 } SYMBOL_NODE;
 
 
 typedef struct
 {
-	SYMBOL_NODE* data;
-	int capacity;
-	int size;
-	bool wait_slot;
+    SYMBOL_NODE* data;
+    int capacity;
+    int size;
+    bool wait_slot;
 } SYMBOL_TABLE;
 
 void init_symbol_table(SYMBOL_TABLE* symbol_table);
