@@ -1,7 +1,6 @@
+#include <string.h>
+#include <stdlib.h>
+#include <stdio.h>
 
-
-void remove_single_line_comment();
-void remove_multi_line_comment();
-void remove_defines();
-void remove_includes();
-void process_macros();
+char* remove_line_comment(char *str, size_t size);
+char *remove_block_comment(char *str, size_t size);

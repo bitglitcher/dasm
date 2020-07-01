@@ -208,7 +208,8 @@ void gen_arg_template(SYMBOL_TABLE* symbol_table, FILE* c_file, FILE* h_file)
                 if(symbol_table->data[i].scope_type == TYPE_ARG_TEMPLATE & symbol_table->data[i].type == TYPE_IDENTIFIER)
                 {
                     printf("keyword found -> %s\n", symbol_table->data[i].name);
-                    fprintf(c_file, "ARG_TEMPLATE %s = { .templates = {", symbol_table->data[i].name);
+                    //Add prefix and template name
+                    fprintf(c_file, "ARG_TEMPLATE %s_%s = { .templates = {", symbol_table->data[i].domain, symbol_table->data[i].name);
                     first = true;
                     //fpintf all args 
                     for(int x = 0; x <= symbol_table->data[i].list->size;x++)
@@ -295,7 +296,8 @@ void gen_ins(SYMBOL_TABLE* symbol_table, FILE* _c_file, FILE* _h_file)
                                 }
                                 printf("keyword found -> %s\n", symbol_table->data[x].name);
                                 printf("\tdomain -> %s\n", symbol_table->data[x].domain);
-                                fprintf(_c_file, " &%s", symbol_table->data[x].name);
+                                //Add prefix and name
+                                fprintf(_c_file, " &%s_%s", symbol_table->data[x].domain, symbol_table->data[x].name);
                                 n_templates++;
                                 //fpintf all args 
 

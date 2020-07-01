@@ -3,7 +3,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include "y.tab.h"
-#include "arch/alu_ops.h"
 #include "internals.h"
 
 //extern int return_token(char* identifier);

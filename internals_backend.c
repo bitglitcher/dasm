@@ -5,7 +5,7 @@
 #include "libs/arg_table.h"
 #include "internals_backend.h"
 #include "libs/symbol_table.h"
-#include "arch/d16i/d16i.h"
+#include "build/target.h"
 
 /*Have to be defined*/
 char* regs [] = REGS_NAMES;
