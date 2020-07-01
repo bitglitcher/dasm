@@ -135,6 +135,9 @@ max:
 
 encode:
 	ENCODE '{' {scope_type = TYPE_ENCODE;} STRING '}'
+	{
+	    append_symbol(&symbol_table, string_literal, TYPE_ENCODE, 0, domain, TYPE_ENCODE);
+	}
 	;
 
 def_branch:

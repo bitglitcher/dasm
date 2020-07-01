@@ -3,12 +3,14 @@
    Backend interface lenguage
    */
 
+#include <argp.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <dirent.h>
 #include "symbol_table.h"
 #include "backend_parser_types.h"
-
+#include "../libs/terminal_colors.h"
 //Define if the front end uses hardcoded architecture description
 //#define BULTIN_PARSER
 
@@ -16,11 +18,14 @@
 SYMBOL_TABLE symbol_table;
 
 extern void reset_identifiers();
-extern void yyparse();
+extern int yyparse();
+extern int yy_scan_bytes(const char*, int);
+extern int yylex();
 extern void print_symbol_table();
 
 #define DEFAULT_C_FILE "target.c"
 #define DEFAULT_HEADER_FILE "target.h"
+#define DEFALUT_INPUT_FILE "target.id" 
 
 #define PROLOGUE_H "#ifndef _TARGET_\n#define _TARGET_\n\n#include \"../internals.h\"\n\n\n\n"
 
@@ -38,6 +43,37 @@ extern void print_symbol_table();
 #define ARG_NODES_INFO "//Join all the ARG_NODE_TEMPLATE defenition into a pointer array,\n//so the assembler backend can reference the argument nodes\n"
 
 #define INS_TEMPLATE_ARRAY_INFO "\n//Pointers to the instruction nodes, so the assembler can use them\n"
+
+const char *argp_program_version = "";
+const char *argp_program_bug_address = "<bitglitcher@github.com>";
+static char doc[] = "Backend generator for the DASM assembler";
+static char args_doc[] = "[FILENAME]... -p [PREFIX]";
+
+static struct argp_option options[] = { 
+    { "prefix", 'p', "PREFIX", 0, "Place prefix as <PREFIX>."},
+    { "table", 't', 0, 0, "Display symbol table."},
+    { 0 } 
+};
+
+struct arguments {
+    char* prefix;
+    char* input_file;
+    bool table_display;
+};
+
+static error_t parse_opt(int key, char *arg, struct argp_state *state) {
+    struct arguments *arguments = state->input;
+    switch (key) {
+        case 'p': arguments->prefix = strdup(arg); break;
+        case 't': arguments->table_display = true; break;
+        case ARGP_KEY_ARG: arguments->input_file = strdup(arg); printf("input %s\n", strdup(arg));return 0;
+        default: return ARGP_ERR_UNKNOWN;
+    }   
+    return 0;
+}
+
+static struct argp argp = { options, parse_opt, args_doc, doc, 0, 0, 0 };
+
 
 /*ARGUMENT NODE TEMPLATE STRUCTURE*/
 
@@ -241,6 +277,7 @@ void gen_ins(SYMBOL_TABLE* symbol_table, FILE* _c_file, FILE* _h_file)
                             symbol_table->data[i].name, symbol_table->data[i].name);
                     fprintf(_h_file, "extern INS_NODE_TEMPLATE %s;\n", symbol_table->data[i].name);
                     first = true;
+                    int n_templates = 0;
                     for(int x = 0;x <= symbol_table->size;x++)
                     {
                         if(symbol_table->data + x)
@@ -259,12 +296,13 @@ void gen_ins(SYMBOL_TABLE* symbol_table, FILE* _c_file, FILE* _h_file)
                                 printf("keyword found -> %s\n", symbol_table->data[x].name);
                                 printf("\tdomain -> %s\n", symbol_table->data[x].domain);
                                 fprintf(_c_file, " &%s", symbol_table->data[x].name);
+                                n_templates++;
                                 //fpintf all args 
 
                             }
-                        }
+                        };
                     }	
-                    fputs("}, .nargs = 3 /* .relative_args = {0, 0, 0}, .asm_func = &assemble_alu*/};\n", _c_file);
+                    fprintf(_c_file, "}, .n_templates = %d, /*. nargs = 3, .relative_args = {0, 0, 0}, .asm_func = &assemble_alu*/};\n", n_templates);
                 }
             }
         }
@@ -296,23 +334,113 @@ void gen_ins(SYMBOL_TABLE* symbol_table, FILE* _c_file, FILE* _h_file)
     }
 }
 
-void gen_ins_templates()
+void gen_ins_encoding(SYMBOL_TABLE* symbol_table, FILE* _c_file, FILE* _c_header)
 {
-
+    if(symbol_table)
+    {
+        for(int i = 0;i <= symbol_table->size;i++)
+        {
+            if(symbol_table->data + i)
+            {
+                if(symbol_table->data[i].scope_type == TYPE_ENCODE)
+                {
+                    printf("Instruction Encoding Found -> %s\n", symbol_table->data[i].name);   
+                }   
+            }
+        }
+    }
 }
-FILE* c_file;
-FILE* c_header;
-int main(void)
+
+FILE* c_file = NULL;
+FILE* c_header = NULL;
+FILE* input_file = NULL;
+char* input_buffer = NULL; //Data from input file
+
+int main(int argc, char* argv[])
 {
+    long file_size;
+
+    struct arguments arguments;
+    arguments.prefix = NULL;
+    arguments.input_file = NULL;
+    arguments.table_display = false;
+
+    argp_parse(&argp, argc, argv, 0, 0, &arguments);
+
+        printf("Directory: %s\n", arguments.input_file);
+    if(arguments.input_file == NULL)
+    {
+        printf(ANSI_COLOR_YELLOW "Warning: " ANSI_COLOR_RESET "Using DEAFULT input name\n");
+        arguments.input_file = DEFALUT_INPUT_FILE;
+    }
+    
+        printf("Directok34k34k34k34k34k34k34k34k34k34k34k34k34k34k34k34k34k34k34k34k34k34k34k34k34k34k34k34k34k34k34k34k34k34k34k34k34k34k34k34k34k34k34ry: %s\n", arguments.input_file);
+    if(arguments.prefix == NULL)
+    {
+        printf(ANSI_COLOR_RED "Error: " ANSI_COLOR_RESET "No output prefix specified.\n");
+        exit(1);
+    }
+    else
+    {
+        //Check if the last character is /
+        if(*(arguments.prefix + strlen(arguments.prefix) - 1) != '/')
+        {
+            printf(ANSI_COLOR_RED "Error: " ANSI_COLOR_RESET "Specify directory name with '/' termination.\n");
+            printf("Last character %s\n", *(arguments.prefix + strlen(arguments.prefix)));
+            exit(1);
+        }
+    }
+
+        printf("34Directory: %s\n", arguments.input_file);
     //Open or create output files
-    c_header = fopen (DEFAULT_HEADER_FILE,"w");
-    c_file = fopen (DEFAULT_C_FILE,"w");
+    char* concat_string = strdup(arguments.prefix);
+    concat_string = strcat(concat_string, DEFAULT_HEADER_FILE);
+    c_header = fopen(concat_string, "w"); 
+    free(concat_string); //Free old string
+    concat_string = strdup(arguments.prefix); //Create new string from .prefix
+    concat_string = strcat(concat_string, DEFAULT_C_FILE);
+    c_file = fopen (concat_string, "w");
+    free(concat_string);
+    input_file = fopen(arguments.input_file, "rb");
+    
+        printf("Directory after: %s\n", arguments.input_file);
+    if(!input_file)
+    {
+        printf(ANSI_COLOR_RED "error: " ANSI_COLOR_RESET "No such file or directory\n");
+        printf("Directory: %s\n", arguments.input_file);
+        exit(1);
+    }
+    else
+    {
+        printf("\nallocating file\n");
+        //Get file size
+        fseek (input_file, 0, SEEK_END);   // non-portable
+        file_size = ftell(input_file);
+        //Go to the begining
+        rewind (input_file);
+        printf("file size: %d\n", file_size);
+        input_buffer = malloc(sizeof(char) * file_size); //Alloc memory for buffer
+        //Now copy the data to the buffer
+        size_t read_bytes = fread(input_buffer, sizeof(char), file_size, input_file);
+        if(read_bytes != file_size)
+        {
+            printf(ANSI_COLOR_RED "error: " ANSI_COLOR_RESET "reading file\n");
+            exit(1);
+        }
+        if(!input_buffer)
+        {
+            printf(ANSI_COLOR_RED "error: " ANSI_COLOR_RESET "allocating memory\n");
+            exit(1);
+        }
+        fclose(input_file);
+    }
 
     if(c_header != NULL & c_file != NULL)
     {
         //Initilize
         init_symbol_table(&symbol_table);
         reset_identifiers();
+        yy_scan_bytes(input_buffer, file_size);
         yyparse();
         print_symbol_table(&symbol_table);
 
@@ -322,12 +450,14 @@ int main(void)
         gen_keywords(&symbol_table, c_file, c_header);
         gen_arg_template(&symbol_table, c_file, c_header);
         gen_ins(&symbol_table, c_file, c_header);
-
+        gen_ins_encoding(&symbol_table, NULL, NULL);
         fputs(EPILOUGE_H, c_header);
 
         fclose(c_file);
         fclose(c_header);
     }
+    //Free allocated memory
+    free(input_file);
     return 0;
 }
 

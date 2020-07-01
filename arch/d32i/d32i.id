@@ -1,8 +1,12 @@
-/*By Benjamin Herrera Navarro*/
-/* Instruction definition of d32i for the DASM assembler*/
-
-
-//predefined clases
+arg registers
+{
+	(ax){0x00},
+	(bx){0x01},
+	(cx){0x02},
+	(dx){0x03},
+	(ex){0x04},
+	(fx){0x05}
+}
 
 arg hi_lo{
 	(lo){1},
@@ -13,21 +17,46 @@ def load_assisted{
 
 	arg_template{
 	(hilo){hi_lo},
-	(val){numeric}
+	(val){numeric},
+	(something){numeric},
+	(apple){numeric}
 	}
 
-	/*Constraints on sizes of values*/
 	max {
 	(val){0xff}
 	}
 
 	encode {
-	/*C MACRO*/
-	(hilo, val) ((hilo << 3) | (val << 4))
+	"(hilo, val) ((hilo << 3) | (val << 4))"
 	}
 
 
 	assemble {
-	load %hilo %val\n
+	"load %hilo %val\n"
 	}
+
 }
+
+def load{
+	arg_template{
+	(regs){registers},
+	(val){numeric}
+	}
+
+	max {
+	(regs){7}
+	}
+
+	encode {
+	"(def) (def + 23)"
+	}
+
+	assemble{
+	"load %hilo"
+	}
+
+}
+
+def store{}
+def add{}
+def sub{}

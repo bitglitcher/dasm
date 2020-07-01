@@ -7,7 +7,6 @@
 #include "libs/symbol_table.h"
 #include "arch/d16i/d16i.h"
 
-
 /*Have to be defined*/
 char* regs [] = REGS_NAMES;
 int reg_addr [] = REGS_ADDRS; 

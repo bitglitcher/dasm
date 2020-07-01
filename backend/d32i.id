@@ -37,7 +37,26 @@ def load_assisted{
 
 }
 
-def load{}
+def load{
+	arg_template{
+	(regs){registers},
+	(val){numeric}
+	}
+
+	max {
+	(regs){7}
+	}
+
+	encode {
+	"(def) (def + 23)"
+	}
+
+	assemble{
+	"load %hilo"
+	}
+
+}
+
 def store{}
 def add{}
 def sub{}
