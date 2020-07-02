@@ -105,6 +105,7 @@ void gen_keywords(SYMBOL_TABLE* symbol_table, FILE* _c_file, FILE* _h_file)
         fputs("/*----------------KEYWORDS----------------*/\n", _c_file);
         fputs("/*----------------KEYWORDS----------------*/\n", _h_file);
         //fputs("char* taget_keywords = {", file);
+        int n_arg_nodes = 0; //Used to count the number of templates
         for(int i = 0;i <= symbol_table->size;i++)
         {
             if(symbol_table->data + i)
@@ -114,6 +115,7 @@ void gen_keywords(SYMBOL_TABLE* symbol_table, FILE* _c_file, FILE* _h_file)
                     printf("keyword found -> %s\n", symbol_table->data[i].name);
                     //check is there is another element after this one
                     fputs("ARG_NODE_TEMPLATE", _c_file);
+                    n_arg_nodes++; //Increment number of templates
                     fprintf(_c_file, " %s = { .name = \"%s\", ", symbol_table->data[i].name, symbol_table->data[i].name);
                     if(symbol_table->data[i].list)
                     {
@@ -131,6 +133,7 @@ void gen_keywords(SYMBOL_TABLE* symbol_table, FILE* _c_file, FILE* _h_file)
                 }
             }
         }
+        fprintf(_c_file, "int N_ARG_NODES = %d;\n", n_arg_nodes);
         fputc('\n', _c_file);
         //Now include every element into a pointer array
         fputs(ARG_NODES_INFO, _h_file);
@@ -167,6 +170,7 @@ void gen_keywords(SYMBOL_TABLE* symbol_table, FILE* _c_file, FILE* _h_file)
             }
         }
         //Separate lines on the header file
+        fprintf(_h_file, "extern int N_ARG_NODES;\n", n_arg_nodes);
         fputs("\n", _h_file);
     }
 }
@@ -265,6 +269,7 @@ void gen_ins(SYMBOL_TABLE* symbol_table, FILE* _c_file, FILE* _h_file)
     //extract and print all the arg template domains 
     if(symbol_table)
     {
+        int INS_TEMPLATES_CNT = 0;
         for(int i = 0;i <= symbol_table->size;i++)
         {
             if(symbol_table->data + i)
@@ -274,6 +279,7 @@ void gen_ins(SYMBOL_TABLE* symbol_table, FILE* _c_file, FILE* _h_file)
                     printf("instruction found -> %s\n", symbol_table->data[i].name);
                     //INS_NODE_TEMPLATE shftr = {.op = iSHFTR, .name="shftr", .nargs = 3, .relative_args = {0, 0, 0}, .asm_func = &assemble_alu};
 
+                    INS_TEMPLATES_CNT++;
                     fprintf(_c_file, "INS_NODE_TEMPLATE %s = { .name=\"%s\", .arg_templates = {", \
                             symbol_table->data[i].name, symbol_table->data[i].name);
                     fprintf(_h_file, "extern INS_NODE_TEMPLATE %s;\n", symbol_table->data[i].name);
@@ -304,11 +310,12 @@ void gen_ins(SYMBOL_TABLE* symbol_table, FILE* _c_file, FILE* _h_file)
                             }
                         };
                     }	
-                    fprintf(_c_file, "}, .n_templates = %d, /*. nargs = 3, .relative_args = {0, 0, 0}, .asm_func = &assemble_alu*/};\n", n_templates);
+                    fprintf(_c_file, "}, .n_templates = %d, /*, .relative_args = {0, 0, 0}, .asm_func = &assemble_alu*/};\n", n_templates);
                 }
             }
         }
-
+        fprintf(_c_file, "int N_INS_TEMPLATES = %d;\n", INS_TEMPLATES_CNT);
+        fprintf(_h_file, "extern int N_INS_TEMPLATES;\n", INS_TEMPLATES_CNT);
         first = true;
 
         //Now define the structure that holds all the instruction node pointers
@@ -369,14 +376,12 @@ int main(int argc, char* argv[])
 
     argp_parse(&argp, argc, argv, 0, 0, &arguments);
 
-        printf("Directory: %s\n", arguments.input_file);
     if(arguments.input_file == NULL)
     {
         printf(ANSI_COLOR_YELLOW "Warning: " ANSI_COLOR_RESET "Using DEAFULT input name\n");
         arguments.input_file = DEFALUT_INPUT_FILE;
     }
     
-        printf("Directok34k34k34k34k34k34k34k34k34k34k34k34k34k34k34k34k34k34k34k34k34k34k34k34k34k34k34k34k34k34k34k34k34k34k34k34k34k34k34k34k34k34k34ry: %s\n", arguments.input_file);
     if(arguments.prefix == NULL)
     {
         printf(ANSI_COLOR_RED "Error: " ANSI_COLOR_RESET "No output prefix specified.\n");
@@ -388,12 +393,10 @@ int main(int argc, char* argv[])
         if(*(arguments.prefix + strlen(arguments.prefix) - 1) != '/')
         {
             printf(ANSI_COLOR_RED "Error: " ANSI_COLOR_RESET "Specify directory name with '/' termination.\n");
-            printf("Last character %s\n", *(arguments.prefix + strlen(arguments.prefix)));
             exit(1);
         }
     }
 
-        printf("34Directory: %s\n", arguments.input_file);
     //Open or create output files
     char* concat_string = strdup(arguments.prefix);
     concat_string = strcat(concat_string, DEFAULT_HEADER_FILE);

@@ -18,7 +18,7 @@ void delete_arg_table()
 
 }
 
-void append_arg(ARG_TABLE* arg_table, MATCHED_ARG arg_match)
+void append_arg(ARG_TABLE* arg_table, ARG_NODE_TEMPLATE arg_node)
 {
     if(arg_table->wait_slot)
     {
@@ -33,12 +33,11 @@ void append_arg(ARG_TABLE* arg_table, MATCHED_ARG arg_match)
     if(arg_table->size >= arg_table->capacity)
     {
         arg_table->capacity *= 2;
-        arg_table->data = realloc(arg_table->data, sizeof(ARG_NODE) * arg_table->capacity);
+        arg_table->data = realloc(arg_table->data, sizeof(ARG_NODE_TEMPLATE) * arg_table->capacity);
     }
 
     //Now append
-    arg_table->data[arg_table->size].value = arg_match.val;
-    arg_table->data[arg_table->size].type = arg_match.type;
+    memcpy((arg_table->data + arg_table->size), &arg_node, sizeof(ARG_NODE_TEMPLATE));
 }
 
 

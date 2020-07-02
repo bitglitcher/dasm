@@ -81,8 +81,8 @@ arguments:
         if(!dry_run)
         {
             printf("arguments number detected: %d\n", val);
-            MATCHED_ARG node;
-            node.val = val;
+            ARG_NODE_TEMPLATE node;
+            node.value = val;
             append_arg(&arg, node);
         }
     }

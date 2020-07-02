@@ -4,10 +4,15 @@ ifneq ("$(wildcard $(build))","")
 	mkdir build
 endif
 
+ifneq ("$(wildcard $(build/bin/))","")	
+	mkdir bin
+endif
+
 all: backend grammar internals arch compile_grammar lexer preprocessor libs main
 
 backend: backend/Makefile
 	@$(MAKE) -C backend/
+	$(Creating Build Directory)
 	./backend/backend_gen arch/${ARCH}/$(ARCH).id -p build/
 
 grammar: grammar.y libs/terminal_colors.h

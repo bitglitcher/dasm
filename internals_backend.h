@@ -3,7 +3,6 @@
 #define INTERNALS_BACKEND
 
 #include "internals.h"
-#include "arch/d16i/d16i.h"
 
 
 
@@ -22,7 +21,7 @@ extern INS_NODE_TEMPLATE* instructions [];
 
 void assemble_ins(char* name, ARG_TABLE* arg_table);
 
-MATCHED_ARG match_args(char* name);
+ARG_NODE_TEMPLATE match_args(char* name);
 
 void increment_addr();
 

@@ -12,21 +12,6 @@
 extern char* keywords [];
 extern int keyword_id [];
 
-//ARG NODE TEMPLATE
-
-typedef struct
-{
-	char* name;
-	int value;
-	char* domain;
-} ARG_NODE_TEMPLATE;
-
-typedef struct
-{
-	int size;
-	char* templates [];
-} ARG_TEMPLATE;
-
 /*Structs for the instruction maching*/
 typedef struct
 {

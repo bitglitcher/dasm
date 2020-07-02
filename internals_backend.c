@@ -8,19 +8,22 @@
 #include "build/target.h"
 
 /*Have to be defined*/
-char* regs [] = REGS_NAMES;
-int reg_addr [] = REGS_ADDRS; 
+//char* regs [] = REGS_NAMES;
+//int reg_addr [] = REGS_ADDRS; 
+
+//These contain all the keywords from the target like registers and constants
+ARG_NODE_TEMPLATE* arg_node_templates [] = ARG_NODES;
 
 /*keyword specific to the architecture*/
-char* target_keywords [] = TARGET_KEYWORDS;
-int target_keywords_vals [] = TARGET_KEYWORDS_VALS;
-int target_keywords_type [] = TARGET_KEYWORDS_TYPES;
+//char* target_keywords [] = TARGET_KEYWORDS;
+//int target_keywords_vals [] = TARGET_KEYWORDS_VALS;
+//int target_keywords_type [] = TARGET_KEYWORDS_TYPES;
 
 /*ALSO a the number of keywords has to be specified*/
 //#define NTARGET_KEYWORDS
 
 //REGISTER CLASSES
-int REG_CLASS [] = REG_CLASSES;
+//int REG_CLASS [] = REG_CLASSES;
 
 void init_internal_backend()
 {
@@ -107,21 +110,24 @@ void assemble_ins(char* name , ARG_TABLE* arg_table)
     for(int i = 0;i <= N_INS_TEMPLATES - 1;i++)
     {
         INS_NODE_TEMPLATE* ptr = instructions[i];
-        printf("template name: %s\n", ptr->name);
-        printf("identifier name: %s\n", name);
+        printf("\ttemplate name: %s\n", ptr->name);
+        printf("\tidentifier name: %s\n", name);
         if(strcmp(ptr->name, name) == 0)
         {
             printf("\t\tMatch Found\n");
             saved = ptr;
-            //Now check for correct syntax
-            if(arg_table->size == (ptr->nargs - 1))
+            //Now check for correct synta
+            printf("\t\targ_table->size = %d\n", arg_table->size);
+            printf("\t\t (ptr->n_templates - 1) = %d\n", (ptr->n_templates - 1));
+            if(arg_table->size == (ptr->n_templates - 1))
             {
                 printf("\t\t\t%s detected\n", ptr->name);
                 //Before calling the assembler function, run syntax check
                 if(check_types(arg_table, ptr))
                 {
                     //Call assembler function and provide context
-                    (*ptr->asm_func)(NULL, arg_table, ptr->op);
+                    //(*ptr->asm_func)(NULL, arg_table, ptr->op);
+                    printf("\t\t\t\tAssembler functions now implemented\n");
                     return; //Done with assembling
                 }
             }
@@ -148,35 +154,25 @@ void assemble_ins(char* name , ARG_TABLE* arg_table)
 
 extern SYMBOL_TABLE symbol_table; //Global symbol table
 
-MATCHED_ARG match_args(char* name)
-{
-    MATCHED_ARG arg_match;
-    arg_match.type = 0;
-    /*This is for the registers*/
-    for(int i = 0;i <= NREGS - 1;i++)
+ARG_NODE_TEMPLATE match_args(char* name)
+{   
+    ARG_NODE_TEMPLATE arg_node;
+    //Match ARG_NODE_TEMPLATES with the correct name
+    for(int i = 0;i <= N_ARG_NODES - 1;i++)
     {
-        if(regs [i])
+        printf("Iterationg throught nodes %d -> %s\n", i, arg_node_templates[i]->name);
+        if(strcmp(arg_node_templates[i]->name, name) == 0)
         {
-            if(strcmp(regs[i], name) == 0)
-            {
-                arg_match.val = reg_addr [i]; 
-                //Get registers classes to get the the type
-                arg_match.type = REG_CLASS [i];
-                return arg_match;
-            }
+            printf("\tString found -> %s , %s\n", arg_node_templates[i]->name, name);
+            arg_node.domain = arg_node_templates[i]->domain;
+            arg_node.name = arg_node_templates[i]->name;
+            arg_node.value = arg_node_templates[i]->value;
+            return arg_node; 
+            break;
         }
     }
-    /*Target Specific Keywords*/
-    for(int i = 0;i <= N_TARGET_KEYWORDS - 1;i++)
-    {
-        if(strcmp(target_keywords [i], name) == 0)
-        {
-            arg_match.val = target_keywords_vals [i];
-            arg_match.type = target_keywords_type [i];
-            return arg_match;
-        }
-    }
-    /*Symbol table search*/
+/*
+    //Symbol table search
     SYMBOL_NODE* symbol_node = search_symbol(&symbol_table, name, "none");
     if(symbol_node)
     {
@@ -187,6 +183,7 @@ MATCHED_ARG match_args(char* name)
     printf("Invalid argument: default 0x0000\n");
     arg_match.val = 0;
     return arg_match;
+*/
 }
 
 bool wait_slot_addr_inc = true;
@@ -198,7 +195,8 @@ void increment_addr()
     }
     else
     {
-        addr += NADDR_INS;
+        //Hardcoded just for testing, should be CHANGED later
+        addr += 2;//NADDR_INS;
     }
     
 }
