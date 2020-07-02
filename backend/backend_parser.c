@@ -427,6 +427,7 @@ int main(int argc, char* argv[])
         input_buffer = malloc(sizeof(char) * file_size); //Alloc memory for buffer
         //Now copy the data to the buffer
         size_t read_bytes = fread(input_buffer, sizeof(char), file_size, input_file);
+        printf("Check!");
         if(read_bytes != file_size)
         {
             printf(ANSI_COLOR_RED "error: " ANSI_COLOR_RESET "reading file\n");
@@ -461,8 +462,6 @@ int main(int argc, char* argv[])
         fclose(c_file);
         fclose(c_header);
     }
-    //Free allocated memory
-    free(input_file);
     return 0;
 }
 

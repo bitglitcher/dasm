@@ -1,19 +1,18 @@
 ARCH=d32i
 
-ifneq ("$(wildcard $(build))","")	
-	mkdir build
-endif
-
-ifneq ("$(wildcard $(build/bin/))","")	
-	mkdir bin
-endif
-
 all: backend grammar internals arch compile_grammar lexer preprocessor libs main
 
-backend: backend/Makefile
+backend: backend/*
 	@$(MAKE) -C backend/
 	$(Creating Build Directory)
+ifeq (,$(wildcard build/))
+	mkdir build
+endif
 	./backend/backend_gen arch/${ARCH}/$(ARCH).id -p build/
+
+
+
+
 
 grammar: grammar.y libs/terminal_colors.h
 	bison -y -d grammar.y
@@ -47,6 +46,11 @@ main: main.c libs/terminal_colors.h libs/file_table.o libs/file_table.c libs/sym
 clean:
 	rm *.o
 	rm *.tab.c
-	rm *.yy.
-	rm build/target.*
+	#rm *.yy.
+ifneq (,$(wildcard dasm))
+	rm dasm
+endif
+ifneq (,$(wildcard build/))
 	rm -r build
+endif
+	@$(MAKE) clean -C backend/

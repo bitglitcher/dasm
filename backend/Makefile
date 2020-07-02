@@ -12,7 +12,7 @@ clean:
 	rm lex.yy.c
 	rm grammar.output
 	rm backend_gen
-	rm target.*
+	#rm target.*
 
 run:
 	./backend_gen d32i.id
