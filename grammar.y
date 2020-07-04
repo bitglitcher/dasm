@@ -83,6 +83,7 @@ arguments:
             printf("arguments number detected: %d\n", val);
             ARG_NODE_TEMPLATE node;
             node.value = val;
+            node.domain = "numeric";
             append_arg(&arg, node);
         }
     }

@@ -5,6 +5,7 @@
 #include "libs/arg_table.h"
 #include "internals_backend.h"
 #include "libs/symbol_table.h"
+#include "libs/terminal_colors.h"
 #include "build/target.h"
 
 /*Have to be defined*/
@@ -68,34 +69,34 @@ INS_NODE_TEMPLATE* get_duplicate_index(char* name, int offset)
 
 bool* check_types(ARG_TABLE* arg_table, INS_NODE_TEMPLATE* ins_node)
 {
-    if(!ins_node->ntypes)
-    {
-        printf("\t\t\t\t\tInstruction Node Argument Template Not Implemented\n");
-        return (bool*)true;
-    }
+    //if(!ins_node->ntypes)
+    //{
+    //    printf("\t\t\t\t\tInstruction Node Argument Template Not Implemented\n");
+    //    return (bool*)true;
+    //}
     if(arg_table && ins_node)
     {
         printf("\t\t\t\tcheck type arguments allocated!\n");
+        
+        //Because the number of elements on the arg_table and the instruction template
+        //are the same, we can use a sungle for loop to address the two arrays
         for(int i = 0;i <= arg_table->size; i++)
         {
             printf("\t\t\t\tcheck types iteration!\n");
-            //Get the argument template and check if it matches the arg_table
-            for(int x = 0;x <= *(ins_node->ntypes + x) - 1; x++)
+            printf("\t\t\t\tINS_TEMPLATE name -> %s\n", ins_node->name);
+            printf("\t\t\t\t\tARG_NODE index -> %d\n", i);
+            for(int x = 0;x <= ins_node->arg_templates[i]->size;x++)
             {
-                printf("\t\t\t\t\tcheck ntypes iteration!\n");
-                //*((arr+i*n) + j)
-                /*
-                if(arg_table->data[i].type != ins_node->types[i])
+                printf("\t\t\t\t\tINS_ARG_TEMPLATE iteration: got %s, expected %s\n", arg_table->data[i].domain, ins_node->arg_templates[i]->templates[x]);
+                //printf("\t\t\t\t\tGot domain -> %s\n", arg_table->data[i].domain);
+                if(strcmp(arg_table->data[i].domain, ins_node->arg_templates[i]->templates[x]) != 0)
                 {
-                    //int** types = ins_node->types;
-                    //printf("comparation: %d\n", *((ins_node->types + i * sizeof(int)) + x));
-                    //printf("comparation: %d\n", arg_table->data[i].type);
-                    printf("index i: %d\n", i);
-                    printf("index x: %d\n", x);
-                    printf("dasm: error: incompatible arguments %d\n", *types + i);
-                    printf("dasm: error: expected arguments %d, recieved %d\n", types[i], arg_table->data[i].type);
-                    return NULL;
-                }*/
+                    printf(ANSI_COLOR_RED "Error: " ANSI_COLOR_RESET "imcompatible argument %s\n", arg_table->data[i].name);
+                    printf(ANSI_COLOR_RED "Error: " ANSI_COLOR_RESET "imcompatible argument, expected argument %s, recieved %s\n", ins_node->arg_templates[i]->templates[x], arg_table->data[i].domain);
+                    //Print possible domains
+                    printf(ANSI_COLOR_GREEN "Possible Arguments:" ANSI_COLOR_RESET "\n");
+                    return (bool*) false;
+                }
             }
         }
     }
