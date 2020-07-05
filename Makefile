@@ -40,8 +40,8 @@ libs: libs/file_table.c libs/file_table.h libs/symbol_table.o libs/arg_table.c l
 	gcc libs/arg_table.c -c
 
 
-main: main.c libs/terminal_colors.h libs/file_table.o libs/file_table.c libs/symbol_table.o libs/symbol_table.c internals.o target.o
-	gcc main.c lex.yy.o y.tab.o libs/file_table.o libs/symbol_table.o internals.o internals_backend.o arg_table.o target.o -g -o dasm
+main: main.c libs/terminal_colors.h libs/file_table.o libs/file_table.c libs/symbol_table.o libs/symbol_table.c internals.o target.o preprocessor.o
+	gcc main.c lex.yy.o y.tab.o libs/file_table.o libs/symbol_table.o internals.o internals_backend.o arg_table.o target.o preprocessor.o -g -o dasm
 
 clean:
 	rm *.o

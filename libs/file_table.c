@@ -1,5 +1,6 @@
 #include "file_table.h"
 #include "terminal_colors.h"
+#include "../preprocessor/preprocessor.h"
 
 void init_file_table(FILE_TABLE* file_table)
 {
@@ -60,6 +61,14 @@ void append_file(FILE_TABLE* file_table, char* name)
         printf("contents in memory %s\n", mem_block);
         fclose(file_ptr);
 
+        //Preprocess files
+        //Remove single line comments
+        mem_block = remove_line_comment(mem_block, file_size);
+        
+        //Remove multiline comments
+        mem_block = remove_block_comment(mem_block, file_size); 
+        
+        printf("contents in memory %s\n", mem_block);
         //Apend it to a file node
         file_table->data[file_table->size].data = strdup(mem_block);
         free(mem_block);
