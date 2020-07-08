@@ -11,6 +11,7 @@
 #include "symbol_table.h"
 #include "backend_parser_types.h"
 #include "../libs/terminal_colors.h"
+#include "../preprocessor/preprocessor.h"
 //Define if the front end uses hardcoded architecture description
 //#define BULTIN_PARSER
 
@@ -446,6 +447,11 @@ int main(int argc, char* argv[])
         //Initilize
         init_symbol_table(&symbol_table);
         reset_identifiers();
+
+        //Call preprocessor functions
+        input_buffer = remove_line_comment(input_buffer, file_size);
+        input_buffer = remove_block_comment(input_buffer, file_size);
+
         yy_scan_bytes(input_buffer, file_size);
         yyparse();
         print_symbol_table(&symbol_table);

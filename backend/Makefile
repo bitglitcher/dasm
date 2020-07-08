@@ -4,7 +4,7 @@ FLAGS=
 all:
 	bison -d grammar.y --report=all
 	flex lexer.l
-	$(CC) $(FLAGS) lex.yy.c grammar.tab.c symbol_table.c backend_parser.c -g -o backend_gen
+	$(CC) $(FLAGS) lex.yy.c grammar.tab.c symbol_table.c ../preprocessor/preprocessor.c backend_parser.c -g -o backend_gen
 
 clean:
 	rm grammar.tab.c

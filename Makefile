@@ -47,6 +47,7 @@ clean:
 	rm *.o
 	rm *.tab.c
 	#rm *.yy.
+	rm *.gch
 ifneq (,$(wildcard dasm))
 	rm dasm
 endif

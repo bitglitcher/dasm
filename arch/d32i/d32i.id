@@ -1,3 +1,5 @@
+//Registers
+
 arg registers
 {
 	(ax){0x00},
@@ -7,6 +9,8 @@ arg registers
 	(ex){0x04},
 	(fx){0x05}
 }
+
+//Keywords
 
 arg hi_lo{
 	(lo){1},
