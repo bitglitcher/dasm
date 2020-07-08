@@ -340,7 +340,7 @@ void gen_ins(SYMBOL_TABLE* symbol_table, FILE* _c_file, FILE* _h_file)
                 }
             }
         }
-        fputs("}", _h_file);
+        fputs("}\n\n", _h_file);
     }
 }
 
@@ -355,6 +355,12 @@ void gen_ins_encoding(SYMBOL_TABLE* symbol_table, FILE* _c_file, FILE* _c_header
                 if(symbol_table->data[i].scope_type == TYPE_ENCODE)
                 {
                     printf("Instruction Encoding Found -> %s\n", symbol_table->data[i].name);   
+                    printf("\nEncoding Domain %s\n", symbol_table->data[i].domain);
+                    //Delete semicolons from strings
+                    char* new_string = malloc(sizeof(char) * (strlen (symbol_table->data[i].name) - 2));
+                    memcpy(new_string, symbol_table->data[i].name + 1, strlen(symbol_table->data[i].name));
+                    *(new_string + strlen(new_string) - 1) = ' ';
+                    fprintf(_c_header, "#define %s_encode%s\n", symbol_table->data[i].domain, new_string);
                 }   
             }
         }
@@ -462,7 +468,7 @@ int main(int argc, char* argv[])
         gen_keywords(&symbol_table, c_file, c_header);
         gen_arg_template(&symbol_table, c_file, c_header);
         gen_ins(&symbol_table, c_file, c_header);
-        gen_ins_encoding(&symbol_table, NULL, NULL);
+        gen_ins_encoding(&symbol_table, c_file, c_header);
         fputs(EPILOUGE_H, c_header);
 
         fclose(c_file);

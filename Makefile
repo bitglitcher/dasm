@@ -46,7 +46,8 @@ main: main.c libs/terminal_colors.h libs/file_table.o libs/file_table.c libs/sym
 clean:
 	rm *.o
 	rm *.tab.c
-	#rm *.yy.
+	rm *.tab.h
+	rm *.yy.c
 	rm *.gch
 ifneq (,$(wildcard dasm))
 	rm dasm
