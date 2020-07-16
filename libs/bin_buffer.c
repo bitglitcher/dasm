@@ -17,14 +17,14 @@ void append_byte(BIN_BUFFER* bin_buffer, char byte)
         bin_buffer->size++;
     }
     //Check capacity
-    if(bin_buffer->size > bin_buffer->capacity)
+    if(bin_buffer->size >= bin_buffer->capacity)
     {
         bin_buffer->capacity *= 2;
         bin_buffer->data = realloc(bin_buffer->data, sizeof(char) * bin_buffer->capacity);
     }
 
     //Apend data
-    bin_buffer->data[bin_buffer->size] = byte;
+    bin_buffer->data[bin_buffer->size]  = byte;
 }
 
 void init_buffer(BIN_BUFFER_TABLE* bin_buffer_table)
@@ -50,10 +50,11 @@ void append_buffer(BIN_BUFFER_TABLE* bin_buffer_table, BIN_BUFFER* bin_buffer)
     if(bin_buffer_table->size > bin_buffer_table->capacity)
     {
         bin_buffer_table->capacity = bin_buffer_table->capacity * 2;
-        bin_buffer_table->data = realloc(bin_buffer_table->data, sizeof(BIN_BUFFER) * bin_buffer_table->capacity);
+        bin_buffer_table->data = realloc(bin_buffer_table->data, sizeof(BIN_BUFFER*) * bin_buffer_table->capacity);
     }
 
-    (bin_buffer_table->data + bin_buffer_table->size) = bin_buffer;
+    //memcpy(bin_buffer_table->data + bin_buffer_table->size, bin_buffer, sizeof(BIN_BUFFER*) );
+    *(bin_buffer_table->data + bin_buffer_table->size) = *bin_buffer;
 }
 
 

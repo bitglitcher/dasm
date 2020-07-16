@@ -7,6 +7,7 @@
 #include "libs/symbol_table.h"
 #include "libs/terminal_colors.h"
 #include "build/target.h"
+#include "libs/bin_buffer.h"
 
 /*Have to be defined*/
 //char* regs [] = REGS_NAMES;
@@ -61,7 +62,7 @@ INS_NODE_TEMPLATE* get_duplicate_index(char* name, int offset)
         printf("identifier name: %s\n", name);
         if(strcmp(ptr->name, name) == 0)
         {
-            return i;
+            return ptr;
         }
     }
     return NULL; //If nothing was found
@@ -79,7 +80,7 @@ bool* check_types(ARG_TABLE* arg_table, INS_NODE_TEMPLATE* ins_node)
         printf("\t\t\t\tcheck type arguments allocated!\n");
         
         //Because the number of elements on the arg_table and the instruction template
-        //are the same, we can use a sungle for loop to address the two arrays
+        //are the same, we can use a single for loop to address the two arrays
         for(int i = 0;i <= arg_table->size; i++)
         {
             printf("\t\t\t\tcheck types iteration!\n");
@@ -91,10 +92,10 @@ bool* check_types(ARG_TABLE* arg_table, INS_NODE_TEMPLATE* ins_node)
                 //printf("\t\t\t\t\tGot domain -> %s\n", arg_table->data[i].domain);
                 if(strcmp(arg_table->data[i].domain, ins_node->arg_templates[i]->templates[x]) != 0)
                 {
-                    printf(ANSI_COLOR_RED "Error: " ANSI_COLOR_RESET "imcompatible argument %s\n", arg_table->data[i].name);
-                    printf(ANSI_COLOR_RED "Error: " ANSI_COLOR_RESET "imcompatible argument, expected argument %s, recieved %s\n", ins_node->arg_templates[i]->templates[x], arg_table->data[i].domain);
+//                    printf(ANSI_COLOR_RED "Error: " ANSI_COLOR_RESET "imcompatible argument %s\n", arg_table->data[i].name);
+//                    printf(ANSI_COLOR_RED "Error: " ANSI_COLOR_RESET "imcompatible argument, expected argument %s, recieved %s\n", ins_node->arg_templates[i]->templates[x], arg_table->data[i].domain);
                     //Print possible domains
-                    printf(ANSI_COLOR_GREEN "Possible Arguments:" ANSI_COLOR_RESET "\n");
+//                    printf(ANSI_COLOR_GREEN "Possible Arguments:" ANSI_COLOR_RESET "\n");
                     return (bool*) false;
                 }
             }
@@ -127,9 +128,13 @@ void assemble_ins(char* name , ARG_TABLE* arg_table)
                 if(check_types(arg_table, ptr))
                 {
                     //Call assembler function and provide context
-                    //(*ptr->asm_func)(NULL, arg_table, ptr->op);
+                    (*ptr->asm_func)(&bin_buffer, arg_table, ptr->op);
                     printf("\t\t\t\tAssembler functions now implemented\n");
                     return; //Done with assembling
+                }
+                else 
+                {    
+                    printf("\t\tIteration to find overriden template\n");
                 }
             }
             else
@@ -151,6 +156,11 @@ void assemble_ins(char* name , ARG_TABLE* arg_table)
         }
     }
     //If not found check for defenitions IDK
+    //If there is no return at this point print errors
+    //
+    //
+    //
+    //
 }
 
 extern SYMBOL_TABLE symbol_table; //Global symbol table

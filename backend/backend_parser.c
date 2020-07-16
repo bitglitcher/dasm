@@ -28,7 +28,7 @@ extern void print_symbol_table();
 #define DEFAULT_HEADER_FILE "target.h"
 #define DEFALUT_INPUT_FILE "target.id" 
 
-#define PROLOGUE_H "#ifndef _TARGET_\n#define _TARGET_\n\n#include \"../internals.h\"\n\n\n\n"
+#define PROLOGUE_H "#ifndef _TARGET_\n#define _TARGET_\n\n#include \"../internals.h\"\n#include \"../libs/bin_buffer.h\"\n\n\n\n"
 
 #define EPILOUGE_H "\n\n\n\n#endif\n"
 
@@ -281,8 +281,26 @@ void gen_ins(SYMBOL_TABLE* symbol_table, FILE* _c_file, FILE* _h_file)
                     //INS_NODE_TEMPLATE shftr = {.op = iSHFTR, .name="shftr", .nargs = 3, .relative_args = {0, 0, 0}, .asm_func = &assemble_alu};
 
                     INS_TEMPLATES_CNT++;
-                    fprintf(_c_file, "INS_NODE_TEMPLATE %s = { .name=\"%s\", .arg_templates = {", \
-                            symbol_table->data[i].name, symbol_table->data[i].name);
+                    char* ins_mnemonic;
+                    for(int x = 0; x <= symbol_table->size;x++)
+                    {
+                        if(symbol_table->data + x)
+                        {
+                            if(symbol_table->data[x].scope_type == TYPE_MNEMONIC)
+                            {
+                                ins_mnemonic = symbol_table->data[x].name;
+                                printf("Data on mnemonic%s\n", symbol_table->data[x].name);
+                                if(!ins_mnemonic)
+                                {
+                                    ins_mnemonic = "Data Not Found!";
+                                }
+                            }
+                        }
+                    }
+                    //Semicolons are not added or removed because, we could use instead, the semicolons
+                    //already placed from the parse stage directly into the .name member
+                    fprintf(_c_file, "INS_NODE_TEMPLATE %s = { .name=%s, .arg_templates = {", \
+                            symbol_table->data[i].name, ins_mnemonic);
                     fprintf(_h_file, "extern INS_NODE_TEMPLATE %s;\n", symbol_table->data[i].name);
                     first = true;
                     int n_templates = 0;
@@ -311,7 +329,7 @@ void gen_ins(SYMBOL_TABLE* symbol_table, FILE* _c_file, FILE* _h_file)
                             }
                         };
                     }	
-                    fprintf(_c_file, "}, .n_templates = %d, /*, .relative_args = {0, 0, 0}, .asm_func = &assemble_alu*/};\n", n_templates);
+                    fprintf(_c_file, "}, .n_templates = %d, .asm_func = &%s_encode_function /*.relative_args = {0, 0, 0}, */};\n", n_templates, symbol_table->data[i].name);
                 }
             }
         }
@@ -367,6 +385,46 @@ void gen_ins_encoding(SYMBOL_TABLE* symbol_table, FILE* _c_file, FILE* _c_header
     }
 }
 
+void gen_ins_functions(SYMBOL_TABLE* symbol_table, FILE* _c_file, FILE* _c_header)
+{
+    if(symbol_table)
+    {
+        for(int i = 0;i <= symbol_table->size;i++)
+        {
+            if(symbol_table->data + i)
+            {
+                if(symbol_table->data[i].scope_type == TYPE_DEF)
+                {
+                    printf("\t\tgen_ins_function: %s\n", symbol_table->data[i].name);
+                    fprintf(_c_header, "extern void %s_encode_function(BIN_BUFFER* bin_buffer, ARG_TABLE* arg_table, int op);\n", symbol_table->data[i].name);
+                    fprintf(_c_file, "\nvoid %s_encode_function(BIN_BUFFER* bin_buffer, ARG_TABLE* arg_table, int op)\n{\n", symbol_table->data[i].name);
+                    fprintf(_c_file, "\tprintf(\"Function For assembler called %s\");\n", symbol_table->data[i].name);
+                    for(int x = 0;x <= symbol_table->size;x++)
+                    {
+                        if(symbol_table->data + x)
+                        {
+                            if(symbol_table->data[x].scope_type == TYPE_ENCODE)
+                            {
+                                if(strcmp(symbol_table->data[x].domain, symbol_table->data[i].name) == 0)
+                                {
+                                    printf("Instruction Encoding Found -> %s\n", symbol_table->data[x].name);   
+                                    printf("\nEncoding Domain %s\n", symbol_table->data[x].domain);
+                                    //Delete semicolons from strings
+                                    char* new_string = malloc(sizeof(char) * (strlen (symbol_table->data[x].name)));
+                                    memcpy(new_string, symbol_table->data[x].name + 1, strlen(symbol_table->data[x].name));
+                                    *(new_string + strlen(new_string) - 1) = ' ';
+                                    fprintf(_c_file, "%s\n", new_string);
+                                }
+                            }   
+                        }
+                    }                   //Now serch for the C code node
+                    fputs("}\n", _c_file);
+                }
+            }
+        }
+    }
+}
+
 FILE* c_file = NULL;
 FILE* c_header = NULL;
 FILE* input_file = NULL;
@@ -388,7 +446,7 @@ int main(int argc, char* argv[])
         printf(ANSI_COLOR_YELLOW "Warning: " ANSI_COLOR_RESET "Using DEAFULT input name\n");
         arguments.input_file = DEFALUT_INPUT_FILE;
     }
-    
+
     if(arguments.prefix == NULL)
     {
         printf(ANSI_COLOR_RED "Error: " ANSI_COLOR_RESET "No output prefix specified.\n");
@@ -414,8 +472,8 @@ int main(int argc, char* argv[])
     c_file = fopen (concat_string, "w");
     free(concat_string);
     input_file = fopen(arguments.input_file, "rb");
-    
-        printf("Directory after: %s\n", arguments.input_file);
+
+    printf("Directory after: %s\n", arguments.input_file);
     if(!input_file)
     {
         printf(ANSI_COLOR_RED "error: " ANSI_COLOR_RESET "No such file or directory\n");
@@ -458,17 +516,19 @@ int main(int argc, char* argv[])
         input_buffer = remove_line_comment(input_buffer, file_size);
         input_buffer = remove_block_comment(input_buffer, file_size);
 
+        //Begin parsing the main file
         yy_scan_bytes(input_buffer, file_size);
         yyparse();
         print_symbol_table(&symbol_table);
-
+        //Produce PROLOGUE
         fputs(PROLOGUE_H, c_header);
         fputs(PROLOGUE_C, c_file);
-
+        //Generate
         gen_keywords(&symbol_table, c_file, c_header);
         gen_arg_template(&symbol_table, c_file, c_header);
         gen_ins(&symbol_table, c_file, c_header);
-        gen_ins_encoding(&symbol_table, c_file, c_header);
+        //gen_ins_encoding(&symbol_table, c_file, c_header);
+        gen_ins_functions(&symbol_table, c_file, c_header);
         fputs(EPILOUGE_H, c_header);
 
         fclose(c_file);

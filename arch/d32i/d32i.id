@@ -21,22 +21,27 @@ def load_assisted{
 
 	arg_template{
 	(hilo){hi_lo},
-	(val){numeric},
-	(something){numeric},
-	(apple){numeric}
+	(val){numeric}
 	}
 
 	max {
 	(val){0xff}
 	}
 
+    //C code goes here for the assembler function
 	encode {
-	"(hilo, val) ((hilo << 3) | (val << 4))"
+	"
+        //Function arguments
+        //BIN_BUFFER* bin_buffer, ARG_TABLE* arg_table, int op
+        
+        //Append byte to bin_buffer
+        append_byte(bin_buffer, 0x45);  
+    "
 	}
 
 
-	assemble {
-	"load %hilo %val\n"
+	mnemonic {
+	"load"
 	}
 
 }
@@ -52,11 +57,13 @@ def load{
 	}
 
 	encode {
-	"(def) (def + 23)"
-	}
+	"
+        //Append byte to bin_buffer
+        append_byte(bin_buffer, 0x45); 
+    "}
 
-	assemble{
-	"load %hilo"
+	mnemonic{
+	"load"
 	}
 
 }

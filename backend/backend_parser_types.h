@@ -6,7 +6,7 @@
 
 #define TYPE_DEF            0
 #define TYPE_ARG            1
-#define TYPE_ASSEMBLE       2
+#define TYPE_MNEMONIC       2
 #define TYPE_ENCODE         3
 #define TYPE_MAX            4
 #define TYPE_ARG_TEMPLATE   5

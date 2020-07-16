@@ -2,7 +2,7 @@ ARCH=d32i
 
 all: backend grammar internals arch compile_grammar lexer preprocessor libs main
 
-backend: backend/*
+backend:
 	@$(MAKE) -C backend/
 	$(Creating Build Directory)
 ifeq (,$(wildcard build/))
@@ -34,14 +34,15 @@ lexer:
 preprocessor: preprocessor/preprocessor.h preprocessor/preprocessor.c
 	gcc preprocessor/preprocessor.c -c
 
-libs: libs/file_table.c libs/file_table.h libs/symbol_table.o libs/arg_table.c libs/arg_table.h
+libs: libs/file_table.c libs/file_table.h libs/symbol_table.o libs/arg_table.c libs/arg_table.h libs/bin_buffer.c libs/bin_buffer.o
 	gcc libs/file_table.c -c
 	gcc libs/symbol_table.c -c
 	gcc libs/arg_table.c -c
+	gcc libs/bin_buffer.c -g -c
 
 
 main: main.c libs/terminal_colors.h libs/file_table.o libs/file_table.c libs/symbol_table.o libs/symbol_table.c internals.o target.o preprocessor.o
-	gcc main.c lex.yy.o y.tab.o libs/file_table.o libs/symbol_table.o internals.o internals_backend.o arg_table.o target.o preprocessor.o -g -o dasm
+	gcc main.c lex.yy.o y.tab.o libs/file_table.o libs/symbol_table.o libs/bin_buffer.o internals.o internals_backend.o arg_table.o target.o preprocessor.o -g -o dasm
 
 clean:
 	rm *.o

@@ -57,6 +57,9 @@ SYMBOL_TABLE symbol_table;
 //Parsing variables
 bool dry_run = true;
 
+//Bin buffer
+BIN_BUFFER bin_buffer;
+
 void print_symbol_table(SYMBOL_TABLE* symbol_table)
 {
     printf("\n\n------------SYMBOL_TABLE------------\n");
@@ -99,6 +102,13 @@ int main(int argc, char *argv[])
         init_file_table(&file_table);
         init_symbol_table(&symbol_table);
         init_internals();
+        //Init Bin Buffer
+        bin_buffer.size = 0;
+        bin_buffer.capacity = 8;
+        bin_buffer.wait_slot = true;
+        bin_buffer.data = malloc(sizeof(char) * bin_buffer.capacity);
+
+        
         append_file(&file_table, arguments.input_file);
         //Parse first file
         printf("Scanning File\n");
@@ -114,6 +124,24 @@ int main(int argc, char *argv[])
             yy_scan_bytes(file_node->data, file_node->size);
             yyparse();
             if(arguments.table_display) print_symbol_table(&symbol_table);
+
+            //Now print the contents of the assembled file
+            const int n_col = 4;
+            int col_cnt = 0;
+            bool first = true; 
+            printf("Size of Bin_buffer %d\n", bin_buffer.size); 
+            printf("Contents of Bin_Buffer:\n\n");
+            for(int i = 0; i <= bin_buffer.size;i++)
+            {
+                if(col_cnt == n_col)
+                {
+                        printf("\n");
+                    col_cnt = 0;
+                }
+                printf("0x%x ", bin_buffer.data[i]); 
+                col_cnt++;
+            }
+            printf("\n");
         }
         else
         {

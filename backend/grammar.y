@@ -42,7 +42,7 @@ LIST* link_list;
 
 %}
 
-%token DEF IDENTIFIER ARG ENCODE MAX ARG_TEMPLATE ASSEMBLE NUMBER STRING
+%token DEF IDENTIFIER ARG ENCODE MAX ARG_TEMPLATE MNEMONIC NUMBER STRING
 
 
 %%
@@ -122,10 +122,10 @@ arg_template:
 	ARG_TEMPLATE '{'  {link_list = create_list(); scope_type = TYPE_ARG_TEMPLATE;} template_defs '}' {link_list = NULL;}
 	;
 
-assemble:
-	ASSEMBLE '{' {scope_type = TYPE_ASSEMBLE;} STRING '}'
+mnemonic:
+	MNEMONIC '{' {scope_type = TYPE_MNEMONIC;} STRING '}'
 	{
-		append_symbol(&symbol_table, string_literal, TYPE_ASSEMBLE, 0, domain, TYPE_ASSEMBLE);
+		append_symbol(&symbol_table, string_literal, TYPE_MNEMONIC, 0, domain, TYPE_MNEMONIC);
 	}
 	;
 
@@ -141,7 +141,7 @@ encode:
 	;
 
 def_branch:
-	assemble
+	mnemonic
 	|
 	arg_template
 	|

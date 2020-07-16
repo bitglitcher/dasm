@@ -27,4 +27,6 @@ void increment_addr();
 
 int addr;
 
+extern BIN_BUFFER bin_buffer;
+
 #endif

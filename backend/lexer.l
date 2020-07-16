@@ -22,10 +22,10 @@ void reset_identifiers()
     identifier_index = 0;
 }
 
-char * keywords [] = {"arg", "encode", "assemble", "max", "def", "arg_template"};
-int keyword_id [10] = {ARG, ENCODE, ASSEMBLE, MAX, DEF, ARG_TEMPLATE};
+char * keywords [] = {"arg", "encode", "mnemonic", "max", "def", "arg_template"};
+int keyword_id [10] = {ARG, ENCODE, MNEMONIC, MAX, DEF, ARG_TEMPLATE};
 
-const char* scope_names [] = {"def", "arg", "assemble", "encode", "max", "arg_template"};
+const char* scope_names [] = {"def", "arg", "mnemonic", "encode", "max", "arg_template"};
 
 int return_token(char* identifier)
 {
