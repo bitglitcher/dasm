@@ -90,14 +90,14 @@ bool* check_types(ARG_TABLE* arg_table, INS_NODE_TEMPLATE* ins_node)
             {
                 printf("\t\t\t\t\tINS_ARG_TEMPLATE iteration: got %s, expected %s\n", arg_table->data[i].domain, ins_node->arg_templates[i]->templates[x]);
                 //printf("\t\t\t\t\tGot domain -> %s\n", arg_table->data[i].domain);
-                if(strcmp(arg_table->data[i].domain, ins_node->arg_templates[i]->templates[x]) != 0)
-                {
+                //if(strcmp(arg_table->data[i].domain, ins_node->arg_templates[i]->templates[x]) != 0)
+                //{
 //                    printf(ANSI_COLOR_RED "Error: " ANSI_COLOR_RESET "imcompatible argument %s\n", arg_table->data[i].name);
 //                    printf(ANSI_COLOR_RED "Error: " ANSI_COLOR_RESET "imcompatible argument, expected argument %s, recieved %s\n", ins_node->arg_templates[i]->templates[x], arg_table->data[i].domain);
                     //Print possible domains
 //                    printf(ANSI_COLOR_GREEN "Possible Arguments:" ANSI_COLOR_RESET "\n");
-                    return (bool*) false;
-                }
+                    //return (bool*) false;
+                //}
             }
         }
     }

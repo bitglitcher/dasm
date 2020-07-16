@@ -17,57 +17,47 @@ arg hi_lo{
 	(hi){2}
 }
 
-def load_assisted{
 
-	arg_template{
-	(hilo){hi_lo},
-	(val){numeric}
-	}
+def mov {
 
-	max {
-	(val){0xff}
-	}
+    arg_template{
+    (op0){registers},
+    (op1){registers, numeric}
+    }
 
-    //C code goes here for the assembler function
-	encode {
-	"
-        //Function arguments
-        //BIN_BUFFER* bin_buffer, ARG_TABLE* arg_table, int op
-        
-        //Append byte to bin_buffer
-        append_byte(bin_buffer, 0x45);  
+    max {
+    }
+    
+    encode {
     "
-	}
+    printf(\"Mov Instruction Detected\n\");
+    append_byte(bin_buffer, 0x12);
+    "
+    }
 
-
-	mnemonic {
-	"load"
-	}
-
+    mnemonic {
+    "mov"
+    }
 }
 
-def load{
-	arg_template{
-	(regs){registers},
-	(val){numeric}
-	}
+def add {
 
-	max {
-	(regs){7}
-	}
+    arg_template{
+    (op0){register},
+    (op1){registers, numeric}
+    }
 
-	encode {
-	"
-        //Append byte to bin_buffer
-        append_byte(bin_buffer, 0x45); 
-    "}
+    max {
+    }
+    
+    encode {
+    "
+        printf(\"Mov Instruction Detected\n\");
+        append_byte(bin_buffer, 0x13);
+    "
+    }
 
-	mnemonic{
-	"load"
-	}
-
+    mnemonic {
+    "add"
+    }
 }
-
-def store{}
-def add{}
-def sub{}

@@ -281,18 +281,20 @@ void gen_ins(SYMBOL_TABLE* symbol_table, FILE* _c_file, FILE* _h_file)
                     //INS_NODE_TEMPLATE shftr = {.op = iSHFTR, .name="shftr", .nargs = 3, .relative_args = {0, 0, 0}, .asm_func = &assemble_alu};
 
                     INS_TEMPLATES_CNT++;
-                    char* ins_mnemonic;
+                    char* ins_mnemonic = "\"Data Not Found\"";
                     for(int x = 0; x <= symbol_table->size;x++)
                     {
                         if(symbol_table->data + x)
                         {
                             if(symbol_table->data[x].scope_type == TYPE_MNEMONIC)
                             {
-                                ins_mnemonic = symbol_table->data[x].name;
-                                printf("Data on mnemonic%s\n", symbol_table->data[x].name);
-                                if(!ins_mnemonic)
+                                //Name memeber for index i, because thats the inital node
+                                printf("\t\t\t\tname -> %s, domain -> %s\n", symbol_table->data[i].name, symbol_table->data[x].domain);
+                                if(strcmp(symbol_table->data[x].domain, symbol_table->data[i].name) == 0)
                                 {
-                                    ins_mnemonic = "Data Not Found!";
+                                    ins_mnemonic = symbol_table->data[x].name;
+                                    printf("\t\t\t\tmnemonic found %s\n", symbol_table->data[x].name);
+                                    break; //Exit loop x
                                 }
                             }
                         }
@@ -413,6 +415,19 @@ void gen_ins_functions(SYMBOL_TABLE* symbol_table, FILE* _c_file, FILE* _c_heade
                                     char* new_string = malloc(sizeof(char) * (strlen (symbol_table->data[x].name)));
                                     memcpy(new_string, symbol_table->data[x].name + 1, strlen(symbol_table->data[x].name));
                                     *(new_string + strlen(new_string) - 1) = ' ';
+
+                                    //Now that the semicolons have been removed
+                                    //Remove \" characters from the File
+                                    //This will leave black spaces and should later be fixed
+                                    //By shifting the characters
+                                    for(int y = 0;y <= strlen(new_string);y++)
+                                    {
+                                        if((new_string[y] == '\\') & (new_string[y + 1] == '\"'))
+                                        {
+                                            *(new_string + y) = ' ';
+                                        }
+
+                                    }
                                     fprintf(_c_file, "%s\n", new_string);
                                 }
                             }   
