@@ -61,3 +61,25 @@ def add {
     "add"
     }
 }
+
+def jmp {
+
+    arg_template
+    {
+    (op0){numeric}
+    }
+    
+    max {
+
+    }
+
+    encode {
+    "
+        append_byte(bin_buffer, arg_table->data[0].value);
+    "
+    }
+    
+    mnemonic {
+    "jmp"
+    }
+}

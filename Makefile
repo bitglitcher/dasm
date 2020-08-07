@@ -24,6 +24,10 @@ internals: internals.c internals.h internals_backend.c internals_backend.h
 arch: build/target.c
 	gcc build/target.c -c
 
+obj_file: obj_file.c obj_file.h
+	gcc obj_file.c -c 
+	gcc obj_file.h -c
+
 compile_grammar: grammar.y libs/terminal_colors.h
 	gcc y.tab.c -c
 
@@ -41,8 +45,8 @@ libs: libs/file_table.c libs/file_table.h libs/symbol_table.o libs/arg_table.c l
 	gcc libs/bin_buffer.c -g -c
 
 
-main: main.c libs/terminal_colors.h libs/file_table.o libs/file_table.c libs/symbol_table.o libs/symbol_table.c internals.o target.o preprocessor.o
-	gcc main.c lex.yy.o y.tab.o libs/file_table.o libs/symbol_table.o libs/bin_buffer.o internals.o internals_backend.o arg_table.o target.o preprocessor.o -g -o dasm
+main: main.c libs/terminal_colors.h libs/file_table.o libs/file_table.c libs/symbol_table.o libs/symbol_table.c internals.o target.o preprocessor.o obj_file.o
+	gcc main.c lex.yy.o y.tab.o libs/file_table.o libs/symbol_table.o libs/bin_buffer.o internals.o internals_backend.o arg_table.o target.o preprocessor.o obj_file.o -g -o dasm
 
 clean:
 	rm *.o

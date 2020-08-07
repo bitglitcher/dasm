@@ -78,7 +78,7 @@ bool* check_types(ARG_TABLE* arg_table, INS_NODE_TEMPLATE* ins_node)
     if(arg_table && ins_node)
     {
         printf("\t\t\t\tcheck type arguments allocated!\n");
-        
+
         //Because the number of elements on the arg_table and the instruction template
         //are the same, we can use a single for loop to address the two arrays
         for(int i = 0;i <= arg_table->size; i++)
@@ -92,11 +92,11 @@ bool* check_types(ARG_TABLE* arg_table, INS_NODE_TEMPLATE* ins_node)
                 //printf("\t\t\t\t\tGot domain -> %s\n", arg_table->data[i].domain);
                 //if(strcmp(arg_table->data[i].domain, ins_node->arg_templates[i]->templates[x]) != 0)
                 //{
-//                    printf(ANSI_COLOR_RED "Error: " ANSI_COLOR_RESET "imcompatible argument %s\n", arg_table->data[i].name);
-//                    printf(ANSI_COLOR_RED "Error: " ANSI_COLOR_RESET "imcompatible argument, expected argument %s, recieved %s\n", ins_node->arg_templates[i]->templates[x], arg_table->data[i].domain);
-                    //Print possible domains
-//                    printf(ANSI_COLOR_GREEN "Possible Arguments:" ANSI_COLOR_RESET "\n");
-                    //return (bool*) false;
+                //                    printf(ANSI_COLOR_RED "Error: " ANSI_COLOR_RESET "imcompatible argument %s\n", arg_table->data[i].name);
+                //                    printf(ANSI_COLOR_RED "Error: " ANSI_COLOR_RESET "imcompatible argument, expected argument %s, recieved %s\n", ins_node->arg_templates[i]->templates[x], arg_table->data[i].domain);
+                //Print possible domains
+                //                    printf(ANSI_COLOR_GREEN "Possible Arguments:" ANSI_COLOR_RESET "\n");
+                //return (bool*) false;
                 //}
             }
         }
@@ -182,19 +182,22 @@ ARG_NODE_TEMPLATE match_args(char* name)
             break;
         }
     }
-/*
+
     //Symbol table search
     SYMBOL_NODE* symbol_node = search_symbol(&symbol_table, name, "none");
     if(symbol_node)
     {
-        arg_match.val = symbol_node->addr;
-        arg_match.type = symbol_node->type;
-        return arg_match;
+        arg_node.value = symbol_node->addr;
+        arg_node.name = symbol_node->name;
+        arg_node.domain = symbol_node->domain;
+        return arg_node;
     }
     printf("Invalid argument: default 0x0000\n");
-    arg_match.val = 0;
-    return arg_match;
-*/
+    arg_node.value = 0;
+    arg_node.domain = "invalid";
+    arg_node.name = "invalid";
+    return arg_node;
+
 }
 
 bool wait_slot_addr_inc = true;
@@ -209,7 +212,17 @@ void increment_addr()
         //Hardcoded just for testing, should be CHANGED later
         addr += 2;//NADDR_INS;
     }
-    
+
 }
 
-
+bool get_domain(char* domain)
+{
+    for(int i = 0;i <= N_ARG_NODES;i++)
+    {
+        if(strcmp(arg_node_templates[i]->domain, domain))
+        {
+            return true;
+        }
+    }
+    return false; //If nothing was found
+}

@@ -1,0 +1,15 @@
+/*
+Testing block commnets
+*/
+
+//Testing preprocessor
+
+
+
+    mov cx, 0x54;
+    mov dx, 0x34;
+main:
+    mov ax, 0x00;
+    mov bx, cx;
+    add ax, 0x02;
+    jmp main;

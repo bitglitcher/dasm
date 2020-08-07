@@ -12,6 +12,7 @@ Autor: Benjamin Herrera Navarro
 #include "libs/file_table.h"
 #include "libs/symbol_table.h"
 #include "internals.h"
+#include "obj_file.h"
 
 const char *argp_program_version = "dasm rebuilt";
 const char *argp_program_bug_address = "<draketaco@github.com>";
@@ -33,10 +34,10 @@ struct arguments {
 static error_t parse_opt(int key, char *arg, struct argp_state *state) {
     struct arguments *arguments = state->input;
     switch (key) {
-    case 'o': arguments->output_file = strdup(arg); break;
-    case 't': arguments->table_display = true; break;
-    case ARGP_KEY_ARG: arguments->input_file = strdup(arg); return 0;
-    default: return ARGP_ERR_UNKNOWN;
+        case 'o': arguments->output_file = strdup(arg); break;
+        case 't': arguments->table_display = true; break;
+        case ARGP_KEY_ARG: arguments->input_file = strdup(arg); return 0;
+        default: return ARGP_ERR_UNKNOWN;
     }   
     return 0;
 }
@@ -59,6 +60,9 @@ bool dry_run = true;
 
 //Bin buffer
 BIN_BUFFER bin_buffer;
+
+
+//Ins buffer
 
 void print_symbol_table(SYMBOL_TABLE* symbol_table)
 {
@@ -91,7 +95,7 @@ int main(int argc, char *argv[])
         if(arguments.output_file == NULL)
         {
             printf("Using default output -> ROM.bin\n");
-            arguments.output_file = "rom.bin";
+            arguments.output_file = "obj.o";
         }
         else
         {
@@ -108,7 +112,7 @@ int main(int argc, char *argv[])
         bin_buffer.wait_slot = true;
         bin_buffer.data = malloc(sizeof(char) * bin_buffer.capacity);
 
-        
+
         append_file(&file_table, arguments.input_file);
         //Parse first file
         printf("Scanning File\n");
@@ -128,26 +132,35 @@ int main(int argc, char *argv[])
             //Now print the contents of the assembled file
             const int n_col = 4;
             int col_cnt = 0;
-            bool first = true; 
             printf("Size of Bin_buffer %d\n", bin_buffer.size); 
             printf("Contents of Bin_Buffer:\n\n");
             for(int i = 0; i <= bin_buffer.size;i++)
             {
                 if(col_cnt == n_col)
                 {
-                        printf("\n");
+                    printf("\n");
                     col_cnt = 0;
                 }
                 printf("0x%x ", bin_buffer.data[i]); 
                 col_cnt++;
             }
             printf("\n");
+            //Transfer bin_buffer to the object file structure
+            OBJ_FILE obj; 
+            obj.size = bin_buffer.size + 1;
+            obj.binary_data = malloc(sizeof(char) * obj.size);
+            obj.reloc_table.reloc = malloc(sizeof(RELOC) * 1);
+            obj.reloc_table.size = 1;
+            obj.reloc_table.reloc[0].name = "hola";
+            obj.reloc_table.reloc[0].size = strlen(obj.reloc_table.reloc[0].name);
+            memcpy(obj.binary_data, bin_buffer.data, obj.size);
+            serialize(arguments.output_file, &obj);
         }
         else
         {
             printf("dasm: " ANSI_COLOR_RED "fatal error" ANSI_COLOR_RESET ": empty file_node\n");
         }
-        
+
     }
     else
     {
