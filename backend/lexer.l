@@ -22,15 +22,15 @@ void reset_identifiers()
     identifier_index = 0;
 }
 
-char * keywords [] = {"arg", "encode", "mnemonic", "max", "def", "arg_template"};
-int keyword_id [10] = {ARG, ENCODE, MNEMONIC, MAX, DEF, ARG_TEMPLATE};
+char * keywords [] = {"arg", "encode", "mnemonic", "max", "def", "arg_template", "macros"};
+int keyword_id [10] = {ARG, ENCODE, MNEMONIC, MAX, DEF, ARG_TEMPLATE, MACROS};
 
-const char* scope_names [] = {"def", "arg", "mnemonic", "encode", "max", "arg_template"};
+const char* scope_names [] = {"def", "arg", "mnemonic", "encode", "max", "arg_template", "macros"};
 
 int return_token(char* identifier)
 {
     //printf("sizeof %d\n", sizeof((char*)keywords));
-    for(int i = 0;i <= 5;i++)
+    for(int i = 0;i <= 6;i++)
     {
         //printf("To compare %s\n", identifier);
         if(strcmp(keywords [i], identifier) == 0)

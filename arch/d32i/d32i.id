@@ -17,6 +17,12 @@ arg hi_lo{
 	(hi){2}
 }
 
+//Here define all C macros
+macros {
+"
+    #define IOO(byte)
+"
+}
 
 def mov {
 

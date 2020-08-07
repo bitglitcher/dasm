@@ -440,6 +440,22 @@ void gen_ins_functions(SYMBOL_TABLE* symbol_table, FILE* _c_file, FILE* _c_heade
     }
 }
 
+void gen_macros(SYMBOL_TABLE* symbol_table, FILE* _c_header)
+{
+    fputs("/*--------------TARGET MACROS--------------*/", _c_header);
+    for(int i = 0;i <= symbol_table->size;i++)
+    {
+        if(symbol_table->data + i)
+        {
+            if(symbol_table->data[i].scope_type == TYPE_MACRO)
+            {
+                fwrite(symbol_table->data[i].name + 1, sizeof(char), strlen (symbol_table->data[i].name)- 2, _c_header);
+            }
+        }
+    }
+    fputs("\n\n\n\n\n", _c_header);
+}
+
 FILE* c_file = NULL;
 FILE* c_header = NULL;
 FILE* input_file = NULL;
@@ -539,6 +555,7 @@ int main(int argc, char* argv[])
         fputs(PROLOGUE_H, c_header);
         fputs(PROLOGUE_C, c_file);
         //Generate
+        gen_macros(&symbol_table, c_header);
         gen_keywords(&symbol_table, c_file, c_header);
         gen_arg_template(&symbol_table, c_file, c_header);
         gen_ins(&symbol_table, c_file, c_header);

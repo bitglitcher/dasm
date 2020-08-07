@@ -43,7 +43,7 @@ LIST* link_list;
 %}
 
 %token DEF IDENTIFIER ARG ENCODE MAX ARG_TEMPLATE MNEMONIC NUMBER STRING
-
+%token MACROS
 
 %%
 
@@ -55,6 +55,8 @@ command:
 	def
 	|
 	arg
+    |
+    macros
     ;
 
 identifiers:
@@ -169,4 +171,13 @@ def:
 		'{' recusive_def_branch '}'
 	;
 
+macros:
+    MACROS '{' STRING '}'
+    {
+        printf("\t\t\tMACRO DETECTED\n");
+        append_symbol(&symbol_table, string_literal, TYPE_MACRO, 0, "none", TYPE_MACRO);
+        link_list = NULL;
+        scope_type = TYPE_MACRO;
+    }
+    ;
 %%

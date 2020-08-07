@@ -10,8 +10,9 @@
 #define TYPE_ENCODE         3
 #define TYPE_MAX            4
 #define TYPE_ARG_TEMPLATE   5
+#define TYPE_MACRO          6
 
-#define TYPE_IDENTIFIER     6
-#define TYPE_NUMBER         7
+#define TYPE_IDENTIFIER     7
+#define TYPE_NUMBER         8
 
 #endif
