@@ -87,10 +87,22 @@ arguments:
             append_arg(&arg, node);
         }
     }
+    |
+    arguments ',' '[' NUMBER ']'
+    {
+        if(!dry_run)
+        {
+            printf("argument address detected\n", val);
+            ARG_NODE_TEMPLATE node;
+            node.value = val;
+            node.domain = "address";
+            append_arg(&arg, node);
+        }
+    }
     ;
 
 instruction:
-    IDENTIFIER
+           IDENTIFIER
     {   
         if(!dry_run)
         {
@@ -109,7 +121,7 @@ instruction:
     ;
 
 defenition_exp:
-    instruction
+              instruction
     |
     label
     |
@@ -117,15 +129,15 @@ defenition_exp:
     |
     defenition_exp label
     ;
-    
+
 defenition:
-    DEF '{' defenition_exp '}'
+          DEF '{' defenition_exp '}'
     {
         printf("DEF\n");
     }
     ;
 label:
-    IDENTIFIER ':'
+     IDENTIFIER ':'
     {
         if(dry_run)
         {

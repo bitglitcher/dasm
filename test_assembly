@@ -12,4 +12,5 @@ main:
     mov ax, 0x00;
     mov bx, cx;
     add ax, 0x02;
+    mov ax, [0x3234e];
     jmp main;

@@ -28,7 +28,7 @@ def mov {
 
     arg_template{
     (op0){registers},
-    (op1){registers, numeric}
+    (op1){registers, numeric, address}
     }
 
     max {
