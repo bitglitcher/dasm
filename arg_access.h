@@ -29,6 +29,11 @@
 #define GET_OP4_DOMAIN arg_table->data[3].domain
 #define GET_OP5_DOMAIN arg_table->data[4].domain
 
+#define GET_SIZE_32_SEC_1(data) (data & 0xff)
+#define GET_SIZE_32_SEC_2(data) ((data >> 8) & 0xff)
+#define GET_SIZE_32_SEC_3(data) ((data >> 16) & 0xff)
+#define GET_SIZE_32_SEC_4(data) ((data >> 24) & 0xff)
+
 #define REGISTER "register"
 #define NUMERIC "numeric"
 #define ADDRESS "address"
