@@ -7,6 +7,7 @@ backend:
 	$(Creating Build Directory)
 ifeq (,$(wildcard build/))
 	mkdir build
+	mkdir build/bin
 endif
 	./backend/backend_gen arch/${ARCH}/$(ARCH).id -p build/
 
@@ -46,7 +47,7 @@ libs: libs/file_table.c libs/file_table.h libs/symbol_table.o libs/arg_table.c l
 
 
 main: main.c libs/terminal_colors.h libs/file_table.o libs/file_table.c libs/symbol_table.o libs/symbol_table.c internals.o target.o preprocessor.o obj_file.o
-	gcc main.c lex.yy.o y.tab.o libs/file_table.o libs/symbol_table.o libs/bin_buffer.o internals.o internals_backend.o arg_table.o target.o preprocessor.o obj_file.o -g -o dasm
+	gcc main.c lex.yy.o y.tab.o libs/file_table.o libs/symbol_table.o libs/bin_buffer.o internals.o internals_backend.o arg_table.o target.o preprocessor.o obj_file.o -g -o build/bin/dasm
 
 clean:
 	rm *.o
