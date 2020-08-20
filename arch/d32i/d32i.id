@@ -20,7 +20,24 @@ arg hi_lo{
 //Here define all C macros
 macros {
 "
-    #define IOO(byte)
+    //Addressing modes
+    #define ADDRM_IMM                       0x00
+    #define ADDRM_APIMMA                    0x01
+    #define ADDRM_APR                       0x02
+    #define ADDRM_R                         0x03
+    #define ADDRM_OPAIMM                    0x04
+    #define ADDRM_OPAIMME                   0x05
+    #define ADDRM_INSOP                     0x06
+
+    //M Extension
+    #define EXT_M   0x00
+
+    #define M_MOV     0x00
+    #define M_POP     0x01
+    #define M_PUSH    0x02
+
+    //24byte encoding
+    #define IOO(ext, ins, a, addrm1, addrm2, op1, op2) ((ext & 0b111) | ((ins << 3) & 0b1111000) | (a << 8) | (addrm1 << 9) | (addrm2 << 12) | (op1 << 15) | (op2 << 20))
 "
 }
 
@@ -36,8 +53,29 @@ def mov {
     
     encode {
     "
-    printf(\"Mov Instruction Detected\n\");
-    append_byte(bin_buffer, 0x12);
+        //REG REG MOV
+        if(strcmp(GET_OP2_DOMAIN, REGISTER) == 0)
+        {
+            APPEND_BYTE(GET_SIZE_32_SEC_1(IOO(EXT_M, M_MOV, 0, ADDRM_R, ADDRM_R, GET_OP1_VAL, GET_OP2_VAL)));
+            APPEND_BYTE(GET_SIZE_32_SEC_2(IOO(EXT_M, M_MOV, 0, ADDRM_R, ADDRM_R, GET_OP1_VAL, GET_OP2_VAL)));
+            APPEND_BYTE(GET_SIZE_32_SEC_3(IOO(EXT_M, M_MOV, 0, ADDRM_R, ADDRM_R, GET_OP1_VAL, GET_OP2_VAL)));
+            APPEND_BYTE(GET_SIZE_32_SEC_4(IOO(EXT_M, M_MOV, 0, ADDRM_R, ADDRM_R, GET_OP1_VAL, GET_OP2_VAL)));
+        } else if(strcmp(GET_OP2_DOMAIN, NUMERIC) == 0)
+        {
+            APPEND_BYTE(GET_SIZE_32_SEC_1(IOO(EXT_M, M_MOV, 0, ADDRM_R, ADDRM_IMM, GET_OP1_VAL, 0x3)));
+            APPEND_BYTE(GET_SIZE_32_SEC_2(IOO(EXT_M, M_MOV, 0, ADDRM_R, ADDRM_IMM, GET_OP1_VAL, 0x3)));
+            APPEND_BYTE(GET_SIZE_32_SEC_3(IOO(EXT_M, M_MOV, 0, ADDRM_R, ADDRM_IMM, GET_OP1_VAL, 0x3)));
+            APPEND_BYTE(GET_SIZE_32_SEC_4(IOO(EXT_M, M_MOV, 0, ADDRM_R, ADDRM_IMM, GET_OP1_VAL, 0x3)));
+        } else if(strcmp(GET_OP2_DOMAIN, ADDRESS) == 0)
+        {
+            //ADDRM_APIMMA is wrong, it should be ADDRM_IMMA. Still lets just keep it like that xd
+            //I would have to update the architecture
+            APPEND_BYTE(GET_SIZE_32_SEC_1(IOO(EXT_M, M_MOV, 0, ADDRM_R, ADDRM_APIMMA, GET_OP1_VAL, 0x3)));
+            APPEND_BYTE(GET_SIZE_32_SEC_2(IOO(EXT_M, M_MOV, 0, ADDRM_R, ADDRM_APIMMA, GET_OP1_VAL, 0x3)));
+            APPEND_BYTE(GET_SIZE_32_SEC_3(IOO(EXT_M, M_MOV, 0, ADDRM_R, ADDRM_APIMMA, GET_OP1_VAL, 0x3)));
+            APPEND_BYTE(GET_SIZE_32_SEC_4(IOO(EXT_M, M_MOV, 0, ADDRM_R, ADDRM_APIMMA, GET_OP1_VAL, 0x3)));
+        }
+        printf(\"Mov Instruction Detected\n\");
     "
     }
 

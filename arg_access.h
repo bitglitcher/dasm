@@ -34,6 +34,8 @@
 #define GET_SIZE_32_SEC_3(data) ((data >> 16) & 0xff)
 #define GET_SIZE_32_SEC_4(data) ((data >> 24) & 0xff)
 
+#define APPEND_BYTE(byte) append_byte(bin_buffer, byte)
+
 #define REGISTER "register"
 #define NUMERIC "numeric"
 #define ADDRESS "address"

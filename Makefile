@@ -55,6 +55,7 @@ clean:
 	rm *.tab.h
 	rm *.yy.c
 	rm *.gch
+	rm libs/*.o
 ifneq (,$(wildcard dasm))
 	rm dasm
 endif
