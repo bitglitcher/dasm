@@ -1,0 +1,656 @@
+//Registers
+
+arg registers
+{
+	(R0){0x0},
+	(R1){0x1},
+	(R2){0x2},
+	(R3){0x3},
+	(R4){0x4},
+	(R5){0x5},
+	(R6){0x6},
+	(R7){0x7},
+	(R8){0x8},
+	(R9){0x9},
+	(R10){0x10},
+	(R11){0x11},
+	(R12){0x12},
+	(R13){0x13},
+	(R14){0x14},
+	(R15){0x15},
+	(R16){0x16},
+	(R17){0x17},
+	(R18){0x18},
+	(R19){0x19},
+	(R20){0x20},
+	(R21){0x21},
+	(R22){0x22},
+	(R23){0x23},
+	(R24){0x24},
+	(R25){0x25},
+	(R26){0x26},
+	(R27){0x27},
+	(R28){0x28},
+	(R29){0x29},
+	(R30){0x30},
+	(R31){0x31}
+}
+
+
+macros 
+{"
+    #define I_ADDU	            0b100001
+    #define I_ADD	            0b100000
+    #define I_ADDIU	            0b001001
+    #define I_ADDI	            0b001000
+    #define I_ANDI	            0b001100
+    #define I_DIV	            0b011010
+    #define I_AND	            0b100100
+    #define I_MULT	            0b011000
+    #define I_DIVU	            0b011011
+    #define I_NOR	            0b100111
+    #define I_MULTU	            0b011001
+    #define I_ORI	            0b001101
+    #define I_OR	            0b100101
+    #define I_SLLV	            0b000100
+    #define I_SLL	            0b000000
+    #define I_SRAV	            0b000111
+    #define I_SRA	            0b000011
+    #define I_SRLV	            0b000110
+    #define I_SRL	            0b000010
+    #define I_SUBU	            0b100011
+    #define I_SUB	            0b100010
+    #define I_XORI	            0b001110
+    #define I_XOR	            0b100110
+    #define ENCODE_R(op, rs, rt, rd, shamt, funct) ((funct & 0b111111) | ((shamt & 0b11111) << 6) | ((rd & 0b11111) << 11) | ((rt & 0b11111) << 16) | ((rs & 0b11111) << 21) | ((op & 0b111111) << 26))
+    #define ENCODE_I(op, rs, rt, imm) ((imm & 0xffff) | ((rt << 16) & 0b11111) | ((rs << 21) & 0b11111) | ((op << 26) & 0b111111))
+    #define ENCODE_J(op, addr) ((addr & 0x3ffffff) | ((op << 26) & 0b111111))
+"}
+
+//instruction	Opcode/Function	    Syntax	        Operation	                Format
+//addu	        100001	            f $d, $s, $t	t$d = $s + $t	            R
+//add	        100000	            f $d, $s, $t	$d = $s + $	                R
+//addiu	        001001	            f $d, $s, i	    $d = $s + SE(i)             I
+//addi	        001000	            f $d, $s, i	    $d = $s + SE(i)             I
+//andi	        001100	            f $d, $s, i	    $t = $s & ZE(i)             I
+//div	        011010	            f $s, $t	    lo = $s / $t; hi = $s % $t	R
+//and	        100100	            f $d, $s, $t	$d = $s & $t	            R
+//mult	        011000	            f $s, $t	    hi:lo = $s * $t	            R
+//divu	        011011	            f $s, $t	    lo = $s / $t; hi = $s % $t	R
+//nor	        100111	            f $d, $s, $t	$d = ~($s | $t)	            R
+//multu	        011001	            f $s, $t	    hi:lo = $s * $t	            R
+//ori	        001101	            f $d, $s, i	    $t = $s | ZE(i)	            I
+//or	        100101	            f $d, $s, $t	$d = $s | $t	            R
+//sllv	        000100	            f $d, $t, $s	$d = $t << $s	            R
+//sll	        000000	            f $d, $t, a	    $d = $t << a	            R
+//srav	        000111	            f $d, $t, $s	$d = $t >> $s	            R
+//sra	        000011	            f $d, $t, a	    $d = $t >> a	            R
+//srlv	        000110	            f $d, $t, $s	$d = $t >>> $s	            R
+//srl	        000010	            f $d, $t, a	    $d = $t >>> $s	            R
+//subu	        100011	            f $d, $s, $t	$d = $s – $t	            R
+//sub	        100010	            f $d, $s, $t	$d = $s – $t	            R
+//xori	        001110	            f $d, $s, i	    $d = $s ^ ZE(i)	            I
+//xor	        100110	            f $d, $s, $t	$d = $s ^ $t	            R
+
+def addu {
+    arg_template {
+        (rs){registers},
+        (rt){registers},
+        (rd){registers}
+    }
+
+    max {
+
+    }
+
+    encode 
+    {
+    "
+        APPEND_BYTE(GET_SIZE_32_SEC_1(ENCODE_R(I_ADDU, GET_OP1_VAL, GET_OP2_VAL, GET_OP3_VAL, 0x00, 0x00)));
+        APPEND_BYTE(GET_SIZE_32_SEC_2(ENCODE_R(I_ADDU, GET_OP1_VAL, GET_OP2_VAL, GET_OP3_VAL, 0x00, 0x00)));
+        APPEND_BYTE(GET_SIZE_32_SEC_3(ENCODE_R(I_ADDU, GET_OP1_VAL, GET_OP2_VAL, GET_OP3_VAL, 0x00, 0x00)));
+        APPEND_BYTE(GET_SIZE_32_SEC_4(ENCODE_R(I_ADDU, GET_OP1_VAL, GET_OP2_VAL, GET_OP3_VAL, 0x00, 0x00)));
+    "
+    }
+
+    mnemonic {
+        "addu"
+    }
+}
+def add {
+    arg_template {
+        (rs){registers},
+        (rt){registers},
+        (rd){registers}
+    }
+
+    max {
+
+    }
+
+    encode 
+    {
+    "
+        APPEND_BYTE(GET_SIZE_32_SEC_1(ENCODE_R(I_ADD, GET_OP1_VAL, GET_OP2_VAL, GET_OP3_VAL, 0x00, 0x00)));
+        APPEND_BYTE(GET_SIZE_32_SEC_2(ENCODE_R(I_ADD, GET_OP1_VAL, GET_OP2_VAL, GET_OP3_VAL, 0x00, 0x00)));
+        APPEND_BYTE(GET_SIZE_32_SEC_3(ENCODE_R(I_ADD, GET_OP1_VAL, GET_OP2_VAL, GET_OP3_VAL, 0x00, 0x00)));
+        APPEND_BYTE(GET_SIZE_32_SEC_4(ENCODE_R(I_ADD, GET_OP1_VAL, GET_OP2_VAL, GET_OP3_VAL, 0x00, 0x00)));
+    "
+    }
+
+    mnemonic {
+        "add"
+    }
+}
+def addiu {
+    arg_template {
+        (rs){registers},
+        (rt){registers},
+        (imm){numeric}
+    }
+
+    max {
+
+    }
+
+    encode 
+    {
+    "
+        
+    "
+    }
+
+    mnemonic {
+        "addiu"
+    }
+}
+def addi {
+    arg_template {
+        (rs){registers},
+        (rt){registers},
+        (imm){numeric}
+    }
+
+    max {
+
+    }
+
+    encode 
+    {
+    "
+        
+    "
+    }
+
+    mnemonic {
+        "addi"
+    }
+}
+def andi {
+    arg_template {
+        (rs){registers},
+        (rt){registers},
+        (imm){numeric}
+    }
+
+    max {
+
+    }
+
+    encode 
+    {
+    "
+        
+    "
+    }
+
+    mnemonic {
+        "andi"
+    }
+}
+
+//same as div but stdlib already declarede it
+def mdiv {
+    arg_template {
+        (rs){registers},
+        (rt){registers},
+        (rd){registers}
+    }
+
+    max {
+
+    }
+
+    encode 
+    {
+    "
+        APPEND_BYTE(GET_SIZE_32_SEC_1(ENCODE_R(I_DIV, GET_OP1_VAL, GET_OP2_VAL, GET_OP3_VAL, 0x00, 0x00)));
+        APPEND_BYTE(GET_SIZE_32_SEC_2(ENCODE_R(I_DIV, GET_OP1_VAL, GET_OP2_VAL, GET_OP3_VAL, 0x00, 0x00)));
+        APPEND_BYTE(GET_SIZE_32_SEC_3(ENCODE_R(I_DIV, GET_OP1_VAL, GET_OP2_VAL, GET_OP3_VAL, 0x00, 0x00)));
+        APPEND_BYTE(GET_SIZE_32_SEC_4(ENCODE_R(I_DIV, GET_OP1_VAL, GET_OP2_VAL, GET_OP3_VAL, 0x00, 0x00)));
+    "
+    }
+
+    mnemonic {
+        "mdiv"
+    }
+}
+def and {
+    arg_template {
+        (rs){registers},
+        (rt){registers},
+        (rd){registers}
+    }
+
+    max {
+
+    }
+
+    encode 
+    {
+    "
+        APPEND_BYTE(GET_SIZE_32_SEC_1(ENCODE_R(I_AND, GET_OP1_VAL, GET_OP2_VAL, GET_OP3_VAL, 0x00, 0x00)));
+        APPEND_BYTE(GET_SIZE_32_SEC_2(ENCODE_R(I_AND, GET_OP1_VAL, GET_OP2_VAL, GET_OP3_VAL, 0x00, 0x00)));
+        APPEND_BYTE(GET_SIZE_32_SEC_3(ENCODE_R(I_AND, GET_OP1_VAL, GET_OP2_VAL, GET_OP3_VAL, 0x00, 0x00)));
+        APPEND_BYTE(GET_SIZE_32_SEC_4(ENCODE_R(I_AND, GET_OP1_VAL, GET_OP2_VAL, GET_OP3_VAL, 0x00, 0x00)));
+    "
+    }
+
+    mnemonic {
+        "and"
+    }
+}
+def mult {
+    arg_template {
+        (rs){registers},
+        (rt){registers},
+        (rd){registers}
+    }
+
+    max {
+
+    }
+
+    encode 
+    {
+    "
+        APPEND_BYTE(GET_SIZE_32_SEC_1(ENCODE_R(I_MULT, GET_OP1_VAL, GET_OP2_VAL, GET_OP3_VAL, 0x00, 0x00)));
+        APPEND_BYTE(GET_SIZE_32_SEC_2(ENCODE_R(I_MULT, GET_OP1_VAL, GET_OP2_VAL, GET_OP3_VAL, 0x00, 0x00)));
+        APPEND_BYTE(GET_SIZE_32_SEC_3(ENCODE_R(I_MULT, GET_OP1_VAL, GET_OP2_VAL, GET_OP3_VAL, 0x00, 0x00)));
+        APPEND_BYTE(GET_SIZE_32_SEC_4(ENCODE_R(I_MULT, GET_OP1_VAL, GET_OP2_VAL, GET_OP3_VAL, 0x00, 0x00)));
+    "
+    }
+
+    mnemonic {
+        "mult"
+    }
+}
+def divu {
+    arg_template {
+        (rs){registers},
+        (rt){registers},
+        (rd){registers}
+    }
+
+    max {
+
+    }
+
+    encode 
+    {
+    "
+        APPEND_BYTE(GET_SIZE_32_SEC_1(ENCODE_R(I_DIVU, GET_OP1_VAL, GET_OP2_VAL, GET_OP3_VAL, 0x00, 0x00)));
+        APPEND_BYTE(GET_SIZE_32_SEC_2(ENCODE_R(I_DIVU, GET_OP1_VAL, GET_OP2_VAL, GET_OP3_VAL, 0x00, 0x00)));
+        APPEND_BYTE(GET_SIZE_32_SEC_3(ENCODE_R(I_DIVU, GET_OP1_VAL, GET_OP2_VAL, GET_OP3_VAL, 0x00, 0x00)));
+        APPEND_BYTE(GET_SIZE_32_SEC_4(ENCODE_R(I_DIVU, GET_OP1_VAL, GET_OP2_VAL, GET_OP3_VAL, 0x00, 0x00)));
+    "
+    }
+
+    mnemonic {
+        "divu"
+    }
+}
+def nor {
+    arg_template {
+        (rs){registers},
+        (rt){registers},
+        (rd){registers}
+    }
+
+    max {
+
+    }
+
+    encode 
+    {
+    "
+        APPEND_BYTE(GET_SIZE_32_SEC_1(ENCODE_R(I_NOR, GET_OP1_VAL, GET_OP2_VAL, GET_OP3_VAL, 0x00, 0x00)));
+        APPEND_BYTE(GET_SIZE_32_SEC_2(ENCODE_R(I_NOR, GET_OP1_VAL, GET_OP2_VAL, GET_OP3_VAL, 0x00, 0x00)));
+        APPEND_BYTE(GET_SIZE_32_SEC_3(ENCODE_R(I_NOR, GET_OP1_VAL, GET_OP2_VAL, GET_OP3_VAL, 0x00, 0x00)));
+        APPEND_BYTE(GET_SIZE_32_SEC_4(ENCODE_R(I_NOR, GET_OP1_VAL, GET_OP2_VAL, GET_OP3_VAL, 0x00, 0x00)));
+    "
+    }
+
+    mnemonic {
+        "nor"
+    }
+}
+def multu {
+    arg_template {
+        (rs){registers},
+        (rt){registers},
+        (rd){registers}
+    }
+
+    max {
+
+    }
+
+    encode 
+    {
+    "
+        APPEND_BYTE(GET_SIZE_32_SEC_1(ENCODE_R(I_MULTU, GET_OP1_VAL, GET_OP2_VAL, GET_OP3_VAL, 0x00, 0x00)));
+        APPEND_BYTE(GET_SIZE_32_SEC_2(ENCODE_R(I_MULTU, GET_OP1_VAL, GET_OP2_VAL, GET_OP3_VAL, 0x00, 0x00)));
+        APPEND_BYTE(GET_SIZE_32_SEC_3(ENCODE_R(I_MULTU, GET_OP1_VAL, GET_OP2_VAL, GET_OP3_VAL, 0x00, 0x00)));
+        APPEND_BYTE(GET_SIZE_32_SEC_4(ENCODE_R(I_MULTU, GET_OP1_VAL, GET_OP2_VAL, GET_OP3_VAL, 0x00, 0x00)));
+    "
+    }
+
+    mnemonic {
+        "multu"
+    }
+}
+def ori {
+    arg_template {
+        (rs){registers},
+        (rt){registers},
+        (imm){numeric}
+    }
+
+    max {
+
+    }
+
+    encode 
+    {
+    "
+        
+    "
+    }
+
+    mnemonic {
+        "ori"
+    }
+}
+def or {
+    arg_template {
+        (rs){registers},
+        (rt){registers},
+        (rd){registers}
+    }
+
+    max {
+
+    }
+
+    encode 
+    {
+    "
+        APPEND_BYTE(GET_SIZE_32_SEC_1(ENCODE_R(I_OR, GET_OP1_VAL, GET_OP2_VAL, GET_OP3_VAL, 0x00, 0x00)));
+        APPEND_BYTE(GET_SIZE_32_SEC_2(ENCODE_R(I_OR, GET_OP1_VAL, GET_OP2_VAL, GET_OP3_VAL, 0x00, 0x00)));
+        APPEND_BYTE(GET_SIZE_32_SEC_3(ENCODE_R(I_OR, GET_OP1_VAL, GET_OP2_VAL, GET_OP3_VAL, 0x00, 0x00)));
+        APPEND_BYTE(GET_SIZE_32_SEC_4(ENCODE_R(I_OR, GET_OP1_VAL, GET_OP2_VAL, GET_OP3_VAL, 0x00, 0x00)));
+    "
+    }
+
+    mnemonic {
+        "or"
+    }
+}
+def sllv {
+    arg_template {
+        (rs){registers},
+        (rt){registers},
+        (rd){registers}
+    }
+
+    max {
+
+    }
+
+    encode 
+    {
+    "
+        APPEND_BYTE(GET_SIZE_32_SEC_1(ENCODE_R(I_SLLV, GET_OP1_VAL, GET_OP2_VAL, GET_OP3_VAL, 0x00, 0x00)));
+        APPEND_BYTE(GET_SIZE_32_SEC_2(ENCODE_R(I_SLLV, GET_OP1_VAL, GET_OP2_VAL, GET_OP3_VAL, 0x00, 0x00)));
+        APPEND_BYTE(GET_SIZE_32_SEC_3(ENCODE_R(I_SLLV, GET_OP1_VAL, GET_OP2_VAL, GET_OP3_VAL, 0x00, 0x00)));
+        APPEND_BYTE(GET_SIZE_32_SEC_4(ENCODE_R(I_SLLV, GET_OP1_VAL, GET_OP2_VAL, GET_OP3_VAL, 0x00, 0x00)));
+    "
+    }
+
+    mnemonic {
+        "sllv"
+    }
+}
+def sll {
+    arg_template {
+        (rs){registers},
+        (rt){registers},
+        (rd){registers}
+    }
+
+    max {
+
+    }
+
+    encode 
+    {
+    "
+        APPEND_BYTE(GET_SIZE_32_SEC_1(ENCODE_R(I_SLL, GET_OP1_VAL, GET_OP2_VAL, GET_OP3_VAL, 0x00, 0x00)));
+        APPEND_BYTE(GET_SIZE_32_SEC_2(ENCODE_R(I_SLL, GET_OP1_VAL, GET_OP2_VAL, GET_OP3_VAL, 0x00, 0x00)));
+        APPEND_BYTE(GET_SIZE_32_SEC_3(ENCODE_R(I_SLL, GET_OP1_VAL, GET_OP2_VAL, GET_OP3_VAL, 0x00, 0x00)));
+        APPEND_BYTE(GET_SIZE_32_SEC_4(ENCODE_R(I_SLL, GET_OP1_VAL, GET_OP2_VAL, GET_OP3_VAL, 0x00, 0x00)));
+    "
+    }
+
+    mnemonic {
+        "sll"
+    }
+}
+def srav {
+    arg_template {
+        (rs){registers},
+        (rt){registers},
+        (rd){registers}
+    }
+
+    max {
+
+    }
+
+    encode 
+    {
+    "
+        APPEND_BYTE(GET_SIZE_32_SEC_1(ENCODE_R(I_SRAV, GET_OP1_VAL, GET_OP2_VAL, GET_OP3_VAL, 0x00, 0x00)));
+        APPEND_BYTE(GET_SIZE_32_SEC_2(ENCODE_R(I_SRAV, GET_OP1_VAL, GET_OP2_VAL, GET_OP3_VAL, 0x00, 0x00)));
+        APPEND_BYTE(GET_SIZE_32_SEC_3(ENCODE_R(I_SRAV, GET_OP1_VAL, GET_OP2_VAL, GET_OP3_VAL, 0x00, 0x00)));
+        APPEND_BYTE(GET_SIZE_32_SEC_4(ENCODE_R(I_SRAV, GET_OP1_VAL, GET_OP2_VAL, GET_OP3_VAL, 0x00, 0x00)));
+    "
+    }
+
+    mnemonic {
+        "srav"
+    }
+}
+def sra {
+    arg_template {
+        (rs){registers},
+        (rt){registers},
+        (rd){registers}
+    }
+
+    max {
+
+    }
+
+    encode 
+    {
+    "
+        APPEND_BYTE(GET_SIZE_32_SEC_1(ENCODE_R(I_SRA, GET_OP1_VAL, GET_OP2_VAL, GET_OP3_VAL, 0x00, 0x00)));
+        APPEND_BYTE(GET_SIZE_32_SEC_2(ENCODE_R(I_SRA, GET_OP1_VAL, GET_OP2_VAL, GET_OP3_VAL, 0x00, 0x00)));
+        APPEND_BYTE(GET_SIZE_32_SEC_3(ENCODE_R(I_SRA, GET_OP1_VAL, GET_OP2_VAL, GET_OP3_VAL, 0x00, 0x00)));
+        APPEND_BYTE(GET_SIZE_32_SEC_4(ENCODE_R(I_SRA, GET_OP1_VAL, GET_OP2_VAL, GET_OP3_VAL, 0x00, 0x00)));
+    "
+    }
+
+    mnemonic {
+        "sra"
+    }
+}
+def srlv {
+    arg_template {
+        (rs){registers},
+        (rt){registers},
+        (rd){registers}
+    }
+
+    max {
+
+    }
+
+    encode 
+    {
+    "
+        APPEND_BYTE(GET_SIZE_32_SEC_1(ENCODE_R(I_SRLV, GET_OP1_VAL, GET_OP2_VAL, GET_OP3_VAL, 0x00, 0x00)));
+        APPEND_BYTE(GET_SIZE_32_SEC_2(ENCODE_R(I_SRLV, GET_OP1_VAL, GET_OP2_VAL, GET_OP3_VAL, 0x00, 0x00)));
+        APPEND_BYTE(GET_SIZE_32_SEC_3(ENCODE_R(I_SRLV, GET_OP1_VAL, GET_OP2_VAL, GET_OP3_VAL, 0x00, 0x00)));
+        APPEND_BYTE(GET_SIZE_32_SEC_4(ENCODE_R(I_SRLV, GET_OP1_VAL, GET_OP2_VAL, GET_OP3_VAL, 0x00, 0x00)));
+    "
+    }
+
+    mnemonic {
+        "srlv"
+    }
+}
+def srl {
+    arg_template {
+        (rs){registers},
+        (rt){registers},
+        (rd){registers}
+    }
+
+    max {
+
+    }
+
+    encode 
+    {
+    "
+        APPEND_BYTE(GET_SIZE_32_SEC_1(ENCODE_R(I_SRL, GET_OP1_VAL, GET_OP2_VAL, GET_OP3_VAL, 0x00, 0x00)));
+        APPEND_BYTE(GET_SIZE_32_SEC_2(ENCODE_R(I_SRL, GET_OP1_VAL, GET_OP2_VAL, GET_OP3_VAL, 0x00, 0x00)));
+        APPEND_BYTE(GET_SIZE_32_SEC_3(ENCODE_R(I_SRL, GET_OP1_VAL, GET_OP2_VAL, GET_OP3_VAL, 0x00, 0x00)));
+        APPEND_BYTE(GET_SIZE_32_SEC_4(ENCODE_R(I_SRL, GET_OP1_VAL, GET_OP2_VAL, GET_OP3_VAL, 0x00, 0x00)));
+    "
+    }
+
+    mnemonic {
+        "srl"
+    }
+}
+def subu {
+    arg_template {
+        (rs){registers},
+        (rt){registers},
+        (rd){registers}
+    }
+
+    max {
+
+    }
+
+    encode 
+    {
+    "
+        APPEND_BYTE(GET_SIZE_32_SEC_1(ENCODE_R(I_SUBU, GET_OP1_VAL, GET_OP2_VAL, GET_OP3_VAL, 0x00, 0x00)));
+        APPEND_BYTE(GET_SIZE_32_SEC_2(ENCODE_R(I_SUBU, GET_OP1_VAL, GET_OP2_VAL, GET_OP3_VAL, 0x00, 0x00)));
+        APPEND_BYTE(GET_SIZE_32_SEC_3(ENCODE_R(I_SUBU, GET_OP1_VAL, GET_OP2_VAL, GET_OP3_VAL, 0x00, 0x00)));
+        APPEND_BYTE(GET_SIZE_32_SEC_4(ENCODE_R(I_SUBU, GET_OP1_VAL, GET_OP2_VAL, GET_OP3_VAL, 0x00, 0x00)));
+    "
+    }
+
+    mnemonic {
+        "subu"
+    }
+}
+def sub {
+    arg_template {
+        (rs){registers},
+        (rt){registers},
+        (rd){registers}
+    }
+
+    max {
+
+    }
+
+    encode 
+    {
+    "
+        APPEND_BYTE(GET_SIZE_32_SEC_1(ENCODE_R(I_SUB, GET_OP1_VAL, GET_OP2_VAL, GET_OP3_VAL, 0x00, 0x00)));
+        APPEND_BYTE(GET_SIZE_32_SEC_2(ENCODE_R(I_SUB, GET_OP1_VAL, GET_OP2_VAL, GET_OP3_VAL, 0x00, 0x00)));
+        APPEND_BYTE(GET_SIZE_32_SEC_3(ENCODE_R(I_SUB, GET_OP1_VAL, GET_OP2_VAL, GET_OP3_VAL, 0x00, 0x00)));
+        APPEND_BYTE(GET_SIZE_32_SEC_4(ENCODE_R(I_SUB, GET_OP1_VAL, GET_OP2_VAL, GET_OP3_VAL, 0x00, 0x00)));
+    "
+    }
+
+    mnemonic {
+        "sub"
+    }
+}
+def xori {
+    arg_template {
+        (rs){registers},
+        (rt){registers},
+        (imm){numeric}
+    }
+
+    max {
+
+    }
+
+    encode 
+    {
+    "
+        
+    "
+    }
+
+    mnemonic {
+        "xori"
+    }
+}
+def xor {
+    arg_template {
+        (rs){registers},
+        (rt){registers},
+        (rd){registers}
+    }
+
+    max {
+
+    }
+
+    encode 
+    {
+    "
+        APPEND_BYTE(GET_SIZE_32_SEC_1(ENCODE_R(I_XOR, GET_OP1_VAL, GET_OP2_VAL, GET_OP3_VAL, 0x00, 0x00)));
+        APPEND_BYTE(GET_SIZE_32_SEC_2(ENCODE_R(I_XOR, GET_OP1_VAL, GET_OP2_VAL, GET_OP3_VAL, 0x00, 0x00)));
+        APPEND_BYTE(GET_SIZE_32_SEC_3(ENCODE_R(I_XOR, GET_OP1_VAL, GET_OP2_VAL, GET_OP3_VAL, 0x00, 0x00)));
+        APPEND_BYTE(GET_SIZE_32_SEC_4(ENCODE_R(I_XOR, GET_OP1_VAL, GET_OP2_VAL, GET_OP3_VAL, 0x00, 0x00)));
+    "
+    }
+
+    mnemonic {
+        "xor"
+    }
+}

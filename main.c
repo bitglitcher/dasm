@@ -153,9 +153,10 @@ int main(int argc, char *argv[])
                     printf("\n");
                     col_cnt = 0;
                 }
-                printf("0x%x ", bin_buffer.data[i]); 
+                printf("0x%02x ", bin_buffer.data[i] & 0xff); 
                 col_cnt++;
             }
+            printf("\n");
             if(arguments.raw)
             {
                 FILE* raw_output = fopen(arguments.output_file, "w+");
