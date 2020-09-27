@@ -1,6 +1,6 @@
 # DASM
 
-DASM is a multiarchitecture portable assembler. You can port your new toy architectures to it, with a simple description file. Right now the syntax of the description files is kinda ugly but it will improve with time.
+DASM is a multiarchitecture portable assembler. You can port your new toy architectures to it, with a simple description file. Right now the syntax of the description files is kinda ugly but it will improve with time. Currently it has no main architecture backend, but im working on a backend for MIPS1.
 
 # Compiling
 
