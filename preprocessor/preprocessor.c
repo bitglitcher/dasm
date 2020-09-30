@@ -10,24 +10,26 @@ char* remove_line_comment(char *str, size_t size)
 	//Scan letter by letter on the buffer
 	for(size_t i = 0;i <= size;i++)
 	{
-		//printf("Argument %s\n", *(str_copy + i));
 		if(*(str + i) == '/')
 		{
 			if(*(str + (i + 1)) == '/')
 			{
 				//Just fill with spaces
 				int fill = 0;
-				while(*(str + (fill + i)) != '\n' || *(str + (fill + i)) == '\0')
+				while(*(str + (fill + i)) != '\n' || *(str + (fill + i)) != '\0')
 				{
-					*(copy + (fill + i)) = ' ';
+					if(*(str + (fill + i)) != '\n')
+					{
+						*(copy + (fill + i)) = ' ';
+					}
 					fill++;
 				}
 			}
 		}
-		//printf("Nothing found\n");
 	}
 	return copy;
 }
+
 char *remove_block_comment(char *str, size_t size)
 {
 	char *copy = malloc(sizeof(char*) * size);
