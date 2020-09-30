@@ -211,3 +211,7 @@ encode
 #define NUMERIC "numeric"
 #define ADDRESS "address"
 ```
+
+# Misc
+
+To enable debuging the macro `_DEBUG_` has to be defined in the file `debug.h`
