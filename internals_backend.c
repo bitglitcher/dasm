@@ -8,6 +8,7 @@
 #include "libs/terminal_colors.h"
 #include "build/target.h"
 #include "libs/bin_buffer.h"
+#include "debug.h"
 
 /*Have to be defined*/
 //char* regs [] = REGS_NAMES;
@@ -44,8 +45,10 @@ INS_NODE_TEMPLATE* get_duplicate(char* name, int offset)
     for(int i = offset + 1;i <= N_INS_TEMPLATES - 1;i++)
     {
         INS_NODE_TEMPLATE* ptr = instructions[i];
+        #ifdef _DEBUG_
         printf("template name: %s\n", ptr->name);
         printf("identifier name: %s\n", name);
+        #endif
         if(strcmp(ptr->name, name) == 0)
         {
             return ptr;
@@ -58,8 +61,10 @@ INS_NODE_TEMPLATE* get_duplicate_index(char* name, int offset)
     for(int i = offset + 1;i <= N_INS_TEMPLATES - 1;i++)
     {
         INS_NODE_TEMPLATE* ptr = instructions[i];
+        #ifdef _DEBUG_
         printf("template name: %s\n", ptr->name);
         printf("identifier name: %s\n", name);
+        #endif
         if(strcmp(ptr->name, name) == 0)
         {
             return ptr;
@@ -77,15 +82,19 @@ bool* check_types(ARG_TABLE* arg_table, INS_NODE_TEMPLATE* ins_node)
     //}
     if(arg_table && ins_node)
     {
+        #ifdef _DEBUG_
         printf("\t\t\t\tcheck type arguments allocated!\n");
+        #endif
 
         //Because the number of elements on the arg_table and the instruction template
         //are the same, we can use a single for loop to address the two arrays
         for(int i = 0;i <= arg_table->size; i++)
         {
+            #ifdef _DEBUG_
             printf("\t\t\t\tcheck types iteration!\n");
             printf("\t\t\t\tINS_TEMPLATE name -> %s\n", ins_node->name);
             printf("\t\t\t\t\tARG_NODE index -> %d\n", i);
+            #endif
             for(int x = 0;x <= ins_node->arg_templates[i]->size;x++)
             {
                 printf("\t\t\t\t\tINS_ARG_TEMPLATE iteration: got %s, expected %s\n", arg_table->data[i].domain, ins_node->arg_templates[i]->templates[x]);
@@ -108,38 +117,55 @@ bool* check_types(ARG_TABLE* arg_table, INS_NODE_TEMPLATE* ins_node)
 void assemble_ins(char* name , ARG_TABLE* arg_table)
 {
     INS_NODE_TEMPLATE* saved;
+    #ifdef _DEBUG_
     printf("Assemble ins %s\n", name);
+    #endif
     for(int i = 0;i <= N_INS_TEMPLATES - 1;i++)
     {
         INS_NODE_TEMPLATE* ptr = instructions[i];
+        #ifdef _DEBUG_
         printf("\ttemplate name: %s\n", ptr->name);
         printf("\tidentifier name: %s\n", name);
+        #endif
         if(strcmp(ptr->name, name) == 0)
         {
+            #ifdef _DEBUG_
             printf("\t\tMatch Found\n");
+            #endif
             saved = ptr;
-            //Now check for correct synta
+
+            //Now check for correct syntax
+            #ifdef _DEBUG_
             printf("\t\targ_table->size = %d\n", arg_table->size);
             printf("\t\t (ptr->n_templates - 1) = %d\n", (ptr->n_templates - 1));
+            #endif
             if(arg_table->size == (ptr->n_templates - 1))
             {
+                #ifdef _DEBUG_
                 printf("\t\t\t%s detected\n", ptr->name);
+                #endif
                 //Before calling the assembler function, run syntax check
                 if(check_types(arg_table, ptr))
                 {
                     //Call assembler function and provide context
                     (*ptr->asm_func)(&bin_buffer, arg_table, ptr->op);
+                    #ifdef _DEBUG_
                     printf("\t\t\t\tAssembler functions now implemented\n");
+                    #endif
                     return; //Done with assembling
                 }
                 else 
                 {    
+                    #ifdef _DEBUG_
                     printf("\t\tIteration to find overriden template\n");
+                    #endif
                 }
             }
             else
             {
+                #ifdef _DEBUG_
                 printf("\t\tIteration to find overriden template\n");
+                #endif
             }
         }
     }
@@ -171,10 +197,14 @@ ARG_NODE_TEMPLATE match_args(char* name)
     //Match ARG_NODE_TEMPLATES with the correct name
     for(int i = 0;i <= N_ARG_NODES - 1;i++)
     {
+        #ifdef _DEBUG_
         printf("Iterationg throught nodes %d -> %s\n", i, arg_node_templates[i]->name);
+        #endif
         if(strcmp(arg_node_templates[i]->name, name) == 0)
         {
+            #ifdef _DEBUG_
             printf("\tString found -> %s , %s\n", arg_node_templates[i]->name, name);
+            #endif
             arg_node.domain = arg_node_templates[i]->domain;
             arg_node.name = arg_node_templates[i]->name;
             arg_node.value = arg_node_templates[i]->value;
