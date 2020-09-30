@@ -1,0 +1,1583 @@
+
+arg registers
+{
+    (r0){0x00},
+    (r1){0x01},
+    (r2){0x02},
+    (r3){0x03},
+    (r4){0x04},
+    (r5){0x05},
+    (r6){0x06},
+    (r7){0x07},
+    (r8){0x08},
+    (r9){0x09},
+    (r10){0x0a},
+    (r11){0x0b},
+    (r12){0x0c},
+    (r13){0x0d},
+    (fp){0x0e},
+    (bp){0x0f}
+}
+
+arg special_reg
+{
+
+}
+
+macros 
+{"
+#define AND_OP 0b00100110
+#define ADD_OP 0b00000101
+#define ASHL_OP 0b00101000
+#define ASHR_OP 0b00101101
+#define BEQ_OP 0b110000
+#define BGE_OP 0b110110
+#define BGEU_OP 0b111000
+#define BGT_OP 0b110011
+#define BGTU_OP 0b110101
+#define BLE_OP 0b110111
+#define BLEU_OP 0b111001
+#define BLT_OP 0b110010
+#define BLTU_OP 0b110100
+#define BNE_OP 0b110001
+#define BRK_OP 0b00110101
+#define CMP_OP 0b00001110
+#define DEC_OP 0b1001
+#define DIV_OP 0b00110001
+#define GSR_OP 0b1010
+#define INC_OP 0b1000
+#define JMP_OP 0b00100101
+#define JMPA_OP 0b00011010
+#define JSR_OP 0b00011001
+#define JSRA_OP 0b00000011
+#define LD_B_OP 0b00011100
+#define LD_L_OP 0b00001010
+#define LD_S_OP 0b00100001
+#define LDA_B_OP 0b00011101
+#define LDA_L_OP 0b00001000
+#define LDA_S_OP 0b00100010
+#define LDI_L_OP 0b00000001
+#define LDI_B_OP 0b00011011
+#define LDI_S_OP 0b00100000
+#define LDO_B_OP 0b00110110
+#define LDO_L_OP 0b00001100
+#define LDO_S_OP 0b00111000
+#define LSHR_OP 0b00100111
+#define MOD_OP 0b00110011
+#define MOV_OP 0b00000010
+#define MUL_OP 0b00101111
+#define MUL_X_OP 0b00010101
+#define NEG_OP 0b00101010
+#define NOP_OP 0b00001111
+#define NOT_OP 0b00101100
+#define OR_OP 0b00101011
+#define POP_OP 0b00000111
+#define PUSH_OP 0b00000110
+#define RET_OP 0b00000100
+#define SEX_B_OP 0b00010000
+#define SEX_S_OP 0b00010001
+#define SSR_OP 0b1011
+#define ST_B_OP 0b00011110
+#define ST_L_OP 0b00001011
+#define ST_S_OP 0b00100011
+#define STA_B_OP 0b00011111
+#define STA_L_OP 0b00001001
+#define STA_S_OP 0b00100100
+#define STO_B_OP 0b00110111
+#define STO_L_OP 0b00001101
+#define STO_S_OP 0b00111001
+#define SUB_OP 0b00101001
+#define SWI_OP 0b00110000
+#define UDIV_OP 0b00110010
+#define UMOD_OP 0b00110100
+#define UMUL_X_OP 0b00010100
+#define XOR_OP 0b00101110
+#define ZEX_B_OP 0b00010010
+#define ZEX_S_OP 0b00010011
+"}
+
+def AND
+{
+    arg_template {
+        (ra){registers},
+        (rb){registers}
+    }
+
+    max {
+
+    }
+
+    encode 
+    {
+    "
+    
+    "
+    }
+
+    mnemonic {
+        "and"
+    }
+}
+def ADD
+{
+    arg_template {
+        (ra){registers},
+        (rb){registers}
+    }
+
+    max {
+
+    }
+
+    encode 
+    {
+    "
+    
+    "
+    }
+
+    mnemonic {
+        "add"
+    }
+}
+def ASHL
+{
+    arg_template {
+        (ra){registers},
+        (rb){registers}
+    }
+
+    max {
+
+    }
+
+    encode 
+    {
+    "
+    
+    "
+    }
+
+    mnemonic {
+        "ashl"
+    }
+}
+def ASHR
+{
+    arg_template {
+        (ra){registers},
+        (rb){registers}
+    }
+
+    max {
+
+    }
+
+    encode 
+    {
+    "
+    
+    "
+    }
+
+    mnemonic {
+        "ashr"
+    }
+}
+def BEQ
+{
+    arg_template {
+        (imm){numeric}
+    }
+
+    max {
+
+    }
+
+    encode 
+    {
+    "
+    
+    "
+    }
+
+    mnemonic {
+        "beq"
+    }
+}
+def BGE
+{
+    arg_template {
+        (imm){numeric}
+    }
+
+    max {
+
+    }
+
+    encode 
+    {
+    "
+    
+    "
+    }
+
+    mnemonic {
+        "bge"
+    }
+}
+def BGEU
+{
+    arg_template {
+        (imm){numeric}
+    }
+
+    max {
+
+    }
+
+    encode 
+    {
+    "
+    
+    "
+    }
+
+    mnemonic {
+        "bgeu"
+    }
+}
+def BGT
+{
+    arg_template {
+        (imm){numeric}
+    }
+
+    max {
+
+    }
+
+    encode 
+    {
+    "
+    
+    "
+    }
+
+    mnemonic {
+        "bgt"
+    }
+}
+def BGTU
+{
+    arg_template {
+        (imm){numeric}
+    }
+
+    max {
+        (imm){numeric}
+    }
+
+    encode 
+    {
+    "
+    
+    "
+    }
+
+    mnemonic {
+        "bgtu"
+    }
+}
+def BLE
+{
+    arg_template {
+        (imm){numeric}
+    }
+
+    max {
+
+    }
+
+    encode 
+    {
+    "
+    
+    "
+    }
+
+    mnemonic {
+        "ble"
+    }
+}
+def BLEU
+{
+    arg_template {
+        (imm){numeric}
+    }
+
+    max {
+
+    }
+
+    encode 
+    {
+    "
+    
+    "
+    }
+
+    mnemonic {
+        "bleu"
+    }
+}
+def BLT
+{
+    arg_template {
+        (imm){numeric}
+    }
+
+    max {
+
+    }
+
+    encode 
+    {
+    "
+    
+    "
+    }
+
+    mnemonic {
+        "blt"
+    }
+}
+def BLTU
+{
+    arg_template {
+        (imm){numeric}
+    }
+
+    max {
+
+    }
+
+    encode 
+    {
+    "
+    
+    "
+    }
+
+    mnemonic {
+        "bltu"
+    }
+}
+def BNE
+{
+    arg_template {
+        (imm){numeric}
+    }
+
+    max {
+
+    }
+
+    encode 
+    {
+    "
+    
+    "
+    }
+
+    mnemonic {
+        "bne"
+    }
+}
+def BRK
+{
+    arg_template {
+
+    }
+
+    max {
+
+    }
+
+    encode 
+    {
+    "
+    
+    "
+    }
+
+    mnemonic {
+        "brk"
+    }
+}
+def CMP
+{
+    arg_template {
+        (ra){registers},
+        (rb){registers}
+    }
+
+    max {
+
+    }
+
+    encode 
+    {
+    "
+    
+    "
+    }
+
+    mnemonic {
+        "cmp"
+    }
+}
+def DEC
+{
+    arg_template {
+        (ra){registers},
+        (imm){numeric}
+    }
+
+    max {
+
+    }
+
+    encode 
+    {
+    "
+    
+    "
+    }
+
+    mnemonic {
+        "dec"
+    }
+}
+def DIV
+{
+    arg_template {
+        (ra){registers},
+        (rb){registers}
+    }
+
+    max {
+
+    }
+
+    encode 
+    {
+    "
+    
+    "
+    }
+
+    mnemonic {
+        "div"
+    }
+}
+def GSR
+{
+    arg_template {
+        (ra){registers},
+        (sr){special_reg}
+    }
+
+    max {
+
+    }
+
+    encode 
+    {
+    "
+    
+    "
+    }
+
+    mnemonic {
+        "gsr"
+    }
+}
+def INC
+{
+    arg_template {
+        (ra){registers},
+        (imm){numeric} 
+    }
+
+    max {
+
+    }
+
+    encode 
+    {
+    "
+    
+    "
+    }
+
+    mnemonic {
+        "inc"
+    }
+}
+def JMP
+{
+    arg_template {
+        (ra){registers}
+    }
+
+    max {
+
+    }
+
+    encode 
+    {
+    "
+    
+    "
+    }
+
+    mnemonic {
+        "jmp"
+    }
+}
+def JMPA
+{
+    arg_template {
+        (imm32){numeric}
+    }
+
+    max {
+
+    }
+
+    encode 
+    {
+    "
+    
+    "
+    }
+
+    mnemonic {
+        "jmpa"
+    }
+}
+def JSR
+{
+    arg_template {
+        (ra){registers}
+    }
+
+    max {
+
+    }
+
+    encode 
+    {
+    "
+    
+    "
+    }
+
+    mnemonic {
+        "jsr"
+    }
+}
+def JSRA
+{
+    arg_template {
+        (imm32){numeric}
+    }
+
+    max {
+
+    }
+
+    encode 
+    {
+    "
+    
+    "
+    }
+
+    mnemonic {
+        "jsra"
+    }
+}
+def LD_B
+{
+    arg_template {
+        (ra){registers},
+        (rb){registers}
+    }
+
+    max {
+
+    }
+
+    encode 
+    {
+    "
+    
+    "
+    }
+
+    mnemonic {
+        "ld_b"
+    }
+}
+def LD_L
+{
+    arg_template {
+        (ra){registers},
+        (rb){registers}
+    }
+
+    max {
+
+    }
+
+    encode 
+    {
+    "
+    
+    "
+    }
+
+    mnemonic {
+        "ld_l"
+    }
+}
+def LD_S
+{
+    arg_template {
+        (ra){registers},
+        (rb){registers}
+    }
+
+    max {
+
+    }
+
+    encode 
+    {
+    "
+    
+    "
+    }
+
+    mnemonic {
+        "ld_s"
+    }
+}
+def LDA_B
+{
+    arg_template {
+        (ra){registers},
+        (imm32){numeric}
+    }
+
+    max {
+
+    }
+
+    encode 
+    {
+    "
+    
+    "
+    }
+
+    mnemonic {
+        "lda_b"
+    }
+}
+def LDA_L
+{
+    arg_template {
+        (ra){registers},
+        (imm32){numeric}
+    }
+
+    max {
+
+    }
+
+    encode 
+    {
+    "
+    
+    "
+    }
+
+    mnemonic {
+        "lda_l"
+    }
+}
+def LDA_S
+{
+    arg_template {
+        (ra){registers},
+        (imm32){numeric}
+    }
+
+    max {
+
+    }
+
+    encode 
+    {
+    "
+    
+    "
+    }
+
+    mnemonic {
+        "lda_s"
+    }
+}
+def LDI_L
+{
+    arg_template {
+        (ra){registers},
+        (imm32){numeric}
+
+    }
+
+    max {
+
+    }
+
+    encode 
+    {
+    "
+    
+    "
+    }
+
+    mnemonic {
+        "ldi_l"
+    }
+}
+def LDI_B
+{
+    arg_template {
+        (ra){registers},
+        (imm32){numeric}
+    }
+
+    max {
+
+    }
+
+    encode 
+    {
+    "
+    
+    "
+    }
+
+    mnemonic {
+        "ldi_b"
+    }
+}
+def LDI_S
+{
+    arg_template {
+        (ra){registers},
+        (imm32){numeric}
+    }
+
+    max {
+
+    }
+
+    encode 
+    {
+    "
+    
+    "
+    }
+
+    mnemonic {
+        "ldi_s"
+    }
+}
+def LDO_B
+{
+    arg_template {
+        (ra){registers},
+        (rb){registers},
+        (imm16){numeric}
+    }
+
+    max {
+
+    }
+
+    encode 
+    {
+    "
+    
+    "
+    }
+
+    mnemonic {
+        "ldo_b"
+    }
+}
+def LDO_L
+{
+    arg_template {
+        (ra){registers},
+        (rb){registers},
+        (imm16){numeric}
+    }
+
+    max {
+
+    }
+
+    encode 
+    {
+    "
+    
+    "
+    }
+
+    mnemonic {
+        "ldo_l"
+    }
+}
+def LDO_S
+{
+    arg_template {
+        (ra){registers},
+        (rb){registers},
+        (imm16){numeric}
+    }
+
+    max {
+
+    }
+
+    encode 
+    {
+    "
+    
+    "
+    }
+
+    mnemonic {
+        "ldo_s"
+    }
+}
+def LSHR
+{
+    arg_template {
+        (ra){registers},
+        (rb){registers}
+    }
+
+    max {
+
+    }
+
+    encode 
+    {
+    "
+    
+    "
+    }
+
+    mnemonic {
+        "lshr"
+    }
+}
+def MOD
+{
+    arg_template {
+        (ra){registers},
+        (rb){registers}
+    }
+
+    max {
+
+    }
+
+    encode 
+    {
+    "
+    
+    "
+    }
+
+    mnemonic {
+        "mod"
+    }
+}
+def MOV
+{
+    arg_template {
+        (ra){registers},
+        (rb){registers}
+    }
+
+    max {
+
+    }
+
+    encode 
+    {
+    "
+    
+    "
+    }
+
+    mnemonic {
+        "mov"
+    }
+}
+def MUL
+{
+    arg_template {
+        (ra){registers},
+        (rb){registers}
+    }
+
+    max {
+
+    }
+
+    encode 
+    {
+    "
+    
+    "
+    }
+
+    mnemonic {
+        "mul"
+    }
+}
+def MUL_X
+{
+    arg_template {
+        (ra){registers},
+        (rb){registers}
+    }
+
+    max {
+
+    }
+
+    encode 
+    {
+    "
+    
+    "
+    }
+
+    mnemonic {
+        "mul_x"
+    }
+}
+def NEG
+{
+    arg_template {
+        (ra){registers},
+        (rb){registers}
+    }
+
+    max {
+
+    }
+
+    encode 
+    {
+    "
+    
+    "
+    }
+
+    mnemonic {
+        "neg"
+    }
+}
+def NOP
+{
+    arg_template {
+
+    }
+
+    max {
+
+    }
+
+    encode 
+    {
+    "
+    
+    "
+    }
+
+    mnemonic {
+        "nop"
+    }
+}
+def NOT
+{
+    arg_template {
+        (ra){registers},
+        (rb){registers}
+    }
+
+    max {
+
+    }
+
+    encode 
+    {
+    "
+    
+    "
+    }
+
+    mnemonic {
+        "not"
+    }
+}
+def OR
+{
+    arg_template {
+        (ra){registers},
+        (rb){registers}
+    }
+
+    max {
+
+    }
+
+    encode 
+    {
+    "
+    
+    "
+    }
+
+    mnemonic {
+        "or"
+    }
+}
+def POP
+{
+    arg_template {
+        (ra){registers},
+        (rb){registers}
+    }
+
+    max {
+
+    }
+
+    encode 
+    {
+    "
+    
+    "
+    }
+
+    mnemonic {
+        "pop"
+    }
+}
+def PUSH
+{
+    arg_template {
+        (ra){registers},
+        (rb){registers}
+    }
+
+    max {
+
+    }
+
+    encode 
+    {
+    "
+    
+    "
+    }
+
+    mnemonic {
+        "push"
+    }
+}
+def RET
+{
+    arg_template {
+
+    }
+
+    max {
+
+    }
+
+    encode 
+    {
+    "
+    
+    "
+    }
+
+    mnemonic {
+        "ret"
+    }
+}
+def SEX_B
+{
+    arg_template {
+        (ra){registers},
+        (rb){registers}
+    }
+
+    max {
+
+    }
+
+    encode 
+    {
+    "
+    
+    "
+    }
+
+    mnemonic {
+        "sex_b"
+    }
+}
+def SEX_S
+{
+    arg_template {
+        (ra){registers},
+        (rb){registers}
+    }
+
+    max {
+
+    }
+
+    encode 
+    {
+    "
+    
+    "
+    }
+
+    mnemonic {
+        "sex_s"
+    }
+}
+def SSR
+{
+    arg_template {
+        (ra){registers},
+        (sr){special_reg}
+    }
+
+    max {
+
+    }
+
+    encode 
+    {
+    "
+    
+    "
+    }
+
+    mnemonic {
+        "ssr"
+    }
+}
+def ST_B
+{
+    arg_template {
+        (ra){registers},
+        (rb){registers}
+    }
+
+    max {
+
+    }
+
+    encode 
+    {
+    "
+    
+    "
+    }
+
+    mnemonic {
+        "st_b"
+    }
+}
+def ST_L
+{
+    arg_template {
+        (ra){registers},
+        (rb){registers}
+    }
+
+    max {
+
+    }
+
+    encode 
+    {
+    "
+    
+    "
+    }
+
+    mnemonic {
+        "st_l"
+    }
+}
+def ST_S
+{
+    arg_template {
+        (ra){registers},
+        (rb){registers}
+    }
+
+    max {
+
+    }
+
+    encode 
+    {
+    "
+    
+    "
+    }
+
+    mnemonic {
+        "st_s"
+    }
+}
+def STA_B
+{
+    arg_template {
+        (ra){registers},
+        (imm32){numeric}
+    }
+
+    max {
+
+    }
+
+    encode 
+    {
+    "
+    
+    "
+    }
+
+    mnemonic {
+        "sta_b"
+    }
+}
+def STA_L
+{
+    arg_template {
+        (ra){registers},
+        (imm32){numeric}
+    }
+
+    max {
+
+    }
+
+    encode 
+    {
+    "
+    
+    "
+    }
+
+    mnemonic {
+        "sta_l"
+    }
+}
+def STA_S
+{
+    arg_template {
+        (ra){registers},
+        (imm32){numeric}
+    }
+
+    max {
+
+    }
+
+    encode 
+    {
+    "
+    
+    "
+    }
+
+    mnemonic {
+        "sta_s"
+    }
+}
+def STO_B
+{
+    arg_template {
+        (ra){registers},
+        (rb){registers},
+        (imm16){numeric}
+    }
+
+    max {
+
+    }
+
+    encode 
+    {
+    "
+    
+    "
+    }
+
+    mnemonic {
+        "sto_b"
+    }
+}
+def STO_L
+{
+    arg_template {
+        (ra){registers},
+        (rb){registers},
+        (imm16){numeric}
+    }
+
+    max {
+
+    }
+
+    encode 
+    {
+    "
+    
+    "
+    }
+
+    mnemonic {
+        "sto_l"
+    }
+}
+def STO_S
+{
+    arg_template {
+        (ra){registers},
+        (rb){registers},
+        (imm16){numeric}
+    }
+
+    max {
+
+    }
+
+    encode 
+    {
+    "
+    
+    "
+    }
+
+    mnemonic {
+        "sto_s"
+    }
+}
+def SUB
+{
+    arg_template {
+        (ra){registers},
+        (rb){registers}
+    }
+
+    max {
+
+    }
+
+    encode 
+    {
+    "
+    
+    "
+    }
+
+    mnemonic {
+        "sub"
+    }
+}
+def SWI
+{
+    arg_template {
+        (imm16){numeric}
+    }
+
+    max {
+
+    }
+
+    encode 
+    {
+    "
+    
+    "
+    }
+
+    mnemonic {
+        "swi"
+    }
+}
+def UDIV
+{
+    arg_template {
+        (ra){registers},
+        (rb){registers}
+    }
+
+    max {
+
+    }
+
+    encode 
+    {
+    "
+    
+    "
+    }
+
+    mnemonic {
+        "udiv"
+    }
+}
+def UMOD
+{
+    arg_template {
+        (ra){registers},
+        (rb){registers}
+    }
+
+    max {
+
+    }
+
+    encode 
+    {
+    "
+    
+    "
+    }
+
+    mnemonic {
+        "umod"
+    }
+}
+def UMUL_X
+{
+    arg_template {
+        (ra){registers},
+        (rb){registers}
+    }
+
+    max {
+
+    }
+
+    encode 
+    {
+    "
+    
+    "
+    }
+
+    mnemonic {
+        "umul_x"
+    }
+}
+def XOR
+{
+    arg_template {
+        (ra){registers},
+        (rb){registers}
+    }
+
+    max {
+
+    }
+
+    encode 
+    {
+    "
+    
+    "
+    }
+
+    mnemonic {
+        "xor"
+    }
+}
+def ZEX_B
+{
+    arg_template {
+        (ra){registers},
+        (rb){registers}
+    }
+
+    max {
+
+    }
+
+    encode 
+    {
+    "
+    
+    "
+    }
+
+    mnemonic {
+        "zex_b"
+    }
+}
+def ZEX_S
+{
+    arg_template {
+        (ra){registers},
+        (rb){registers}
+    }
+
+    max {
+
+    }
+
+    encode 
+    {
+    "
+    
+    "
+    }
+
+    mnemonic {
+        "zex_s"
+    }
+}

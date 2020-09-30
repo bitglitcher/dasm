@@ -20,7 +20,7 @@ char* remove_line_comment(char *str, size_t size)
 				{
 					if(*(str + (fill + i)) != '\n')
 					{
-						*(copy + (fill + i)) = ' ';
+						*(copy + (fill + i)) = '\n';
 					}
 					fill++;
 				}
