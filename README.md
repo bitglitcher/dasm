@@ -46,7 +46,7 @@ Any assembler syntax includes the mnemonic and the operands. As shown in the nex
 | :---: | :---: | :---: |
 | ld | R0 | 0xff |
 
-How we describe such instruction? Well, we need first need to let the assembler know our operands. We do so by defining our arguments or operands.
+How we describe such instruction? Well, we first need to let the assembler know our operands. We do so by defining our arguments or operands.
 
 In the following example we define our registers and their address.
 ```
