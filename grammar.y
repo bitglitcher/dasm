@@ -67,6 +67,30 @@ arguments:
         }
     }
     |
+    NUMBER
+    {
+        if(!dry_run)
+        {
+            printf("arguments number detected: %d\n", val);
+            ARG_NODE_TEMPLATE node;
+            node.value = val;
+            node.domain = "numeric";
+            append_arg(&arg, node);
+        }
+    }
+    |
+    '[' NUMBER ']'
+    {
+        if(!dry_run)
+        {
+            printf("argument address detected\n", val);
+            ARG_NODE_TEMPLATE node;
+            node.value = val;
+            node.domain = "address";
+            append_arg(&arg, node);
+        }
+    }
+    |
     arguments ',' IDENTIFIER 
     {
         if(!dry_run)
