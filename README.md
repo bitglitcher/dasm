@@ -19,6 +19,18 @@ This is part of a new toolchain that im creating, with similar ideology. C Compi
 Multiline Comments
 */
 
+//C Like struct
+struct identifier
+{
+	byte 4, apple;
+	byte 4, orange;
+	byte 8, lime; 
+}
+
+//Access Struct
+// struct_identifier.member
+
+
 //Labels identifier:
 main:
      mnemonic operand, operand;
