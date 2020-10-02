@@ -49,5 +49,6 @@ int return_token(char* identifier)
         }
     }
     //if nothing
+    set_identifier(strdup(identifier));
     return IDENTIFIER;
 }

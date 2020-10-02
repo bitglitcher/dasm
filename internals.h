@@ -60,10 +60,12 @@ void set_identifier(char* identifier_name);
 void reset_identifiers();
 
 /*TYPES of symbols*/
-#define TYPE_LABEL      0x00
-#define TYPE_DEF        0x01
-#define TYPE_REG        0x02
-#define TYPE_DONT_CARE  0xffae
+#define TYPE_LABEL      	0x00
+#define TYPE_DEF        	0x01
+#define TYPE_REG        	0x02
+#define TYPE_STRUCT			0x03
+#define TYPE_STRUCT_MEMBER	0x03
+#define TYPE_DONT_CARE  	0xffae
 
 //Register clases Classess
 #define CLASS_GPR  0

@@ -37,7 +37,7 @@ IDENTIFIER [A-Za-z0-9]*
 %%
     
 
-[a-zA-Z_][a-zA-Z0-9_]*      {set_identifier(strdup(yytext));printf("IDENTIFIER %s\n", yytext); return return_token(yytext);};
+[a-zA-Z_][a-zA-Z0-9_]*      {printf("IDENTIFIER %s\n", yytext); return return_token(yytext);};
 
 (0-9)*                      {val=atoi(yytext); return NUMBER;}
 (0x)+[A-Fa-f0-9]*           {val=strtol(yytext,NULL,0); return NUMBER;}

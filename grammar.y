@@ -39,6 +39,8 @@ extern SYMBOL_TABLE symbol_table;
 char* current_scope;
 
 extern bool dry_run;
+
+int struct_size_cnt;
 %}
 
 
@@ -177,7 +179,12 @@ label:
 struct_type_def:
     BYTE NUMBER ',' IDENTIFIER ';'
     {
-
+        if(dry_run)
+        {
+            struct_size_cnt += val;
+            append_symbol(&symbol_table, IDENTIFIER_0, TYPE_STRUCT_MEMBER, 0x00, current_scope);
+        }
+        reset_identifiers();
     }
     ;
 
@@ -187,7 +194,16 @@ recursive_struct_types:
     ;
 
 struct:
-    STRUCT IDENTIFIER '{' recursive_struct_types '}'
+    STRUCT IDENTIFIER '{' 
+    {
+        if(dry_run)
+        {
+            struct_size_cnt = 0;
+            current_scope = IDENTIFIER_0;
+            append_symbol(&symbol_table, IDENTIFIER_0, TYPE_STRUCT, 0x00, "struct");
+            reset_identifiers();
+        }
+    } recursive_struct_types '}'
     ;
 
 %%
