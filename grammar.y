@@ -181,8 +181,8 @@ struct_type_def:
     {
         if(dry_run)
         {
+            append_symbol(&symbol_table, IDENTIFIER_0, TYPE_STRUCT_MEMBER, struct_size_cnt, current_scope);
             struct_size_cnt += val;
-            append_symbol(&symbol_table, IDENTIFIER_0, TYPE_STRUCT_MEMBER, 0x00, current_scope);
         }
         reset_identifiers();
     }
