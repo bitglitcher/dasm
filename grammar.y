@@ -42,7 +42,7 @@ extern bool dry_run;
 %}
 
 
-%token OPERATION SEMICOLON DEF ALLOC IDENTIFIER INS NUMBER
+%token OPERATION SEMICOLON DEF ALLOC IDENTIFIER INS NUMBER STRUCT BYTE 
 
 %%
 commands: /* empty */
@@ -55,6 +55,8 @@ command:
     defenition
     |
     label
+    |
+    struct
     ;
 
 arguments:
@@ -170,6 +172,22 @@ label:
         }
         reset_identifiers();
     }
+    ;
+
+struct_type_def:
+    BYTE NUMBER ',' IDENTIFIER ';'
+    {
+
+    }
+    ;
+
+recursive_struct_types:
+    |
+    recursive_struct_types struct_type_def
+    ;
+
+struct:
+    STRUCT IDENTIFIER '{' recursive_struct_types '}'
     ;
 
 %%

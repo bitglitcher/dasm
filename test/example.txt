@@ -1,3 +1,14 @@
+
+
+
+
+struct something
+{
+    byte 5, apple;
+    byte 4, lime;
+    byte 8, lol;
+}
+
 add ax, bx, cx;
 
 sub ax, bx, cx;

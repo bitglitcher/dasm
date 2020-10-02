@@ -7,8 +7,8 @@
 #include "y.tab.h"
 //#include "arch/"
 
-char* keywords [] = {"def", "alloc"};
-int keyword_id [] = {DEF, ALLOC}; //defined in the y.tab.h header file
+char* keywords [] = {"def", "alloc", "struct", "byte"};
+int keyword_id [] = {DEF, ALLOC, STRUCT, BYTE}; //defined in the y.tab.h header file
 
 //SYMBOL_TABLE local_table; //for identifiers
 
@@ -36,7 +36,7 @@ void init_internals()
 int return_token(char* identifier)
 {
     //printf("sizeof %d\n", sizeof((char*)keywords));
-    for(int i = 0;i <= 1;i++)
+    for(int i = 0;i <= 3;i++)
     {
         //printf("To compare %s\n", identifier);
         if(strcmp(keywords [i], identifier) == 0)

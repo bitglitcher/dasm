@@ -1,7 +1,12 @@
 
 
 
-
+struct something
+{
+    byte 0x5, apple;
+    byte 0x4, lime;
+    byte 0x8, orange;
+}
 
 main:
     add r0, r1;
