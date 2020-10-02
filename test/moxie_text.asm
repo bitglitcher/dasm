@@ -14,6 +14,6 @@ main:
     ashl r0, r1;
     ashr r0, r1;
     beq 0xff;
-    bge 0xff;
+    bge something.orange;
 
 
