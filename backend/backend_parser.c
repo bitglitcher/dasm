@@ -400,7 +400,7 @@ void gen_ins_functions(SYMBOL_TABLE* symbol_table, FILE* _c_file, FILE* _c_heade
                     printf("\t\tgen_ins_function: %s\n", symbol_table->data[i].name);
                     fprintf(_c_header, "extern void %s_encode_function(BIN_BUFFER* bin_buffer, ARG_TABLE* arg_table, int op);\n", symbol_table->data[i].name);
                     fprintf(_c_file, "\nvoid %s_encode_function(BIN_BUFFER* bin_buffer, ARG_TABLE* arg_table, int op)\n{\n", symbol_table->data[i].name);
-                    fprintf(_c_file, "\tprintf(\"Function For assembler called %s\");\n", symbol_table->data[i].name);
+                    fprintf(_c_file, "\tprintf(\"Function For assembler called %s\\n\");\n", symbol_table->data[i].name);
                     for(int x = 0;x <= symbol_table->size;x++)
                     {
                         if(symbol_table->data + x)
