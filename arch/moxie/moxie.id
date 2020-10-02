@@ -1,27 +1,50 @@
 
 arg registers
 {
-    (r0){0x00},
-    (r1){0x01},
-    (r2){0x02},
-    (r3){0x03},
-    (r4){0x04},
-    (r5){0x05},
-    (r6){0x06},
-    (r7){0x07},
-    (r8){0x08},
-    (r9){0x09},
-    (r10){0x0a},
-    (r11){0x0b},
-    (r12){0x0c},
-    (r13){0x0d},
-    (fp){0x0e},
-    (bp){0x0f}
+    (fp){0x00},
+    (sp){0x01},
+    (r0){0x02},
+    (r1){0x03},
+    (r2){0x04},
+    (r3){0x05},
+    (r4){0x06},
+    (r5){0x07},
+    (r6){0x08},
+    (r7){0x09},
+    (r8){0x0a},
+    (r9){0x0b},
+    (r10){0x0c},
+    (r11){0x0d},
+    (r12){0x0e},
+    (r13){0x0f}
 }
+
+
+/*
+    0	status register with the following bit values:
+    1	a pointer to the Exception Handler routine (invoked by swi, IRQs, Divide by Zero and illegal instructions (bad))
+    2	upon invocation of the Excecption Handler (see above), special register 2 will have one of four values..
+    3	the swi request number (by convention)
+    4	address of the supervisor mode stack on which exceptions are executed
+    5	return address upon entering the exception handler
+    6	reserved
+    7	reserved
+    8	reserved
+    9	an optional non-zero pointer to the Device Tree blob describing this device
+*/
 
 arg special_reg
 {
-
+    (sr0){0x00},
+    (sr1){0x01},
+    (sr2){0x02},
+    (sr3){0x03},
+    (sr4){0x04},
+    (sr5){0x05},
+    (sr6){0x06},
+    (sr7){0x07},
+    (sr8){0x08},
+    (sr9){0x09}
 }
 
 macros 
@@ -94,6 +117,9 @@ macros
 #define XOR_OP 0b00101110
 #define ZEX_B_OP 0b00010010
 #define ZEX_S_OP 0b00010011
+
+#define ENCODE_AB(ins, rb, ra) (((ins & 0xff) << 0x8) | ((rb & 0xf) << 0x4) | (ra & 0xf))
+#define ENCODE_IMM10(ins, imm) (((ins & 0b111111) << 0xa) | (imm & 0x3ff))
 "}
 
 def AND
@@ -110,7 +136,8 @@ def AND
     encode 
     {
     "
-    
+        APPEND_BYTE(GET_SIZE_32_SEC_1(ENCODE_AB(AND_OP, GET_OP1_VAL, GET_OP2_VAL)));
+        APPEND_BYTE(GET_SIZE_32_SEC_2(ENCODE_AB(AND_OP, GET_OP1_VAL, GET_OP2_VAL)));
     "
     }
 
@@ -132,7 +159,8 @@ def ADD
     encode 
     {
     "
-    
+        APPEND_BYTE(GET_SIZE_32_SEC_1(ENCODE_AB(ADD_OP, GET_OP1_VAL, GET_OP2_VAL)));
+        APPEND_BYTE(GET_SIZE_32_SEC_2(ENCODE_AB(ADD_OP, GET_OP1_VAL, GET_OP2_VAL)));
     "
     }
 
@@ -154,7 +182,8 @@ def ASHL
     encode 
     {
     "
-    
+        APPEND_BYTE(GET_SIZE_32_SEC_1(ENCODE_AB(ASHL_OP, GET_OP1_VAL, GET_OP2_VAL)));
+        APPEND_BYTE(GET_SIZE_32_SEC_2(ENCODE_AB(ASHL_OP, GET_OP1_VAL, GET_OP2_VAL))); 
     "
     }
 
@@ -176,7 +205,8 @@ def ASHR
     encode 
     {
     "
-    
+        APPEND_BYTE(GET_SIZE_32_SEC_1(ENCODE_AB(ASHR_OP, GET_OP1_VAL, GET_OP2_VAL)));
+        APPEND_BYTE(GET_SIZE_32_SEC_2(ENCODE_AB(ASHR_OP, GET_OP1_VAL, GET_OP2_VAL))); 
     "
     }
 
@@ -191,13 +221,13 @@ def BEQ
     }
 
     max {
-
     }
 
     encode 
     {
     "
-    
+        APPEND_BYTE(GET_SIZE_32_SEC_1(ENCODE_IMM10(BEQ_OP, GET_OP1_VAL)));
+        APPEND_BYTE(GET_SIZE_32_SEC_2(ENCODE_IMM10(BEQ_OP, GET_OP1_VAL))); 
     "
     }
 
@@ -218,7 +248,8 @@ def BGE
     encode 
     {
     "
-    
+        APPEND_BYTE(GET_SIZE_32_SEC_1(ENCODE_IMM10(BGE_OP, GET_OP1_VAL)));
+        APPEND_BYTE(GET_SIZE_32_SEC_2(ENCODE_IMM10(BGE_OP, GET_OP1_VAL)));
     "
     }
 
@@ -239,7 +270,8 @@ def BGEU
     encode 
     {
     "
-    
+        APPEND_BYTE(GET_SIZE_32_SEC_1(ENCODE_IMM10(BGEU_OP, GET_OP1_VAL)));
+        APPEND_BYTE(GET_SIZE_32_SEC_2(ENCODE_IMM10(BGEU_OP, GET_OP1_VAL)));
     "
     }
 
@@ -260,7 +292,8 @@ def BGT
     encode 
     {
     "
-    
+        APPEND_BYTE(GET_SIZE_32_SEC_1(ENCODE_IMM10(BGT_OP, GET_OP1_VAL)));
+        APPEND_BYTE(GET_SIZE_32_SEC_2(ENCODE_IMM10(BGT_OP, GET_OP1_VAL)));
     "
     }
 
@@ -281,7 +314,8 @@ def BGTU
     encode 
     {
     "
-    
+        APPEND_BYTE(GET_SIZE_32_SEC_1(ENCODE_IMM10(BGTU_OP, GET_OP1_VAL)));
+        APPEND_BYTE(GET_SIZE_32_SEC_2(ENCODE_IMM10(BGTU_OP, GET_OP1_VAL)));
     "
     }
 
@@ -302,7 +336,8 @@ def BLE
     encode 
     {
     "
-    
+        APPEND_BYTE(GET_SIZE_32_SEC_1(ENCODE_IMM10(BLE_OP, GET_OP1_VAL)));
+        APPEND_BYTE(GET_SIZE_32_SEC_2(ENCODE_IMM10(BLE_OP, GET_OP1_VAL)));
     "
     }
 
@@ -323,7 +358,8 @@ def BLEU
     encode 
     {
     "
-    
+        APPEND_BYTE(GET_SIZE_32_SEC_1(ENCODE_IMM10(BLEU_OP, GET_OP1_VAL)));
+        APPEND_BYTE(GET_SIZE_32_SEC_2(ENCODE_IMM10(BLEU_OP, GET_OP1_VAL)));
     "
     }
 
@@ -344,7 +380,8 @@ def BLT
     encode 
     {
     "
-    
+        APPEND_BYTE(GET_SIZE_32_SEC_1(ENCODE_IMM10(BLT_OP, GET_OP1_VAL)));
+        APPEND_BYTE(GET_SIZE_32_SEC_2(ENCODE_IMM10(BLT_OP, GET_OP1_VAL)));
     "
     }
 
@@ -365,7 +402,8 @@ def BLTU
     encode 
     {
     "
-    
+        APPEND_BYTE(GET_SIZE_32_SEC_1(ENCODE_IMM10(BLTU_OP, GET_OP1_VAL)));
+        APPEND_BYTE(GET_SIZE_32_SEC_2(ENCODE_IMM10(BLTU_OP, GET_OP1_VAL)));    
     "
     }
 
@@ -386,7 +424,8 @@ def BNE
     encode 
     {
     "
-    
+        APPEND_BYTE(GET_SIZE_32_SEC_1(ENCODE_IMM10(BNE_OP, GET_OP1_VAL)));
+        APPEND_BYTE(GET_SIZE_32_SEC_2(ENCODE_IMM10(BNE_OP, GET_OP1_VAL)));   
     "
     }
 
@@ -407,7 +446,8 @@ def BRK
     encode 
     {
     "
-    
+            APPEND_BYTE(GET_SIZE_32_SEC_1(ENCODE_IMM10(BRK_OP, 0x00)));
+            APPEND_BYTE(GET_SIZE_32_SEC_2(ENCODE_IMM10(BRK_OP, 0x00)));   
     "
     }
 
