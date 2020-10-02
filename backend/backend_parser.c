@@ -33,7 +33,7 @@ extern void print_symbol_table();
 #define EPILOUGE_H "\n\n\n\n#endif\n"
 
 //Define libraries to include in the target.c file
-#define PROLOGUE_C "#include <stdio.h>\n#include <string.h>\n#include \"target.h\"\n#include \"../arg_access.h\" \n\n"
+#define PROLOGUE_C "#include <stdio.h>\n#include <string.h>\n#include \"target.h\"\n#include \"../arg_access.h\"\n#include \"../helper_f.h\"\n\n"
 #define EPILOGUE_C ""
 
 //ARGUMENT NODE TEMPLATE STRUCTURE

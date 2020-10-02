@@ -1,6 +1,6 @@
 ARCH=d32i
 
-all: backend grammar internals arch compile_grammar lexer preprocessor libs main
+all: backend grammar internals helper_f arch compile_grammar lexer preprocessor libs main 
 
 backend:
 	@$(MAKE) -C backend/
@@ -21,6 +21,9 @@ grammar: grammar.y libs/terminal_colors.h
 internals: internals.c internals.h internals_backend.c internals_backend.h
 	gcc internals.c internals.h -c
 	gcc internals_backend.c -c
+
+helper_f: helper_f.c
+	gcc helper_f.c -c
 
 arch: build/target.c
 	gcc build/target.c -c
@@ -46,8 +49,8 @@ libs: libs/file_table.c libs/file_table.h libs/symbol_table.o libs/arg_table.c l
 	gcc libs/bin_buffer.c -g -c
 
 
-main: main.c libs/terminal_colors.h libs/file_table.o libs/file_table.c libs/symbol_table.o libs/symbol_table.c internals.o target.o preprocessor.o obj_file.o
-	gcc main.c lex.yy.o y.tab.o libs/file_table.o libs/symbol_table.o libs/bin_buffer.o internals.o internals_backend.o arg_table.o target.o preprocessor.o obj_file.o -g -o build/bin/dasm
+main: main.c libs/terminal_colors.h libs/file_table.o libs/file_table.c libs/symbol_table.o libs/symbol_table.c internals.o target.o preprocessor.o obj_file.o helper_f.o
+	gcc main.c lex.yy.o y.tab.o libs/file_table.o libs/symbol_table.o libs/bin_buffer.o internals.o internals_backend.o arg_table.o target.o preprocessor.o obj_file.o helper_f.o -g -o build/bin/dasm
 
 clean:
 	rm *.o
