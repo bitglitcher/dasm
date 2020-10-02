@@ -7,6 +7,10 @@
 #include "y.tab.h"
 //#include "arch/"
 
+/*
+Useless code that will be deleted
+*/
+
 char* keywords [] = {"def", "alloc", "struct", "byte"};
 int keyword_id [] = {DEF, ALLOC, STRUCT, BYTE}; //defined in the y.tab.h header file
 
@@ -20,7 +24,7 @@ int identifier_index = 0;
 void set_identifier(char* identifier_name)
 {
     identifiers [identifier_index] = strdup(identifier_name);
-    identifier_index++;
+    //identifier_index++;
 }
 
 void reset_identifiers()
@@ -35,20 +39,16 @@ void init_internals()
 
 int return_token(char* identifier)
 {
-    //printf("sizeof %d\n", sizeof((char*)keywords));
     for(int i = 0;i <= 3;i++)
     {
         //printf("To compare %s\n", identifier);
         if(strcmp(keywords [i], identifier) == 0)
         {
-            if(DEF == keyword_id [i])
-            {
-                //printf("DEF returned\n");
-            }
             return keyword_id [i]; 
         }
     }
     //if nothing
-    set_identifier(strdup(identifier));
+    printf("Return IDENTIFIER %s\n", identifier);
+    set_identifier(identifier);
     return IDENTIFIER;
 }

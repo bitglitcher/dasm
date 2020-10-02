@@ -31,16 +31,15 @@ int val;
 %option nounput yylineno
 %option noyywrap
 
-STRING_P L?\"(\\.|[^\\"])*\"
-IDENTIFIER [A-Za-z0-9]*
-
 %%
     
+"struct"                    return STRUCT;
+"byte"                      return BYTE;
 
-[a-zA-Z_][a-zA-Z0-9_]*      {printf("IDENTIFIER %s\n", yytext); return return_token(yytext);};
+[A-Za-z_][A-Za-z_0-9]*      {printf("IDENTIFIER %s\n", yytext); yylval.id = strdup(yytext); return IDENTIFIER;};
+(0-9)*                      {yylval.val=atoi(yytext); return NUMBER;}
+(0x)+[A-Fa-f0-9]*           {yylval.val=strtol(yytext,NULL,0); return NUMBER;}
 
-(0-9)*                      {val=atoi(yytext); return NUMBER;}
-(0x)+[A-Fa-f0-9]*           {val=strtol(yytext,NULL,0); return NUMBER;}
 
 ":"                         return ':';
 "("                         return '(';
@@ -49,6 +48,7 @@ IDENTIFIER [A-Za-z0-9]*
 ";"                         return ';';
 "{"                         return '{';
 "}"                         return '}';
+"."                         return '.';
 
 [ \r\n]                     ;
 .                           ;
