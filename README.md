@@ -6,7 +6,6 @@ This is part of a new toolchain that im creating, with similar ideology. C Compi
 
 # Upcoming
 - C Like Structures, with nesting
-- ELF Support
 - x86 Backend
 - Moxie Backend
 
