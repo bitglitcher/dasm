@@ -119,6 +119,7 @@ macros
 #define ZEX_S_OP 0b00010011
 
 #define ENCODE_AB(ins, rb, ra) (((ins & 0xff) << 0x8) | ((rb & 0xf) << 0x4) | (ra & 0xf))
+#define ENCODE_IMM8(ins, ra, imm) (((ins & 0xf) << 0xc) | ((ra & 0xf) << 0x8) | (imm & 0xff))
 #define ENCODE_IMM10(ins, imm) (((ins & 0b111111) << 0xa) | (imm & 0x3ff))
 "}
 
@@ -469,7 +470,8 @@ def CMP
     encode 
     {
     "
-    
+        APPEND_BYTE(GET_SIZE_32_SEC_1(ENCODE_AB(CMP_OP, GET_OP1_VAL, GET_OP2_VAL)));
+        APPEND_BYTE(GET_SIZE_32_SEC_2(ENCODE_AB(CMP_OP, GET_OP1_VAL, GET_OP2_VAL))); 
     "
     }
 
@@ -491,7 +493,8 @@ def DEC
     encode 
     {
     "
-    
+        APPEND_BYTE(GET_SIZE_32_SEC_1(ENCODE_IMM8(DEC_OP, GET_OP1_VAL, GET_OP2_VAL)));
+        APPEND_BYTE(GET_SIZE_32_SEC_2(ENCODE_IMM8(DEC_OP, GET_OP1_VAL, GET_OP2_VAL))); 
     "
     }
 
@@ -513,7 +516,8 @@ def DIV
     encode 
     {
     "
-    
+        APPEND_BYTE(GET_SIZE_32_SEC_1(ENCODE_AB(DIV_OP, GET_OP1_VAL, GET_OP2_VAL)));
+        APPEND_BYTE(GET_SIZE_32_SEC_2(ENCODE_AB(DIV_OP, GET_OP1_VAL, GET_OP2_VAL))); 
     "
     }
 
@@ -535,7 +539,8 @@ def GSR
     encode 
     {
     "
-    
+        APPEND_BYTE(GET_SIZE_32_SEC_1(ENCODE_IMM8(GSR_OP, GET_OP1_VAL, GET_OP2_VAL)));
+        APPEND_BYTE(GET_SIZE_32_SEC_2(ENCODE_IMM8(GSR_OP, GET_OP1_VAL, GET_OP2_VAL))); 
     "
     }
 
@@ -557,7 +562,8 @@ def INC
     encode 
     {
     "
-    
+        APPEND_BYTE(GET_SIZE_32_SEC_1(ENCODE_IMM8(INC_OP, GET_OP1_VAL, GET_OP2_VAL)));
+        APPEND_BYTE(GET_SIZE_32_SEC_2(ENCODE_IMM8(INC_OP, GET_OP1_VAL, GET_OP2_VAL))); 
     "
     }
 
@@ -578,7 +584,8 @@ def JMP
     encode 
     {
     "
-    
+        APPEND_BYTE(GET_SIZE_32_SEC_1(ENCODE_AB(JMP_OP, GET_OP1_VAL, 0x00)));
+        APPEND_BYTE(GET_SIZE_32_SEC_2(ENCODE_AB(JMP_OP, GET_OP1_VAL, 0x00))); 
     "
     }
 
@@ -599,7 +606,12 @@ def JMPA
     encode 
     {
     "
-    
+        APPEND_BYTE(GET_SIZE_32_SEC_1(ENCODE_AB(JMPA_OP, 0x00, 0x00)));
+        APPEND_BYTE(GET_SIZE_32_SEC_2(ENCODE_AB(JMPA_OP, 0x00, 0x00))); 
+        APPEND_BYTE(GET_SIZE_32_SEC_1(GET_OP1_VAL));
+        APPEND_BYTE(GET_SIZE_32_SEC_2(GET_OP1_VAL)); 
+        APPEND_BYTE(GET_SIZE_32_SEC_3(GET_OP1_VAL));
+        APPEND_BYTE(GET_SIZE_32_SEC_4(GET_OP1_VAL)); 
     "
     }
 
@@ -620,7 +632,8 @@ def JSR
     encode 
     {
     "
-    
+        APPEND_BYTE(GET_SIZE_32_SEC_1(ENCODE_AB(JSR_OP, GET_OP1_VAL, 0x00)));
+        APPEND_BYTE(GET_SIZE_32_SEC_2(ENCODE_AB(JSR_OP, GET_OP1_VAL, 0x00)));
     "
     }
 
@@ -641,7 +654,12 @@ def JSRA
     encode 
     {
     "
-    
+        APPEND_BYTE(GET_SIZE_32_SEC_1(ENCODE_AB(JSRA_OP, 0x00, 0x00)));
+        APPEND_BYTE(GET_SIZE_32_SEC_2(ENCODE_AB(JSRA_OP, 0x00, 0x00))); 
+        APPEND_BYTE(GET_SIZE_32_SEC_1(GET_OP1_VAL));
+        APPEND_BYTE(GET_SIZE_32_SEC_2(GET_OP1_VAL)); 
+        APPEND_BYTE(GET_SIZE_32_SEC_3(GET_OP1_VAL));
+        APPEND_BYTE(GET_SIZE_32_SEC_4(GET_OP1_VAL));
     "
     }
 
@@ -663,7 +681,8 @@ def LD_B
     encode 
     {
     "
-    
+        APPEND_BYTE(GET_SIZE_32_SEC_1(ENCODE_AB(LD_B_OP, GET_OP1_VAL, GET_OP2_VAL)));
+        APPEND_BYTE(GET_SIZE_32_SEC_2(ENCODE_AB(LD_B_OP, GET_OP1_VAL, GET_OP2_VAL)));
     "
     }
 
@@ -685,7 +704,8 @@ def LD_L
     encode 
     {
     "
-    
+        APPEND_BYTE(GET_SIZE_32_SEC_1(ENCODE_AB(LD_L_OP, GET_OP1_VAL, GET_OP2_VAL)));
+        APPEND_BYTE(GET_SIZE_32_SEC_2(ENCODE_AB(LD_L_OP, GET_OP1_VAL, GET_OP2_VAL)));
     "
     }
 
@@ -707,7 +727,8 @@ def LD_S
     encode 
     {
     "
-    
+        APPEND_BYTE(GET_SIZE_32_SEC_1(ENCODE_AB(LD_S_OP, GET_OP1_VAL, GET_OP2_VAL)));
+        APPEND_BYTE(GET_SIZE_32_SEC_2(ENCODE_AB(LD_S_OP, GET_OP1_VAL, GET_OP2_VAL)));
     "
     }
 
@@ -729,7 +750,12 @@ def LDA_B
     encode 
     {
     "
-    
+        APPEND_BYTE(GET_SIZE_32_SEC_1(ENCODE_AB(LDA_B_OP, GET_OP1_VAL, 0x00)));
+        APPEND_BYTE(GET_SIZE_32_SEC_2(ENCODE_AB(LDA_B_OP, GET_OP1_VAL, 0x00))); 
+        APPEND_BYTE(GET_SIZE_32_SEC_1(GET_OP2_VAL));
+        APPEND_BYTE(GET_SIZE_32_SEC_2(GET_OP2_VAL)); 
+        APPEND_BYTE(GET_SIZE_32_SEC_3(GET_OP2_VAL));
+        APPEND_BYTE(GET_SIZE_32_SEC_4(GET_OP2_VAL));
     "
     }
 
@@ -751,7 +777,12 @@ def LDA_L
     encode 
     {
     "
-    
+        APPEND_BYTE(GET_SIZE_32_SEC_1(ENCODE_AB(LDA_L_OP, GET_OP1_VAL, 0x00)));
+        APPEND_BYTE(GET_SIZE_32_SEC_2(ENCODE_AB(LDA_L_OP, GET_OP1_VAL, 0x00))); 
+        APPEND_BYTE(GET_SIZE_32_SEC_1(GET_OP2_VAL));
+        APPEND_BYTE(GET_SIZE_32_SEC_2(GET_OP2_VAL)); 
+        APPEND_BYTE(GET_SIZE_32_SEC_3(GET_OP2_VAL));
+        APPEND_BYTE(GET_SIZE_32_SEC_4(GET_OP2_VAL)); 
     "
     }
 
@@ -773,7 +804,12 @@ def LDA_S
     encode 
     {
     "
-    
+        APPEND_BYTE(GET_SIZE_32_SEC_1(ENCODE_AB(LDA_S_OP, GET_OP1_VAL, 0x00)));
+        APPEND_BYTE(GET_SIZE_32_SEC_2(ENCODE_AB(LDA_S_OP, GET_OP1_VAL, 0x00))); 
+        APPEND_BYTE(GET_SIZE_32_SEC_1(GET_OP2_VAL));
+        APPEND_BYTE(GET_SIZE_32_SEC_2(GET_OP2_VAL)); 
+        APPEND_BYTE(GET_SIZE_32_SEC_3(GET_OP2_VAL));
+        APPEND_BYTE(GET_SIZE_32_SEC_4(GET_OP2_VAL));
     "
     }
 
@@ -796,7 +832,12 @@ def LDI_L
     encode 
     {
     "
-    
+        APPEND_BYTE(GET_SIZE_32_SEC_1(ENCODE_AB(LDI_L_OP, GET_OP1_VAL, 0x00)));
+        APPEND_BYTE(GET_SIZE_32_SEC_2(ENCODE_AB(LDI_L_OP, GET_OP1_VAL, 0x00))); 
+        APPEND_BYTE(GET_SIZE_32_SEC_1(GET_OP2_VAL));
+        APPEND_BYTE(GET_SIZE_32_SEC_2(GET_OP2_VAL)); 
+        APPEND_BYTE(GET_SIZE_32_SEC_3(GET_OP2_VAL));
+        APPEND_BYTE(GET_SIZE_32_SEC_4(GET_OP2_VAL));
     "
     }
 
@@ -818,7 +859,12 @@ def LDI_B
     encode 
     {
     "
-    
+        APPEND_BYTE(GET_SIZE_32_SEC_1(ENCODE_AB(LDI_B_OP, GET_OP1_VAL, 0x00)));
+        APPEND_BYTE(GET_SIZE_32_SEC_2(ENCODE_AB(LDI_B_OP, GET_OP1_VAL, 0x00))); 
+        APPEND_BYTE(GET_SIZE_32_SEC_1(GET_OP2_VAL));
+        APPEND_BYTE(GET_SIZE_32_SEC_2(GET_OP2_VAL)); 
+        APPEND_BYTE(GET_SIZE_32_SEC_3(GET_OP2_VAL));
+        APPEND_BYTE(GET_SIZE_32_SEC_4(GET_OP2_VAL));
     "
     }
 
@@ -840,7 +886,12 @@ def LDI_S
     encode 
     {
     "
-    
+        APPEND_BYTE(GET_SIZE_32_SEC_1(ENCODE_AB(LDI_S_OP, GET_OP1_VAL, 0x00)));
+        APPEND_BYTE(GET_SIZE_32_SEC_2(ENCODE_AB(LDI_S_OP, GET_OP1_VAL, 0x00))); 
+        APPEND_BYTE(GET_SIZE_32_SEC_1(GET_OP2_VAL));
+        APPEND_BYTE(GET_SIZE_32_SEC_2(GET_OP2_VAL)); 
+        APPEND_BYTE(GET_SIZE_32_SEC_3(GET_OP2_VAL));
+        APPEND_BYTE(GET_SIZE_32_SEC_4(GET_OP2_VAL));
     "
     }
 
@@ -863,7 +914,10 @@ def LDO_B
     encode 
     {
     "
-    
+        APPEND_BYTE(GET_SIZE_32_SEC_1(ENCODE_AB(LDO_B_OP, GET_OP1_VAL, GET_OP2_VAL)));
+        APPEND_BYTE(GET_SIZE_32_SEC_2(ENCODE_AB(LDO_B_OP, GET_OP1_VAL, GET_OP2_VAL))); 
+        APPEND_BYTE(GET_SIZE_32_SEC_1(GET_OP3_VAL));
+        APPEND_BYTE(GET_SIZE_32_SEC_2(GET_OP3_VAL));
     "
     }
 
@@ -886,7 +940,10 @@ def LDO_L
     encode 
     {
     "
-    
+        APPEND_BYTE(GET_SIZE_32_SEC_1(ENCODE_AB(LDO_L_OP, GET_OP1_VAL, GET_OP2_VAL)));
+        APPEND_BYTE(GET_SIZE_32_SEC_2(ENCODE_AB(LDO_L_OP, GET_OP1_VAL, GET_OP2_VAL))); 
+        APPEND_BYTE(GET_SIZE_32_SEC_1(GET_OP3_VAL));
+        APPEND_BYTE(GET_SIZE_32_SEC_2(GET_OP3_VAL));
     "
     }
 
@@ -909,7 +966,10 @@ def LDO_S
     encode 
     {
     "
-    
+        APPEND_BYTE(GET_SIZE_32_SEC_1(ENCODE_AB(LDO_S_OP, GET_OP1_VAL, GET_OP2_VAL)));
+        APPEND_BYTE(GET_SIZE_32_SEC_2(ENCODE_AB(LDO_S_OP, GET_OP1_VAL, GET_OP2_VAL))); 
+        APPEND_BYTE(GET_SIZE_32_SEC_1(GET_OP3_VAL));
+        APPEND_BYTE(GET_SIZE_32_SEC_2(GET_OP3_VAL));
     "
     }
 
@@ -931,7 +991,8 @@ def LSHR
     encode 
     {
     "
-    
+        APPEND_BYTE(GET_SIZE_32_SEC_1(ENCODE_AB(LSHR_OP, GET_OP1_VAL, GET_OP2_VAL)));
+        APPEND_BYTE(GET_SIZE_32_SEC_2(ENCODE_AB(LSHR_OP, GET_OP1_VAL, GET_OP2_VAL))); 
     "
     }
 
@@ -953,7 +1014,8 @@ def MOD
     encode 
     {
     "
-    
+        APPEND_BYTE(GET_SIZE_32_SEC_1(ENCODE_AB(MOD_OP, GET_OP1_VAL, GET_OP2_VAL)));
+        APPEND_BYTE(GET_SIZE_32_SEC_2(ENCODE_AB(MOD_OP, GET_OP1_VAL, GET_OP2_VAL))); 
     "
     }
 
@@ -975,7 +1037,8 @@ def MOV
     encode 
     {
     "
-    
+        APPEND_BYTE(GET_SIZE_32_SEC_1(ENCODE_AB(MOV_OP, GET_OP1_VAL, GET_OP2_VAL)));
+        APPEND_BYTE(GET_SIZE_32_SEC_2(ENCODE_AB(MOV_OP, GET_OP1_VAL, GET_OP2_VAL))); 
     "
     }
 
@@ -997,7 +1060,8 @@ def MUL
     encode 
     {
     "
-    
+        APPEND_BYTE(GET_SIZE_32_SEC_1(ENCODE_AB(MUL_OP, GET_OP1_VAL, GET_OP2_VAL)));
+        APPEND_BYTE(GET_SIZE_32_SEC_2(ENCODE_AB(MUL_OP, GET_OP1_VAL, GET_OP2_VAL))); 
     "
     }
 
@@ -1019,7 +1083,8 @@ def MUL_X
     encode 
     {
     "
-    
+        APPEND_BYTE(GET_SIZE_32_SEC_1(ENCODE_AB(MUL_X_OP, GET_OP1_VAL, GET_OP2_VAL)));
+        APPEND_BYTE(GET_SIZE_32_SEC_2(ENCODE_AB(MUL_X_OP, GET_OP1_VAL, GET_OP2_VAL))); 
     "
     }
 
@@ -1041,7 +1106,8 @@ def NEG
     encode 
     {
     "
-    
+        APPEND_BYTE(GET_SIZE_32_SEC_1(ENCODE_AB(NEG_OP, GET_OP1_VAL, GET_OP2_VAL)));
+        APPEND_BYTE(GET_SIZE_32_SEC_2(ENCODE_AB(NEG_OP, GET_OP1_VAL, GET_OP2_VAL))); 
     "
     }
 
@@ -1062,7 +1128,8 @@ def NOP
     encode 
     {
     "
-    
+        APPEND_BYTE(GET_SIZE_32_SEC_1(ENCODE_AB(NOP_OP, GET_OP1_VAL, GET_OP2_VAL)));
+        APPEND_BYTE(GET_SIZE_32_SEC_2(ENCODE_AB(NOP_OP, GET_OP1_VAL, GET_OP2_VAL))); 
     "
     }
 
@@ -1084,7 +1151,8 @@ def NOT
     encode 
     {
     "
-    
+        APPEND_BYTE(GET_SIZE_32_SEC_1(ENCODE_AB(NOT_OP, GET_OP1_VAL, GET_OP2_VAL)));
+        APPEND_BYTE(GET_SIZE_32_SEC_2(ENCODE_AB(NOT_OP, GET_OP1_VAL, GET_OP2_VAL))); 
     "
     }
 
@@ -1106,7 +1174,8 @@ def OR
     encode 
     {
     "
-    
+        APPEND_BYTE(GET_SIZE_32_SEC_1(ENCODE_AB(OR_OP, GET_OP1_VAL, GET_OP2_VAL)));
+        APPEND_BYTE(GET_SIZE_32_SEC_2(ENCODE_AB(OR_OP, GET_OP1_VAL, GET_OP2_VAL))); 
     "
     }
 
@@ -1128,7 +1197,8 @@ def POP
     encode 
     {
     "
-    
+        APPEND_BYTE(GET_SIZE_32_SEC_1(ENCODE_AB(POP_OP, GET_OP1_VAL, GET_OP2_VAL)));
+        APPEND_BYTE(GET_SIZE_32_SEC_2(ENCODE_AB(POP_OP, GET_OP1_VAL, GET_OP2_VAL))); 
     "
     }
 
@@ -1150,7 +1220,8 @@ def PUSH
     encode 
     {
     "
-    
+        APPEND_BYTE(GET_SIZE_32_SEC_1(ENCODE_AB(PUSH_OP, GET_OP1_VAL, GET_OP2_VAL)));
+        APPEND_BYTE(GET_SIZE_32_SEC_2(ENCODE_AB(PUSH_OP, GET_OP1_VAL, GET_OP2_VAL))); 
     "
     }
 
@@ -1193,7 +1264,8 @@ def SEX_B
     encode 
     {
     "
-    
+        APPEND_BYTE(GET_SIZE_32_SEC_1(ENCODE_AB(SEX_B_OP, GET_OP1_VAL, GET_OP2_VAL)));
+        APPEND_BYTE(GET_SIZE_32_SEC_2(ENCODE_AB(SEX_B_OP, GET_OP1_VAL, GET_OP2_VAL))); 
     "
     }
 
@@ -1215,7 +1287,8 @@ def SEX_S
     encode 
     {
     "
-    
+        APPEND_BYTE(GET_SIZE_32_SEC_1(ENCODE_AB(SEX_S_OP, GET_OP1_VAL, GET_OP2_VAL)));
+        APPEND_BYTE(GET_SIZE_32_SEC_2(ENCODE_AB(SEX_S_OP, GET_OP1_VAL, GET_OP2_VAL))); 
     "
     }
 
@@ -1237,7 +1310,8 @@ def SSR
     encode 
     {
     "
-    
+        APPEND_BYTE(GET_SIZE_32_SEC_1(ENCODE_IMM8(SSR_OP, GET_OP1_VAL, GET_OP2_VAL)));
+        APPEND_BYTE(GET_SIZE_32_SEC_2(ENCODE_IMM8(SSR_OP, GET_OP1_VAL, GET_OP2_VAL))); 
     "
     }
 
@@ -1259,7 +1333,8 @@ def ST_B
     encode 
     {
     "
-    
+        APPEND_BYTE(GET_SIZE_32_SEC_1(ENCODE_AB(ST_B_OP, GET_OP1_VAL, GET_OP2_VAL)));
+        APPEND_BYTE(GET_SIZE_32_SEC_2(ENCODE_AB(ST_B_OP, GET_OP1_VAL, GET_OP2_VAL))); 
     "
     }
 
@@ -1281,7 +1356,8 @@ def ST_L
     encode 
     {
     "
-    
+        APPEND_BYTE(GET_SIZE_32_SEC_1(ENCODE_AB(ST_L_OP, GET_OP1_VAL, GET_OP2_VAL)));
+        APPEND_BYTE(GET_SIZE_32_SEC_2(ENCODE_AB(ST_L_OP, GET_OP1_VAL, GET_OP2_VAL))); 
     "
     }
 
@@ -1303,7 +1379,8 @@ def ST_S
     encode 
     {
     "
-    
+        APPEND_BYTE(GET_SIZE_32_SEC_1(ENCODE_AB(ST_S_OP, GET_OP1_VAL, GET_OP2_VAL)));
+        APPEND_BYTE(GET_SIZE_32_SEC_2(ENCODE_AB(ST_S_OP, GET_OP1_VAL, GET_OP2_VAL))); 
     "
     }
 
@@ -1325,7 +1402,12 @@ def STA_B
     encode 
     {
     "
-    
+        APPEND_BYTE(GET_SIZE_32_SEC_1(ENCODE_AB(STA_B_OP, GET_OP1_VAL, 0x00)));
+        APPEND_BYTE(GET_SIZE_32_SEC_2(ENCODE_AB(STA_B_OP, GET_OP1_VAL, 0x00))); 
+        APPEND_BYTE(GET_SIZE_32_SEC_1(GET_OP2_VAL));
+        APPEND_BYTE(GET_SIZE_32_SEC_2(GET_OP2_VAL)); 
+        APPEND_BYTE(GET_SIZE_32_SEC_3(GET_OP2_VAL));
+        APPEND_BYTE(GET_SIZE_32_SEC_4(GET_OP2_VAL));
     "
     }
 
@@ -1347,7 +1429,12 @@ def STA_L
     encode 
     {
     "
-    
+        APPEND_BYTE(GET_SIZE_32_SEC_1(ENCODE_AB(STA_L_OP, GET_OP1_VAL, 0x00)));
+        APPEND_BYTE(GET_SIZE_32_SEC_2(ENCODE_AB(STA_L_OP, GET_OP1_VAL, 0x00))); 
+        APPEND_BYTE(GET_SIZE_32_SEC_1(GET_OP2_VAL));
+        APPEND_BYTE(GET_SIZE_32_SEC_2(GET_OP2_VAL)); 
+        APPEND_BYTE(GET_SIZE_32_SEC_3(GET_OP2_VAL));
+        APPEND_BYTE(GET_SIZE_32_SEC_4(GET_OP2_VAL));
     "
     }
 
@@ -1369,7 +1456,12 @@ def STA_S
     encode 
     {
     "
-    
+        APPEND_BYTE(GET_SIZE_32_SEC_1(ENCODE_AB(STA_S_OP, GET_OP1_VAL, 0x00)));
+        APPEND_BYTE(GET_SIZE_32_SEC_2(ENCODE_AB(STA_S_OP, GET_OP1_VAL, 0x00))); 
+        APPEND_BYTE(GET_SIZE_32_SEC_1(GET_OP2_VAL));
+        APPEND_BYTE(GET_SIZE_32_SEC_2(GET_OP2_VAL)); 
+        APPEND_BYTE(GET_SIZE_32_SEC_3(GET_OP2_VAL));
+        APPEND_BYTE(GET_SIZE_32_SEC_4(GET_OP2_VAL));
     "
     }
 
@@ -1392,7 +1484,10 @@ def STO_B
     encode 
     {
     "
-    
+        APPEND_BYTE(GET_SIZE_32_SEC_1(ENCODE_AB(STO_B_OP, GET_OP1_VAL, GET_OP2_VAL)));
+        APPEND_BYTE(GET_SIZE_32_SEC_2(ENCODE_AB(STO_B_OP, GET_OP1_VAL, GET_OP2_VAL))); 
+        APPEND_BYTE(GET_SIZE_32_SEC_1(GET_OP3_VAL));
+        APPEND_BYTE(GET_SIZE_32_SEC_2(GET_OP3_VAL));
     "
     }
 
@@ -1415,7 +1510,10 @@ def STO_L
     encode 
     {
     "
-    
+        APPEND_BYTE(GET_SIZE_32_SEC_1(ENCODE_AB(STO_L_OP, GET_OP1_VAL, GET_OP2_VAL)));
+        APPEND_BYTE(GET_SIZE_32_SEC_2(ENCODE_AB(STO_L_OP, GET_OP1_VAL, GET_OP2_VAL))); 
+        APPEND_BYTE(GET_SIZE_32_SEC_1(GET_OP3_VAL));
+        APPEND_BYTE(GET_SIZE_32_SEC_2(GET_OP3_VAL));
     "
     }
 
@@ -1438,7 +1536,10 @@ def STO_S
     encode 
     {
     "
-    
+        APPEND_BYTE(GET_SIZE_32_SEC_1(ENCODE_AB(STO_S_OP, GET_OP1_VAL, GET_OP2_VAL)));
+        APPEND_BYTE(GET_SIZE_32_SEC_2(ENCODE_AB(STO_S_OP, GET_OP1_VAL, GET_OP2_VAL))); 
+        APPEND_BYTE(GET_SIZE_32_SEC_1(GET_OP3_VAL));
+        APPEND_BYTE(GET_SIZE_32_SEC_2(GET_OP3_VAL));
     "
     }
 
@@ -1460,7 +1561,8 @@ def SUB
     encode 
     {
     "
-    
+        APPEND_BYTE(GET_SIZE_32_SEC_1(ENCODE_AB(SUB_OP, GET_OP1_VAL, GET_OP2_VAL)));
+        APPEND_BYTE(GET_SIZE_32_SEC_2(ENCODE_AB(SUB_OP, GET_OP1_VAL, GET_OP2_VAL))); 
     "
     }
 
@@ -1481,7 +1583,10 @@ def SWI
     encode 
     {
     "
-    
+        APPEND_BYTE(GET_SIZE_32_SEC_1(ENCODE_AB(SWI_OP, 0x00, 0x00)));
+        APPEND_BYTE(GET_SIZE_32_SEC_2(ENCODE_AB(SWI_OP, 0x00, 0x00))); 
+        APPEND_BYTE(GET_SIZE_32_SEC_1(GET_OP1_VAL));
+        APPEND_BYTE(GET_SIZE_32_SEC_2(GET_OP1_VAL));
     "
     }
 
@@ -1503,7 +1608,8 @@ def UDIV
     encode 
     {
     "
-    
+        APPEND_BYTE(GET_SIZE_32_SEC_1(ENCODE_AB(UDIV_OP, GET_OP1_VAL, GET_OP2_VAL)));
+        APPEND_BYTE(GET_SIZE_32_SEC_2(ENCODE_AB(UDIV_OP, GET_OP1_VAL, GET_OP2_VAL))); 
     "
     }
 
@@ -1525,7 +1631,8 @@ def UMOD
     encode 
     {
     "
-    
+        APPEND_BYTE(GET_SIZE_32_SEC_1(ENCODE_AB(UMOD_OP, GET_OP1_VAL, GET_OP2_VAL)));
+        APPEND_BYTE(GET_SIZE_32_SEC_2(ENCODE_AB(UMOD_OP, GET_OP1_VAL, GET_OP2_VAL))); 
     "
     }
 
@@ -1547,7 +1654,8 @@ def UMUL_X
     encode 
     {
     "
-    
+        APPEND_BYTE(GET_SIZE_32_SEC_1(ENCODE_AB(UMUL_X_OP, GET_OP1_VAL, GET_OP2_VAL)));
+        APPEND_BYTE(GET_SIZE_32_SEC_2(ENCODE_AB(UMUL_X_OP, GET_OP1_VAL, GET_OP2_VAL))); 
     "
     }
 
@@ -1569,7 +1677,8 @@ def XOR
     encode 
     {
     "
-    
+        APPEND_BYTE(GET_SIZE_32_SEC_1(ENCODE_AB(XOR_OP, GET_OP1_VAL, GET_OP2_VAL)));
+        APPEND_BYTE(GET_SIZE_32_SEC_2(ENCODE_AB(XOR_OP, GET_OP1_VAL, GET_OP2_VAL))); 
     "
     }
 
@@ -1591,7 +1700,8 @@ def ZEX_B
     encode 
     {
     "
-    
+        APPEND_BYTE(GET_SIZE_32_SEC_1(ENCODE_AB(ZEX_B_OP, GET_OP1_VAL, GET_OP2_VAL)));
+        APPEND_BYTE(GET_SIZE_32_SEC_2(ENCODE_AB(ZEX_B_OP, GET_OP1_VAL, GET_OP2_VAL))); 
     "
     }
 
@@ -1613,7 +1723,8 @@ def ZEX_S
     encode 
     {
     "
-    
+        APPEND_BYTE(GET_SIZE_32_SEC_1(ENCODE_AB(ZEX_S_OP, GET_OP1_VAL, GET_OP2_VAL)));
+        APPEND_BYTE(GET_SIZE_32_SEC_2(ENCODE_AB(ZEX_S_OP, GET_OP1_VAL, GET_OP2_VAL))); 
     "
     }
 
