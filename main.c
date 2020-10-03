@@ -13,10 +13,11 @@ Autor: Benjamin Herrera Navarro
 #include "libs/symbol_table.h"
 #include "internals.h"
 #include "obj_file.h"
+#include "debug.h"
 
-const char *argp_program_version = "dasm rebuilt";
-const char *argp_program_bug_address = "<draketaco@github.com>";
-static char doc[] = "Simple Assembler for the D series architecture.";
+const char *argp_program_version = "dasm";
+const char *argp_program_bug_address = "<bitglitcher@github.com>";
+static char doc[] = "DASM a portable Assembler.";
 static char args_doc[] = "[FILENAME]...";
 
 static struct argp_option options[] = { 
