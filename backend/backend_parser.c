@@ -542,10 +542,10 @@ int main(int argc, char* argv[])
         //Initilize
         init_symbol_table(&symbol_table);
         reset_identifiers();
-
         //Call preprocessor functions
         input_buffer = remove_line_comment(input_buffer, file_size);
         input_buffer = remove_block_comment(input_buffer, file_size);
+        printf("Fuck shit\n");
 
         //Begin parsing the main file
         yy_scan_bytes(input_buffer, file_size);

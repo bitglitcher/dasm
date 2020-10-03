@@ -49,11 +49,6 @@ int return_token(char* identifier)
     return IDENTIFIER;
 }
 
-/*set_identifier(strdup(yytext)); printf("IDENTIFIER %s\n", yytext);*/
-
-int val;
-char* string_literal;
-
 void print_symbol_table(SYMBOL_TABLE* symbol_table)
 {
     printf("\n\n------------SYMBOL_TABLE------------\n");
@@ -91,16 +86,24 @@ void print_symbol_table(SYMBOL_TABLE* symbol_table)
 %option nounput yylineno
 %option noyywrap
 
-
 %%
 
-[a-zA-Z_][a-zA-Z0-9_]*      return return_token(yytext);
+"arg"                       return ARG;
+"encode"                    return ENCODE;
+"mnemonic"                  return MNEMONIC;
+"max"                       return MAX;
+"def"                       return DEF;
+"arg_template"              return ARG_TEMPLATE;
+"macros"                    return MACROS;
 
-(0x)+[A-Fa-f0-9]*	        {val=strtol(yytext,NULL,0); return NUMBER;}
-[0-9]*			            {val=atoi(yytext); return NUMBER;}
-(0b)+[0-1]*		            {val=strtol(yytext,NULL,2); return NUMBER;}
 
-\"(\\.|[^"\\])*\"           {string_literal = strdup(yytext); return STRING;}
+[a-zA-Z_][a-zA-Z0-9_]*      {yylval.id = strdup(yytext); return IDENTIFIER;}
+
+(0x)+[A-Fa-f0-9]*	        {yylval.val = strtol(yytext,NULL,0); return NUMBER;}
+[0-9]*			            {yylval.val = atoi(yytext); return NUMBER;}
+(0b)+[0-1]*		            {yylval.val = strtol(yytext,NULL,2); return NUMBER;}
+
+\"(\\.|[^"\\])*\"           {yylval.id = strdup(yytext); return STRING;}
 
 "}"			                return '}';
 "{"			                return '{';

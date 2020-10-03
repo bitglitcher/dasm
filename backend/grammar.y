@@ -21,15 +21,12 @@
 extern char* yytext;
 extern int yylineno;
 extern int yylex();
-extern int val;
-extern char* string_literal;
 
 void yyerror(const char *str)
 {
         fprintf(stderr,"error: on line %d, %s before token: %s\n",yylineno ,str, yytext);
 }
 
-extern char* identifiers [4];
 extern SYMBOL_TABLE symbol_table;
 
 char* domain;
@@ -37,13 +34,26 @@ char* linkof;
 int scope_type;
 extern void reset_identifiers();
 
+
 //table to which link attributes
 LIST* link_list;
 
 %}
 
-%token DEF IDENTIFIER ARG ENCODE MAX ARG_TEMPLATE MNEMONIC NUMBER STRING
-%token MACROS
+%union
+{
+	int val;
+	char* id;
+}
+%type def
+%type arg
+%type macros
+%token <id> IDENTIFIER
+%token <val> NUMBER
+%token <id> STRING
+
+%token DEF ARG ENCODE MAX ARG_TEMPLATE MNEMONIC MACROS
+
 
 %%
 
@@ -63,17 +73,15 @@ identifiers:
 	IDENTIFIER
 	{
 		//Store entry on symbol table
-		append_symbol_with_list(&symbol_table, identifiers[0], TYPE_IDENTIFIER, 0, domain, scope_type, link_list);
-		linkof = strdup(identifiers[0]);
-		reset_identifiers();
+		append_symbol_with_list(&symbol_table, $1, TYPE_IDENTIFIER, 0, domain, scope_type, link_list);
+		linkof = $1;
 	}
 	|
 	identifiers ',' IDENTIFIER
 	{
 		//Store entry on symbol table
-		append_symbol_with_list(&symbol_table, identifiers[0], TYPE_IDENTIFIER, 0, domain, scope_type, link_list);
-		linkof = strdup(identifiers[0]);
-		reset_identifiers();
+		append_symbol_with_list(&symbol_table, $3, TYPE_IDENTIFIER, 0, domain, scope_type, link_list);
+		linkof = $3;
 	}
 	;
 	
@@ -82,13 +90,12 @@ template_def_permissive:
 	{
 		//Append identifier name
 		symbol_table.wait_slot = false;
-		append_to_list(link_list, 0, identifiers[0], TYPE_IDENTIFIER);
-		reset_identifiers();
+		append_to_list(link_list, 0, $1, TYPE_IDENTIFIER);
 	}
 	|
 	NUMBER
 	{
-		append_to_list(link_list, val, NULL, TYPE_NUMBER);
+		append_to_list(link_list, $1, NULL, TYPE_NUMBER);
 	}
 	;
 
@@ -113,7 +120,7 @@ template_defs:
 arg:
 	ARG IDENTIFIER
 	{
-		domain = strdup(identifiers[0]);
+		domain = strdup($2);
 		append_symbol(&symbol_table, domain, TYPE_ARG, 0, "none", TYPE_ARG);
 		//Set domain so template_defsdomain its data in the required domain
 		scope_type = TYPE_ARG;
@@ -127,7 +134,7 @@ arg_template:
 mnemonic:
 	MNEMONIC '{' {scope_type = TYPE_MNEMONIC;} STRING '}'
 	{
-		append_symbol(&symbol_table, string_literal, TYPE_MNEMONIC, 0, domain, TYPE_MNEMONIC);
+		append_symbol(&symbol_table, $4, TYPE_MNEMONIC, 0, domain, TYPE_MNEMONIC);
 	}
 	;
 
@@ -138,7 +145,7 @@ max:
 encode:
 	ENCODE '{' {scope_type = TYPE_ENCODE;} STRING '}'
 	{
-	    append_symbol(&symbol_table, string_literal, TYPE_ENCODE, 0, domain, TYPE_ENCODE);
+	    append_symbol(&symbol_table, $4, TYPE_ENCODE, 0, domain, TYPE_ENCODE);
 	}
 	;
 
@@ -164,9 +171,8 @@ def:
    	DEF IDENTIFIER 
 	   	{
 			//Create an enrty on the symbol table
-			append_symbol(&symbol_table, identifiers [0], TYPE_DEF, 0, "none", TYPE_DEF);
-			domain = identifiers[0];
-			reset_identifiers();
+			append_symbol(&symbol_table, $2, TYPE_DEF, 0, "none", TYPE_DEF);
+			domain = $2;
 		}
 		'{' recusive_def_branch '}'
 	;
@@ -175,7 +181,7 @@ macros:
     MACROS '{' STRING '}'
     {
         printf("\t\t\tMACRO DETECTED\n");
-        append_symbol(&symbol_table, string_literal, TYPE_MACRO, 0, "none", TYPE_MACRO);
+        append_symbol(&symbol_table, $3, TYPE_MACRO, 0, "none", TYPE_MACRO);
         link_list = NULL;
         scope_type = TYPE_MACRO;
     }
