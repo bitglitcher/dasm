@@ -43,6 +43,8 @@ The assembler needs the following tools: gcc, flex, bison, make
 make -B ARCH="Your_Arch_Prefix"
 ```
 
+After compiling the binary file will be located at `build/bin/`
+
 # The Backend
 
 Each architecture backend requires its own foler at `arch/arch_name`, for example `arch/mips1`.
