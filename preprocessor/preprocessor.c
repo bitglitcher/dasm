@@ -3,68 +3,77 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
+
+//Return Modified Buffer
 char* remove_line_comment(char *str, size_t size)
 {
-	char *copy = malloc(sizeof(char*) * size);
-	memmove(copy, str, size);
-	//Scan letter by letter on the buffer
-	for(size_t i = 0;i <= size;i++)
+	char* new_buffer = malloc(sizeof(char) * size);
+	memcpy(new_buffer, str, size);
+
+	for(int i = 0;i <= size;i++)
 	{
-		if(*(str + i) == '/')
+		if(*(new_buffer + i) == '/')
 		{
-			if(*(str + (i + 1)) == '/')
+			if((i + 1) < size)
 			{
-				//Just fill with spaces
-				int fill = 0;
-				while(*(str + (fill + i)) != '\n' || *(str + (fill + i)) != '\0')
+				if(*(new_buffer + i + 1) == '/')
 				{
-					if(*(str + (fill + i)) != '\n')
+					//Search for endline and EOF
+					if(memchr(new_buffer + i, '\n', (size - i)))
 					{
-						*(copy + (fill + i)) = '\n';
+						char* ocurrence = memchr(new_buffer + i, '\n', (size - i));
+						memset(new_buffer + i, ' ', (ocurrence - new_buffer) - i);
 					}
-					fill++;
+					else if(memchr(new_buffer + i, '\0', ((size - i) + 1)))
+					{
+						char* ocurrence = memchr(new_buffer + i, '\0', ((size - i) + 1));
+						memset(new_buffer + i, ' ', (ocurrence - new_buffer) - i);
+					}
+					else if(memchr(new_buffer + i, EOF, ((size - i) + 1)))
+					{
+						char* ocurrence = memchr(new_buffer + i, EOF, ((size - i) + 1));
+						memset(new_buffer + i, ' ', (ocurrence - new_buffer) - i);
+					}					
 				}
 			}
 		}
 	}
-	return copy;
+	return new_buffer;
 }
 
+
+//Returns Modified Buffer
 char *remove_block_comment(char *str, size_t size)
 {
-	char *copy = malloc(sizeof(char*) * size);
-	memmove(copy, str, size);
-	//Scan letter by letter
-	for(size_t i = 0;i <= size;i++)
+	char* new_buffer = malloc(sizeof(char) * size);
+	memcpy(new_buffer, str, size);
+
+	for(int i = 0;i <= size;i++)
 	{
-		if(*(str + i) == '/')
+		if(*(new_buffer + i) == '/')
 		{
-			if(*(str + (i + 1)) == '*')
+			if((i + 1) < size)
 			{
-				//Fill with spaces until the close token
-				int fill = 0;
-				while(!(*(str + (fill + i)) == '*' && *(str + (fill + i + 1)) == '/'))
+				if(*(new_buffer + i + 1) == '*')
 				{
-					if(*(str + (fill + i)) == '\n')
+					//Search for */
+					if(((i + 2) < size) & ((i + 3) < size))
 					{
-						*(copy + (i + fill)) = '\n';
+						if(memchr(new_buffer + i + 2, '*', (size - i + 2)))
+						{
+							char* first_part = memchr(new_buffer + i + 2, '*', (size - (i + 2)));
+							if(memchr(first_part + 1, '/', (size - (i + 3))))
+							{
+								char* ocurrence = memchr(first_part + 1, '/', (size - (i + 3)));
+								memset(new_buffer + i, ' ', (ocurrence - new_buffer) - i + 1);
+							}
+						}
 					}
-					else
-					{
-						*(copy + (i + fill)) = ' ';
-					}
-					fill++;
-					//Buffer overflow protection
-					if((i + fill) > size) return NULL;
-					//So if it doesn't find a close token, this will return NULL
 				}
-				//Manually Delete the last two characters
-				*(copy + (i + fill)) = ' ';
-				*(copy + (i + fill + 1)) = ' ';
 			}
 		}
 	}
-	return copy;
+	return new_buffer;
 }
 
 char *cnvrt_schar(char *str, size_t size)
@@ -105,6 +114,7 @@ char *cnvrt_schar(char *str, size_t size)
 	}
 	return strdup(copy);
 }
+
 //int main()
 //{
 //	char *test = "hola //que tal\n Hola qur tal /*This Should Not be eliminated*/ la /*ja*/ vida //hahaha";
