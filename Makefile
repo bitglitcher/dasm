@@ -1,4 +1,4 @@
-ARCH=d32i
+ARCH=moxie
 
 all: backend grammar internals helper_f arch compile_grammar lexer preprocessor libs main 
 
