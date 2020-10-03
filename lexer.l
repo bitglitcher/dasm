@@ -36,7 +36,7 @@ int val;
 "struct"                    return STRUCT;
 "byte"                      return BYTE;
 
-[A-Za-z_][A-Za-z_0-9]*      {printf("IDENTIFIER %s\n", yytext); yylval.id = strdup(yytext); return IDENTIFIER;};
+[A-Za-z_][A-Za-z_0-9]*      {yylval.id = strdup(yytext); return IDENTIFIER;};
 (0-9)*                      {yylval.val=atoi(yytext); return NUMBER;}
 (0x)+[A-Fa-f0-9]*           {yylval.val=strtol(yytext,NULL,0); return NUMBER;}
 
