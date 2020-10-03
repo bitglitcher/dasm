@@ -15,5 +15,20 @@ main:
     ashr r0, r1;
     beq 0xff;
     bge something.orange;
+    bgt 0xff;
+    bgtu 0xff;
+    ble 0xff;
+    bleu 0xff;
+    blt 0xff;
+    bltu 0xff;
+    bne 0xff;
+    brk;
+    cmp r0, r1;
+    dec r0, 0xff;
+    div r0, r1;
+    gsr r0, 0xf;
+    inc r0, 0xf;
+    jmp r0;
+    jmpa 0xffffffff;
 
 
