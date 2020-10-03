@@ -105,7 +105,7 @@ int main(int argc, char *argv[])
             }
             else
             {
-                printf("Using default output -> ROM.bin\n");
+                printf("Using default output -> obj.bin\n");
                 arguments.output_file = "obj.o";
             }
             
@@ -114,7 +114,6 @@ int main(int argc, char *argv[])
         {
             printf("Using specified output -> %s\n", arguments.output_file);
         }
-        printf("\n\n\nOpening file: %s\n", arguments.output_file);
         //File table
         init_file_table(&file_table);
         init_symbol_table(&symbol_table);
@@ -128,7 +127,6 @@ int main(int argc, char *argv[])
 
         append_file(&file_table, arguments.input_file);
         //Parse first file
-        printf("Scanning File\n");
         FILE_NODE* file_node = search_file(&file_table, arguments.input_file);
         if(file_node)
         {

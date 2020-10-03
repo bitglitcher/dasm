@@ -2,12 +2,10 @@
 #include <string.h>
 #include <stdlib.h>
 #include "symbol_table.h"
-
+#include "../debug.h"
 
 void init_symbol_table(SYMBOL_TABLE* symbol_table)
 {
-    printf("Initializing Symbol Table\n");
-    printf("Symbol Table INIT CP: %d\n", SYMBOL_TABLE_INIT_CP);
     symbol_table->capacity = SYMBOL_TABLE_INIT_CP;
     symbol_table->size = 0;
     symbol_table->wait_slot = true;
@@ -35,7 +33,6 @@ void append_symbol(SYMBOL_TABLE* symbol_table, char* name, int type, int addr, c
     if(symbol_table->size >= symbol_table->capacity)
     {
         symbol_table->capacity *= 2;
-        printf("Reallocating: %d\n", symbol_table->capacity);
         symbol_table->data = realloc(symbol_table->data, sizeof(SYMBOL_NODE) * symbol_table->capacity);
     }
 

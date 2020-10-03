@@ -1,6 +1,7 @@
 #include "file_table.h"
 #include "terminal_colors.h"
 #include "../preprocessor/preprocessor.h"
+#include "../debug.h"
 
 void init_file_table(FILE_TABLE* file_table)
 {
@@ -37,14 +38,18 @@ void append_file(FILE_TABLE* file_table, char* name)
     }
     else
     {
-        printf("\nallocating file\n");
+        #ifdef _DEBUG_
+            printf("\nallocating file\n");
+        #endif
         //Get file size
         fseek (file_ptr, 0, SEEK_END);   // non-portable
         long file_size = ftell(file_ptr);
         file_table->data[file_table->size].size = (size_t)file_size;
         //Go to the begining
         rewind (file_ptr);
+        #ifdef _DEBUG_
         printf("file size: %d\n", file_size);
+        #endif
         char* mem_block = malloc(sizeof(char) * file_size);
         //Now copy the data to the buffer
         size_t read_bytes = fread(mem_block, sizeof(char), file_size, file_ptr);
@@ -58,7 +63,9 @@ void append_file(FILE_TABLE* file_table, char* name)
             printf("dasm: "ANSI_COLOR_RED "error: " ANSI_COLOR_RESET "allocating memory\n");
             exit(0);
         }
+        #ifdef _DEBUG_
         printf("contents in memory %s\n", mem_block);
+        #endif
         fclose(file_ptr);
 
         //Preprocess files
@@ -68,7 +75,9 @@ void append_file(FILE_TABLE* file_table, char* name)
         //Remove multiline comments
         mem_block = remove_block_comment(mem_block, file_size); 
         
+        #ifdef _DEBUG_
         printf("contents in memory %s\n", mem_block);
+        #endif
         //Apend it to a file node
         file_table->data[file_table->size].data = strdup(mem_block);
         free(mem_block);

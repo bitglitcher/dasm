@@ -2,7 +2,7 @@
 #define _DEBUG_H
 
 //Define to enable debug mode
-//#define DEBUG
+//#define _DEBUG_
 
 
 

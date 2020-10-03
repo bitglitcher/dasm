@@ -6,7 +6,6 @@
 
 void init_arg_table(ARG_TABLE* arg_table)
 {
-    printf("\t\tINIT ARG TABLE\n");
     arg_table->capacity = INIT_ARG_TABLE_CP;
     arg_table->wait_slot = true;
     arg_table->size = 0;

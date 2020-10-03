@@ -6,6 +6,8 @@
 #include "internals_backend.h"
 #include "libs/arg_table.h"
 #include "internals.h"
+#include "debug.h"
+
 //extern void init_arg_table(ARG_TABLE* arg_table); 
 
 #define BYTE_TO_BINARY_PATTERN "%c%c%c%c%c%c%c%c"
@@ -75,7 +77,9 @@ argument:
     {
         if(!dry_run)
         {
-            printf("struct access %s.%s\n", $3, $1);
+            #ifdef _DEBUG_
+                printf("struct access %s.%s\n", $3, $1);
+            #endif
             SYMBOL_NODE* symb_node = search_symbol(&symbol_table, $3, $1);
             if(symb_node)
             {
@@ -96,7 +100,9 @@ argument:
         if(!dry_run)
         {
             append_arg(arg_table, match_args($1));
-            printf("arguments detected: name: %s \t value %d\n", $1, match_args($1));
+            #ifdef _DEBUG_
+                printf("arguments detected: name: %s \t value %d\n", $1, match_args($1));
+            #endif
         }
     }
     |
@@ -104,7 +110,6 @@ argument:
     {
         if(!dry_run)
         {
-            printf("arguments number detected: %d\n", val);
             ARG_NODE_TEMPLATE node;
             node.value = val;
             node.domain = "numeric";
@@ -116,7 +121,6 @@ argument:
     {
         if(!dry_run)
         {
-            printf("argument address detected\n", val);
             ARG_NODE_TEMPLATE node;
             node.value = val;
             node.domain = "address";
@@ -137,7 +141,9 @@ instruction:
     {   
         if(!dry_run)
         {
-            printf("Instructions %s\n", $1);
+            #ifdef _DEBUG_
+                printf("Instructions %s\n", $1);
+            #endif
             arg_table = malloc(sizeof(ARG_TABLE));
             init_arg_table(arg_table);
         }
@@ -174,7 +180,6 @@ label:
     {
         if(dry_run)
         {
-            printf("label: %s\n", IDENTIFIER_0);
             append_symbol(&symbol_table, $1, TYPE_LABEL, addr, "none");
         }
     }
@@ -201,6 +206,7 @@ struct:
     {
         if(dry_run)
         {
+            //Check if the struct already exists
             struct_size_cnt = 0;
             current_scope = $2;
             append_symbol(&symbol_table, $2, TYPE_STRUCT, 0x00, "struct");
