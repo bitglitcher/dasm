@@ -97,7 +97,10 @@ bool* check_types(ARG_TABLE* arg_table, INS_NODE_TEMPLATE* ins_node)
             #endif
             for(int x = 0;x <= ins_node->arg_templates[i]->size;x++)
             {
-                printf("\t\t\t\t\tINS_ARG_TEMPLATE iteration: got %s, expected %s\n", arg_table->data[i].domain, ins_node->arg_templates[i]->templates[x]);
+                #ifdef _DEBUG_
+                    printf("\t\t\t\t\tINS_ARG_TEMPLATE iteration: got %s, expected %s\n", arg_table->data[i].domain, ins_node->arg_templates[i]->templates[x]);
+                #endif
+                
                 //printf("\t\t\t\t\tGot domain -> %s\n", arg_table->data[i].domain);
                 //if(strcmp(arg_table->data[i].domain, ins_node->arg_templates[i]->templates[x]) != 0)
                 //{
