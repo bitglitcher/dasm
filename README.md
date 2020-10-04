@@ -35,6 +35,13 @@ main:
      mnemonic operand, operand;
 ```
 
+## Error Messages
+
+<p align="center">
+  <img src="img/error_msg.PNG" title="hover text">
+</p>
+
+
 # Compiling
 
 The assembler needs the following tools: gcc, flex, bison, make
