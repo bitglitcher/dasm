@@ -7,8 +7,7 @@
 void init_arg_table(ARG_TABLE* arg_table)
 {
     arg_table->capacity = INIT_ARG_TABLE_CP;
-    arg_table->wait_slot = true;
-    arg_table->size = 0;
+    arg_table->size = -1; //-1 empty
     arg_table->data = malloc(sizeof(ARG_NODE) * INIT_ARG_TABLE_CP);
 }
 
@@ -19,15 +18,8 @@ void delete_arg_table()
 
 void append_arg(ARG_TABLE* arg_table, ARG_NODE_TEMPLATE arg_node)
 {
-    if(arg_table->wait_slot)
-    {
-        arg_table->wait_slot = false;
-    }
-    else
-    {
-        arg_table->size++;
-    }
 
+    arg_table->size++;
     //Check capacity
     if(arg_table->size >= arg_table->capacity)
     {
