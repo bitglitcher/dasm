@@ -42,7 +42,7 @@ The assembler needs the following tools: gcc, flex, bison, make
 ```
 make -B ARCH="Your_Arch_Prefix"
 ```
-The default architecture is moxie. So to compile the default architecture do: `make -B`
+The default architecture is moxie. So to compile the default architecture do: `make -B`. Then you can test it by doing `./build/bin/dasm test/moxie_test.asm`
 
 After compiling the binary file will be located at `build/bin/`
 
