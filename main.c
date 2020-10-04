@@ -53,6 +53,8 @@ static struct argp argp = { options, parse_opt, args_doc, doc, 0, 0, 0 };
 extern int yyparse();
 extern int yy_scan_bytes ( const char *, int);
 extern int yylex();
+extern int yylex_destroy(void);
+
 
 extern void init_internals();
 //FILE TABLE
@@ -133,8 +135,7 @@ int main(int argc, char *argv[])
             dry_run = true;
             yy_scan_bytes(file_node->data, file_node->size);
             yyparse();
-            //yypop_buffer_state();
-            //yyfree();
+            yylex_destroy();
             dry_run = false;
             yy_scan_bytes(file_node->data, file_node->size);
             yyparse();

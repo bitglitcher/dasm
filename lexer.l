@@ -28,7 +28,8 @@ int val;
 //append_symbol(&local_table, yytext, 0x00, "none");
 
 %}
-%option nounput yylineno
+%option nounput 
+%option yylineno
 %option noyywrap
 
 %%
@@ -50,7 +51,8 @@ int val;
 "}"                         return '}';
 "."                         return '.';
 
-[ \r\n]                     ;
+[\r\n]                      ;
+[\n]                        ;
 .                           ;
 [ \t]+                      ;
 
