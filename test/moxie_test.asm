@@ -18,8 +18,8 @@ main:
     bgt 0xff;
     bgtu 0xff;
     ble 0xff;
-    bleu 0xff;
-    blt 0xff;
+    bleu r0;
+    blt r4;
     bltu 0xff;
     bne 0xff;
     brk;
