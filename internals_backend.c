@@ -13,7 +13,7 @@
 /*Have to be defined*/
 //char* regs [] = REGS_NAMES;
 //int reg_addr [] = REGS_ADDRS; 
-
+extern int yylineno;
 //These contain all the keywords from the target like registers and constants
 ARG_NODE_TEMPLATE* arg_node_templates [] = ARG_NODES;
 
@@ -88,31 +88,41 @@ bool* check_types(ARG_TABLE* arg_table, INS_NODE_TEMPLATE* ins_node)
 
         //Because the number of elements on the arg_table and the instruction template
         //are the same, we can use a single for loop to address the two arrays
-        for(int i = 0;i <= arg_table->size; i++)
-        {
-            #ifdef _DEBUG_
-            printf("\t\t\t\tcheck types iteration!\n");
-            printf("\t\t\t\tINS_TEMPLATE name -> %s\n", ins_node->name);
-            printf("\t\t\t\t\tARG_NODE index -> %d\n", i);
-            #endif
-            for(int x = 0;x <= ins_node->arg_templates[i]->size;x++)
+            if(arg_table->size != -1) //If not empty
             {
-                #ifdef _DEBUG_
-                    printf("\t\t\t\t\tINS_ARG_TEMPLATE iteration: got %s, expected %s\n", arg_table->data[i].domain, ins_node->arg_templates[i]->templates[x]);
-                #endif
-                
-                //printf("\t\t\t\t\tGot domain -> %s\n", arg_table->data[i].domain);
-                //if(strcmp(arg_table->data[i].domain, ins_node->arg_templates[i]->templates[x]) != 0)
-                //{
-                //                    printf(ANSI_COLOR_RED "Error: " ANSI_COLOR_RESET "imcompatible argument %s\n", arg_table->data[i].name);
-                //                    printf(ANSI_COLOR_RED "Error: " ANSI_COLOR_RESET "imcompatible argument, expected argument %s, recieved %s\n", ins_node->arg_templates[i]->templates[x], arg_table->data[i].domain);
-                //Print possible domains
-                //                    printf(ANSI_COLOR_GREEN "Possible Arguments:" ANSI_COLOR_RESET "\n");
-                //return (bool*) false;
-                //}
+                for(int i = 0;i <= arg_table->size; i++)
+                {
+                    #ifdef _DEBUG_
+                    printf("\t\t\t\tcheck types iteration!\n");
+                    printf("\t\t\t\tINS_TEMPLATE name -> %s\n", ins_node->name);
+                    printf("\t\t\t\t\tARG_NODE index -> %d\n", i);
+                    #endif
+                    for(int x = 0;x <= ins_node->arg_templates[i]->size;x++)
+                    {
+                        #ifdef _DEBUG_
+                            printf("\t\t\t\t\tINS_ARG_TEMPLATE iteration: got %s, expected %s\n", arg_table->data[i].domain, ins_node->arg_templates[i]->templates[x]);
+                        #endif
+                        
+                        //printf("\t\t\t\t\tGot domain -> %s\n", arg_table->data[i].domain);
+                        if(strcmp(arg_table->data[i].domain, ins_node->arg_templates[i]->templates[x]) != 0)
+                        {
+                            if(strcmp(arg_table->data[i].domain, "numeric") == 0)
+                            {
+                                printf(ANSI_COLOR_RED "Error: " ANSI_COLOR_RESET "on line %d imcompatible argument 0x%x\n", yylineno, arg_table->data[i].value);
+                            }
+                            else
+                            {
+                                printf(ANSI_COLOR_RED "Error: " ANSI_COLOR_RESET "on line %d imcompatible argument %s\n", yylineno, arg_table->data[i].name);
+                            }
+                            printf(ANSI_COLOR_RED "Error: " ANSI_COLOR_RESET "on line %d imcompatible argument, expected argument %s, recieved %s\n", yylineno, ins_node->arg_templates[i]->templates[x], arg_table->data[i].domain);
+                            //Print possible domains
+                            //printf(ANSI_COLOR_GREEN "Possible Arguments:" ANSI_COLOR_RESET "\n");
+                            return (bool*) false;
+                        }
+                    }
+                }
             }
         }
-    }
     return (bool*)true;
 }
 
@@ -177,11 +187,11 @@ void assemble_ins(char* name , ARG_TABLE* arg_table)
     {
         if(arg_table->size > (saved->nargs - 1))
         {
-            printf("\t\tError: too many arguments %d\n", arg_table->size);
+            printf(ANSI_COLOR_RED "Error:" ANSI_COLOR_RESET " on line %d too many arguments %d\n", yylineno, arg_table->size);
         }
         else
         {
-            printf("\t\tError: more arguments expected %d\n", arg_table->size);
+            printf(ANSI_COLOR_RED "Error:" ANSI_COLOR_RESET " more arguments expected %d\n", arg_table->size);
         }
     }
     //If not found check for defenitions IDK

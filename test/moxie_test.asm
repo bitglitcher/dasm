@@ -26,7 +26,7 @@ main:
     cmp r0, r1;
     dec r0, 0xff;
     div r0, r1;
-    gsr r0, 0xf;
+    gsr r0, sr0;
     inc r0, 0xf;
     jmp r0;
     jmpa 0xffffffff;
