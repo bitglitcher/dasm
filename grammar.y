@@ -26,7 +26,6 @@ ARG_TABLE* arg_table = NULL;
 extern char* yytext;
 extern int yylineno;
 extern int yylex();
-extern int val;
 
 
 void yyerror(const char *str)
@@ -111,7 +110,7 @@ argument:
         if(!dry_run)
         {
             ARG_NODE_TEMPLATE node;
-            node.value = val;
+            node.value = $1;
             node.domain = "numeric";
             append_arg(arg_table, node);
         }
@@ -122,7 +121,7 @@ argument:
         if(!dry_run)
         {
             ARG_NODE_TEMPLATE node;
-            node.value = val;
+            node.value = $2;
             node.domain = "address";
             append_arg(arg_table, node);
         }
