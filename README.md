@@ -8,6 +8,7 @@ This is part of a new toolchain that im creating, with similar ideology. C Compi
 - C Like Structures, with nesting
 - x86 Backend
 - Moxie Backend
+- Support for GNU AS syntax
 
 ## Syntax
 
