@@ -9,6 +9,7 @@ This is part of a new toolchain that im creating, with similar ideology. C Compi
 - x86 Backend
 - Moxie Backend
 - Support for GNU AS syntax
+- RISCV Backend
 
 ## Syntax
 
