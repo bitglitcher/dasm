@@ -146,7 +146,7 @@ int main(int argc, char *argv[])
             int col_cnt = 0;
             printf("Size of Bin_buffer %d\n", bin_buffer.size); 
             printf("Contents of Bin_Buffer:\n\n");
-            for(int i = 0; i <= bin_buffer.size;i++)
+            for(int i = 0; i <= bin_buffer.size + 1;i++)
             {
                 if(col_cnt == n_col)
                 {
