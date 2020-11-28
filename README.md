@@ -240,4 +240,3 @@ encode
 
 To enable debuging the macro `_DEBUG_` has to be defined in the file `debug.h`
 
-Any questions, contact me at caminlobo@gmail.com
