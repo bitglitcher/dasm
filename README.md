@@ -4,12 +4,17 @@ DASM is a multiarchitecture portable assembler. You can port your experimental a
 
 This is part of a new toolchain that im creating, with similar ideology. C Compiler with single file backends.
 
-# Upcoming
+# Goals
+- Better description file <- In Development
+- Relocations
+- RISCV Backend <- In Development
 - C Like Structures, with nesting
 - x86 Backend
 - Moxie Backend
 - Support for GNU AS syntax
 - RISCV Backend
+- Preprocessor Macros and Includes <- In Development
+- Object files <- In Development
 
 ## Syntax
 
