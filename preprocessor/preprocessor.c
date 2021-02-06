@@ -41,6 +41,36 @@ char* remove_line_comment(char *str, size_t size)
 	return new_buffer;
 }
 
+//Remove GNU AS like line comment
+char* remove_gnu_as_comment(char* str, size_t size)
+{
+	char* new_buffer = malloc(sizeof(char) * size);
+	memcpy(new_buffer, str, size);
+
+	for(int i = 0;i <= size;i++)
+	{
+		if(*(new_buffer + i) == '#')
+		{
+			//Search for endline and EOF
+			if(memchr(new_buffer + i, '\n', (size - i)))
+			{
+				char* ocurrence = memchr(new_buffer + i, '\n', (size - i));
+				memset(new_buffer + i, ' ', (ocurrence - new_buffer) - i);
+			}
+			else if(memchr(new_buffer + i, '\0', ((size - i) + 1)))
+			{
+				char* ocurrence = memchr(new_buffer + i, '\0', ((size - i) + 1));
+				memset(new_buffer + i, ' ', (ocurrence - new_buffer) - i);
+			}
+			else if(memchr(new_buffer + i, EOF, ((size - i) + 1)))
+			{
+				char* ocurrence = memchr(new_buffer + i, EOF, ((size - i) + 1));
+				memset(new_buffer + i, ' ', (ocurrence - new_buffer) - i);
+			}					
+		}
+	}
+	return new_buffer;
+}
 
 //Returns Modified Buffer
 char *remove_block_comment(char *str, size_t size)

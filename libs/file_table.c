@@ -75,6 +75,9 @@ void append_file(FILE_TABLE* file_table, char* name)
         //Remove multiline comments
         mem_block = remove_block_comment(mem_block, file_size); 
         
+        //Remove GNU Assembly like comments
+        mem_block = remove_gnu_as_comment(mem_block, file_size); 
+
         #ifdef _DEBUG_
         printf("contents in memory %s\n", mem_block);
         #endif

@@ -8,6 +8,13 @@ struct something
     byte 0x8, orange;
 }
 
+
+#this is a gnu like comment
+//C like command
+/*
+Block Comment
+*/
+
 main:
     add r0, r1;
     and r0, r1;
