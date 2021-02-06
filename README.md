@@ -20,7 +20,7 @@ This is part of a new toolchain that im creating, with similar ideology. C Compi
 
 ```
 //C like Comments
-
+# Comment
 /*
 Multiline Comments
 */
