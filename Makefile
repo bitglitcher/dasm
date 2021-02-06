@@ -1,24 +1,22 @@
 ARCH=moxie
 
-all: backend grammar internals helper_f arch compile_grammar lexer preprocessor libs main 
+all: backend_gen generate_backend grammar internals helper_f arch compile_grammar lexer preprocessor libs main 
 
-backend:
+backend_gen: backend/*
 	@$(MAKE) -C backend/
 	$(Creating Build Directory)
 ifeq (,$(wildcard build/))
 	mkdir build
 	mkdir build/bin
 endif
+
+generate_backend: backend_gen
 	./backend/backend_gen arch/${ARCH}/$(ARCH).id -p build/
-
-
-
-
 
 grammar: grammar.y libs/terminal_colors.h
 	bison -y -d grammar.y
 
-internals: internals.c internals.h internals_backend.c internals_backend.h
+internals: internals.c internals.h internals_backend.c internals_backend.h 
 	gcc internals.c internals.h -c
 	gcc internals_backend.c -c
 
@@ -35,7 +33,7 @@ obj_file: obj_file.c obj_file.h
 compile_grammar: grammar.y libs/terminal_colors.h
 	gcc y.tab.c -c
 
-lexer:
+lexer: lexer.l
 	flex lexer.l
 	gcc lex.yy.c -c
 

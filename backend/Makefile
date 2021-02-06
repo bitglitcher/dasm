@@ -1,7 +1,9 @@
 CC=gcc
 FLAGS=
 
-all: grammar.y lexer.l ../preprocessor/preprocessor.c backend_parser.c
+all: backend_gen
+
+backend_gen: grammar.y lexer.l ../preprocessor/preprocessor.c backend_parser.c
 	bison -d grammar.y --report=all
 	flex lexer.l
 	$(CC) $(FLAGS) lex.yy.c grammar.tab.c symbol_table.c ../preprocessor/preprocessor.c backend_parser.c -g -o backend_gen
