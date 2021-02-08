@@ -1,0 +1,52 @@
+arg registers
+{
+    (r[31:0]){[31:0]}
+}
+
+encoding R_ENCODING
+{
+    bit [6:0] opcode;
+    bit [7:11] rd;
+    bit [12:15] funct3;
+    bit [19:15] rs1;
+    bit [24:20] rs2;
+    bit [31:25] funct7;
+
+    ctrtype register_register_arithmetic {
+        opcode = max(opcode),
+        rd = max(rd),
+        funct3 = max(funct3),
+        rs1 = max(rs1),
+        rs2 = max(rs2),
+        funct7 = max(funct7)
+    }
+}
+
+arg_template register_register_arithmetic 
+{
+    (rd){registers},
+    (rs1){registers},
+    (rs2){registers}
+}
+
+encode reg_reg_encode(opcode, funct3, funct7)
+{
+    @requires register_register_arithmetic
+    @requires R_ENCODING
+
+    order
+    {
+        opcode
+        rd,
+        funct3,
+        rs1,
+        rs2,
+        funct7
+    }
+}
+
+def ADD
+{
+    @requires reg_reg_encode(0x02, 324, 234)
+    mnemonic = "add"
+}
