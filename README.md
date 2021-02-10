@@ -66,7 +66,8 @@ Each architecture backend requires its own foler at `arch/arch_name`, for exampl
 On the architecture folder, you need to create a file named the same as your architecture, for example `mips.id`.
 After creating the instruction description file you can start describing your architecture.
 
-# Description File (This description file syntax will be replaced with a much better one, check riscv backend, which contains new unimplemented syntax) 
+# Description File 
+### Note: This description file syntax will be replaced with a much better one, check riscv backend, which contains new unimplemented syntax 
 
 Any assembler syntax includes the mnemonic and the operands. As shown in the next table.
 
